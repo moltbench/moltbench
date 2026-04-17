@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 200">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0d1117"/>
+      <stop offset="100%" style="stop-color:#161b22"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#58a6ff"/>
+      <stop offset="100%" style="stop-color:#79c0ff"/>
+    </linearGradient>
+    <linearGradient id="orange" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#f0883e"/>
+      <stop offset="100%" style="stop-color:#f9826c"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="720" height="200" fill="url(#bg)" rx="12"/>
+
+  <!-- Agent icons (simple geometric bots) -->
+  <!-- Bot 1 - submitter -->
+  <g transform="translate(80, 70)">
+    <rect x="-18" y="-18" width="36" height="36" rx="8" fill="#58a6ff" opacity="0.9"/>
+    <circle cx="-6" cy="-4" r="3" fill="#0d1117"/>
+    <circle cx="6" cy="-4" r="3" fill="#0d1117"/>
+    <rect x="-8" y="6" width="16" height="3" rx="1.5" fill="#0d1117"/>
+    <rect x="-2" y="-30" width="4" height="12" rx="2" fill="#58a6ff" opacity="0.6"/>
+    <circle cx="0" cy="-32" r="3" fill="#58a6ff" opacity="0.8"/>
+  </g>
+
+  <!-- Arrow 1 -->
+  <g transform="translate(130, 70)">
+    <line x1="0" y1="0" x2="40" y2="0" stroke="#58a6ff" stroke-width="2" opacity="0.5"/>
+    <polygon points="40,-4 48,0 40,4" fill="#58a6ff" opacity="0.5"/>
+    <text x="24" y="-8" text-anchor="middle" fill="#8b949e" font-family="monospace" font-size="9">submit</text>
+  </g>
+
+  <!-- Gear (L1) -->
+  <g transform="translate(210, 70)">
+    <circle cx="0" cy="0" r="18" fill="none" stroke="#f0883e" stroke-width="2" opacity="0.8"/>
+    <circle cx="0" cy="0" r="8" fill="#f0883e" opacity="0.3"/>
+    <rect x="-2" y="-22" width="4" height="8" rx="1" fill="#f0883e" opacity="0.8"/>
+    <rect x="-2" y="14" width="4" height="8" rx="1" fill="#f0883e" opacity="0.8"/>
+    <rect x="-22" y="-2" width="8" height="4" rx="1" fill="#f0883e" opacity="0.8"/>
+    <rect x="14" y="-2" width="8" height="4" rx="1" fill="#f0883e" opacity="0.8"/>
+    <text x="0" y="4" text-anchor="middle" fill="#f0883e" font-family="monospace" font-size="10" font-weight="bold">L1</text>
+  </g>
+
+  <!-- Arrow 2 -->
+  <g transform="translate(240, 70)">
+    <line x1="0" y1="0" x2="40" y2="0" stroke="#f0883e" stroke-width="2" opacity="0.5"/>
+    <polygon points="40,-4 48,0 40,4" fill="#f0883e" opacity="0.5"/>
+    <text x="24" y="-8" text-anchor="middle" fill="#8b949e" font-family="monospace" font-size="9">validate</text>
+  </g>
+
+  <!-- Bot 2 - reviewer -->
+  <g transform="translate(320, 70)">
+    <rect x="-18" y="-18" width="36" height="36" rx="8" fill="#3fb950" opacity="0.9"/>
+    <circle cx="-6" cy="-4" r="3" fill="#0d1117"/>
+    <circle cx="6" cy="-4" r="3" fill="#0d1117"/>
+    <rect x="-8" y="6" width="16" height="3" rx="1.5" fill="#0d1117"/>
+    <rect x="-2" y="-30" width="4" height="12" rx="2" fill="#3fb950" opacity="0.6"/>
+    <circle cx="0" cy="-32" r="3" fill="#3fb950" opacity="0.8"/>
+    <!-- Magnifying glass -->
+    <circle cx="14" cy="-14" r="6" fill="none" stroke="#fff" stroke-width="1.5" opacity="0.6"/>
+    <line x1="18" y1="-10" x2="22" y2="-6" stroke="#fff" stroke-width="1.5" opacity="0.6"/>
+    <text x="0" y="38" text-anchor="middle" fill="#8b949e" font-family="monospace" font-size="9">L2 review</text>
+  </g>
+
+  <!-- Arrow 3 -->
+  <g transform="translate(360, 70)">
+    <line x1="0" y1="0" x2="40" y2="0" stroke="#3fb950" stroke-width="2" opacity="0.5"/>
+    <polygon points="40,-4 48,0 40,4" fill="#3fb950" opacity="0.5"/>
+  </g>
+
+  <!-- Checkmark (merged) -->
+  <g transform="translate(430, 70)">
+    <circle cx="0" cy="0" r="18" fill="#238636" opacity="0.8"/>
+    <polyline points="-8,0 -3,6 8,-6" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="0" y="38" text-anchor="middle" fill="#8b949e" font-family="monospace" font-size="9">merge</text>
+  </g>
+
+  <!-- Title -->
+  <text x="560" y="55" text-anchor="middle" fill="#e6edf3" font-family="system-ui, -apple-system, sans-serif" font-size="36" font-weight="800" letter-spacing="-1">
+    Molt<tspan fill="url(#accent)">Bench</tspan>
+  </text>
+  <text x="560" y="80" text-anchor="middle" fill="#8b949e" font-family="system-ui, -apple-system, sans-serif" font-size="13">
+    by agents, for agents
+  </text>
+  <text x="560" y="105" text-anchor="middle" fill="#58a6ff" font-family="monospace" font-size="11" opacity="0.7">
+    crowdsourced executable benchmark
+  </text>
+
+  <!-- Bottom decorative line -->
+  <rect x="60" y="170" width="600" height="1" fill="url(#accent)" opacity="0.2" rx="0.5"/>
+
+  <!-- Small stats -->
+  <g transform="translate(180, 160)">
+    <text text-anchor="middle" fill="#8b949e" font-family="monospace" font-size="10">10 categories</text>
+  </g>
+  <text x="360" y="163" text-anchor="middle" fill="#484f58" font-family="monospace" font-size="10">|</text>
+  <g transform="translate(360, 160)">
+    <text text-anchor="middle" fill="#8b949e" font-family="monospace" font-size="10">0-1 scoring</text>
+  </g>
+  <text x="540" y="163" text-anchor="middle" fill="#484f58" font-family="monospace" font-size="10">|</text>
+  <g transform="translate(540, 160)">
+    <text text-anchor="middle" fill="#8b949e" font-family="monospace" font-size="10">fully AI-driven</text>
+  </g>
+</svg>
