@@ -1,0 +1,662 @@
+[
+  {
+    "id": "mb-321",
+    "cat": "sysadmin",
+    "diff": "easy",
+    "title": "Count HTTP Status Codes in Access Log",
+    "src": "m/agents",
+    "prompt": "Write a Python script `status_count.py` that reads an Apache-style access log file passed as a command-line argument and outputs a summary of HTTP status codes. The output must be written to `status_report.txt` with one line per status code in the format `STATUS_CODE: COUNT`, sorted by status code ascending. Include a final line `Total: N` where N is the total number of requests.",
+    "input": {
+      "access.log": "192.168.1.10 - - [10/Apr/2026:08:15:01 +0000] \"GET /index.html HTTP/1.1\" 200 5123\n192.168.1.11 - - [10/Apr/2026:08:15:02 +0000] \"GET /about.html HTTP/1.1\" 200 3211\n192.168.1.12 - - [10/Apr/2026:08:15:03 +0000] \"GET /missing.html HTTP/1.1\" 404 213\n10.0.0.5 - - [10/Apr/2026:08:15:04 +0000] \"POST /api/data HTTP/1.1\" 500 0\n192.168.1.10 - - [10/Apr/2026:08:15:05 +0000] \"GET /style.css HTTP/1.1\" 200 1024\n192.168.1.13 - - [10/Apr/2026:08:15:06 +0000] \"GET /old-page HTTP/1.1\" 301 0\n192.168.1.14 - - [10/Apr/2026:08:15:07 +0000] \"GET /admin HTTP/1.1\" 403 512\n10.0.0.5 - - [10/Apr/2026:08:15:08 +0000] \"PUT /api/update HTTP/1.1\" 200 128\n192.168.1.15 - - [10/Apr/2026:08:15:09 +0000] \"GET /missing2 HTTP/1.1\" 404 213\n10.0.0.6 - - [10/Apr/2026:08:15:10 +0000] \"DELETE /api/item HTTP/1.1\" 500 0"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "status_count.py"},
+      {"type": "run", "cmd": "python status_count.py access.log", "exit": 0},
+      {"type": "file_match", "path": "status_report.txt", "text": "200: 4"},
+      {"type": "file_match", "path": "status_report.txt", "text": "Total: 10"}
+    ],
+    "tags": ["python", "sysadmin", "logs", "apache"]
+  },
+  {
+    "id": "mb-322",
+    "cat": "sysadmin",
+    "diff": "easy",
+    "title": "Extract Top IPs from Access Log",
+    "src": "m/agents",
+    "prompt": "Write a Python script `top_ips.py` that reads an Apache access log file (first argument) and writes the top 3 IP addresses by request count to `top_ips.txt`. Each line should be formatted as `IP ADDRESS  REQUESTS` (two spaces between), sorted by count descending. If there is a tie, sort alphabetically by IP.",
+    "input": {
+      "access.log": "192.168.1.10 - - [10/Apr/2026:08:15:01 +0000] \"GET / HTTP/1.1\" 200 5123\n10.0.0.5 - - [10/Apr/2026:08:15:02 +0000] \"GET /api HTTP/1.1\" 200 320\n192.168.1.10 - - [10/Apr/2026:08:15:03 +0000] \"GET /page HTTP/1.1\" 200 1200\n192.168.1.10 - - [10/Apr/2026:08:15:04 +0000] \"POST /form HTTP/1.1\" 302 0\n10.0.0.5 - - [10/Apr/2026:08:15:05 +0000] \"GET /data HTTP/1.1\" 200 980\n172.16.0.1 - - [10/Apr/2026:08:15:06 +0000] \"GET / HTTP/1.1\" 200 5123\n192.168.1.10 - - [10/Apr/2026:08:15:07 +0000] \"GET /css HTTP/1.1\" 200 450\n10.0.0.5 - - [10/Apr/2026:08:15:08 +0000] \"GET /js HTTP/1.1\" 200 780\n172.16.0.1 - - [10/Apr/2026:08:15:09 +0000] \"GET /img HTTP/1.1\" 200 2300\n10.0.0.5 - - [10/Apr/2026:08:15:10 +0000] \"GET /fonts HTTP/1.1\" 200 120"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "top_ips.py"},
+      {"type": "run", "cmd": "python top_ips.py access.log", "exit": 0},
+      {"type": "file_match", "path": "top_ips.txt", "text": "192.168.1.10  4"},
+      {"type": "line_count", "path": "top_ips.txt", "min": 3, "max": 3}
+    ],
+    "tags": ["python", "sysadmin", "logs", "network"]
+  },
+  {
+    "id": "mb-323",
+    "cat": "sysadmin",
+    "diff": "easy",
+    "title": "Parse Disk Usage Report",
+    "src": "m/automation",
+    "prompt": "Write a Python script `disk_report.py` that reads a `du_output.txt` file (passed as first argument) containing lines in the format `SIZE_KB\\tPATH` and produces `disk_report.txt`. The report must list all entries larger than 1000 KB sorted by size descending, with each line formatted as `PATH: SIZE_KB KB`. Include a final line `Total large entries: N`.",
+    "input": {
+      "du_output.txt": "524\t/var/log/syslog.1\n12800\t/var/log/journal\n256\t/etc/nginx/nginx.conf\n5120\t/home/user/backups\n48\t/tmp/test.txt\n2048\t/opt/app/data.db\n980\t/var/cache/apt\n1500\t/home/user/downloads\n64\t/etc/hosts\n30720\t/var/lib/docker"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "disk_report.py"},
+      {"type": "run", "cmd": "python disk_report.py du_output.txt", "exit": 0},
+      {"type": "file_match", "path": "disk_report.txt", "text": "/var/lib/docker: 30720 KB"},
+      {"type": "file_match", "path": "disk_report.txt", "text": "Total large entries: 5"}
+    ],
+    "tags": ["python", "sysadmin", "disk", "reporting"]
+  },
+  {
+    "id": "mb-324",
+    "cat": "sysadmin",
+    "diff": "easy",
+    "title": "Validate SSH Config Syntax",
+    "src": "m/agents",
+    "prompt": "Write a Python script `ssh_check.py` that reads an SSH-style config file (first argument) and validates that every `Host` block has both a `HostName` and a `User` field. Write `ssh_validation.txt` with one line per Host block: `Host NAME: OK` or `Host NAME: MISSING HostName|User`. The last line should be `Valid: N/M` where N is valid count and M is total count.",
+    "input": {
+      "ssh_config": "Host webserver\n  HostName 192.168.1.100\n  User deploy\n  Port 22\n\nHost database\n  HostName 10.0.0.50\n  Port 5432\n\nHost staging\n  HostName 172.16.0.10\n  User admin\n  IdentityFile ~/.ssh/staging_key\n\nHost mystery\n  User ghost"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "ssh_check.py"},
+      {"type": "run", "cmd": "python ssh_check.py ssh_config", "exit": 0},
+      {"type": "file_match", "path": "ssh_validation.txt", "text": "Host webserver: OK"},
+      {"type": "file_match", "path": "ssh_validation.txt", "text": "MISSING"},
+      {"type": "file_match", "path": "ssh_validation.txt", "text": "Valid: 2/4"}
+    ],
+    "tags": ["python", "sysadmin", "ssh", "config"]
+  },
+  {
+    "id": "mb-325",
+    "cat": "sysadmin",
+    "diff": "easy",
+    "title": "Parse Process List for Resource Hogs",
+    "src": "m/agents",
+    "prompt": "Write a Python script `proc_check.py` that reads a file (first argument) resembling `ps aux` output and identifies processes using more than 5.0% CPU or more than 10.0% memory. Write results to `alerts.txt` with one line per offending process: `ALERT: PID USER CPU% MEM% COMMAND`. End with a summary line `Alerts: N`.",
+    "input": {
+      "ps_output.txt": "USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND\nroot         1  0.0  0.1  16548  1024 ?        Ss   08:00   0:01 /sbin/init\nwww-data  1234  8.5  3.2 125000 32768 ?        S    08:01   2:15 /usr/sbin/apache2\npostgres  2345  2.1 15.4 500000 157696 ?       S    08:02   5:30 postgres: writer process\nmysql     3456  6.2  8.8 300000 90112 ?        S    08:03   3:45 /usr/sbin/mysqld\nnobody    4567  0.1  0.2   5000  2048 ?        S    08:04   0:00 /usr/bin/dbus-daemon\nroot      5678 12.3 11.5 800000 117760 ?       R    08:05   8:20 /opt/app/worker\nuser      6789  0.3  0.5  12000  5120 pts/0    S+   08:06   0:02 vim config.txt"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "proc_check.py"},
+      {"type": "run", "cmd": "python proc_check.py ps_output.txt", "exit": 0},
+      {"type": "file_match", "path": "alerts.txt", "text": "5678"},
+      {"type": "file_match", "path": "alerts.txt", "text": "Alerts: 3"}
+    ],
+    "tags": ["python", "sysadmin", "process", "monitoring"]
+  },
+  {
+    "id": "mb-326",
+    "cat": "sysadmin",
+    "diff": "easy",
+    "title": "Parse Crontab and List Schedules",
+    "src": "m/automation",
+    "prompt": "Write a Python script `cron_list.py` that reads a crontab file (first argument), ignores comments and blank lines, and writes a human-readable schedule to `cron_report.txt`. Each line should be `COMMAND — runs MINUTE HOUR DOM MONTH DOW`. End with `Total jobs: N`.",
+    "input": {
+      "crontab.txt": "# System maintenance tasks\n0 2 * * * /usr/local/bin/backup.sh\n*/15 * * * * /usr/bin/check_health.sh\n30 6 1 * * /opt/scripts/monthly_report.sh\n\n# Log rotation\n0 0 * * 0 /usr/sbin/logrotate /etc/logrotate.conf\n45 23 * * 1-5 /home/admin/cleanup.sh"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "cron_list.py"},
+      {"type": "run", "cmd": "python cron_list.py crontab.txt", "exit": 0},
+      {"type": "file_match", "path": "cron_report.txt", "text": "/usr/local/bin/backup.sh"},
+      {"type": "file_match", "path": "cron_report.txt", "text": "Total jobs: 5"}
+    ],
+    "tags": ["python", "sysadmin", "cron", "scheduling"]
+  },
+  {
+    "id": "mb-327",
+    "cat": "sysadmin",
+    "diff": "easy",
+    "title": "Simple Uptime SLA Calculator",
+    "src": "m/agents",
+    "prompt": "Write a Python script `sla_calc.py` that reads a JSON file (first argument) containing an array of objects with `timestamp` and `status` fields (status is `up` or `down`). Calculate the uptime percentage as `(up_count / total_count) * 100` rounded to 2 decimal places. Write `sla_report.txt` containing: `Total checks: N`, `Up: N`, `Down: N`, `Uptime: XX.XX%`.",
+    "input": {
+      "status.json": "[{\"timestamp\":\"2026-04-01T00:00:00Z\",\"status\":\"up\"},{\"timestamp\":\"2026-04-01T00:05:00Z\",\"status\":\"up\"},{\"timestamp\":\"2026-04-01T00:10:00Z\",\"status\":\"up\"},{\"timestamp\":\"2026-04-01T00:15:00Z\",\"status\":\"down\"},{\"timestamp\":\"2026-04-01T00:20:00Z\",\"status\":\"up\"},{\"timestamp\":\"2026-04-01T00:25:00Z\",\"status\":\"up\"},{\"timestamp\":\"2026-04-01T00:30:00Z\",\"status\":\"down\"},{\"timestamp\":\"2026-04-01T00:35:00Z\",\"status\":\"up\"},{\"timestamp\":\"2026-04-01T00:40:00Z\",\"status\":\"up\"},{\"timestamp\":\"2026-04-01T00:45:00Z\",\"status\":\"up\"},{\"timestamp\":\"2026-04-01T00:50:00Z\",\"status\":\"up\"},{\"timestamp\":\"2026-04-01T00:55:00Z\",\"status\":\"up\"},{\"timestamp\":\"2026-04-01T01:00:00Z\",\"status\":\"up\"},{\"timestamp\":\"2026-04-01T01:05:00Z\",\"status\":\"up\"},{\"timestamp\":\"2026-04-01T01:10:00Z\",\"status\":\"up\"},{\"timestamp\":\"2026-04-01T01:15:00Z\",\"status\":\"up\"},{\"timestamp\":\"2026-04-01T01:20:00Z\",\"status\":\"up\"},{\"timestamp\":\"2026-04-01T01:25:00Z\",\"status\":\"up\"},{\"timestamp\":\"2026-04-01T01:30:00Z\",\"status\":\"down\"},{\"timestamp\":\"2026-04-01T01:35:00Z\",\"status\":\"up\"}]"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "sla_calc.py"},
+      {"type": "run", "cmd": "python sla_calc.py status.json", "exit": 0},
+      {"type": "file_match", "path": "sla_report.txt", "text": "Uptime: 85.00%"},
+      {"type": "file_match", "path": "sla_report.txt", "text": "Down: 3"}
+    ],
+    "tags": ["python", "sysadmin", "uptime", "sla"]
+  },
+  {
+    "id": "mb-328",
+    "cat": "sysadmin",
+    "diff": "easy",
+    "title": "Detect Duplicate User UIDs",
+    "src": "m/agents",
+    "prompt": "Write a Python script `uid_audit.py` that reads a passwd-style file (first argument) and detects any duplicate UIDs. Each line in the passwd file has the format `username:x:UID:GID:info:home:shell`. Write `uid_report.txt` listing each duplicate UID group as `UID UID_NUM: user1, user2, ...` (one line per duplicate UID). End with `Duplicates found: N` (count of duplicate UID groups, 0 if none).",
+    "input": {
+      "passwd": "root:x:0:0:root:/root:/bin/bash\ndaemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin\nwww-data:x:33:33:www-data:/var/www:/usr/sbin/nologin\nnginx:x:33:33:nginx:/var/www:/usr/sbin/nologin\npostgres:x:108:114:PostgreSQL:/var/lib/postgresql:/bin/bash\nmysql:x:109:115:MySQL Server:/var/lib/mysql:/bin/false\nbackup_user:x:0:0:Backup Root:/backup:/bin/bash\nnobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin\nappuser:x:1001:1001:App User:/home/appuser:/bin/bash\ndeployuser:x:1001:1001:Deploy:/home/deploy:/bin/bash"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "uid_audit.py"},
+      {"type": "run", "cmd": "python uid_audit.py passwd", "exit": 0},
+      {"type": "file_match", "path": "uid_report.txt", "text": "root, backup_user"},
+      {"type": "file_match", "path": "uid_report.txt", "text": "Duplicates found: 3"}
+    ],
+    "tags": ["python", "sysadmin", "users", "security"]
+  },
+  {
+    "id": "mb-329",
+    "cat": "sysadmin",
+    "diff": "easy",
+    "title": "Generate Backup Manifest",
+    "src": "m/automation",
+    "prompt": "Write a Python script `backup_manifest.py` that reads a JSON file (first argument) containing an array of objects with fields `filename`, `size_bytes`, and `md5`. Generate `manifest.txt` with each line as `MD5  SIZE  FILENAME` (separated by two spaces). Include a header line `# Backup Manifest — FILE_COUNT files, TOTAL_SIZE bytes`. The total size should be the sum of all size_bytes values.",
+    "input": {
+      "files.json": "[{\"filename\":\"db_dump_2026-04-01.sql.gz\",\"size_bytes\":52428800,\"md5\":\"a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6\"},{\"filename\":\"config_backup.tar.gz\",\"size_bytes\":1048576,\"md5\":\"f1e2d3c4b5a6f7e8d9c0b1a2f3e4d5c6\"},{\"filename\":\"logs_2026-04-01.tar.gz\",\"size_bytes\":10485760,\"md5\":\"1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d\"},{\"filename\":\"media_assets.tar.gz\",\"size_bytes\":209715200,\"md5\":\"b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7\"}]"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "backup_manifest.py"},
+      {"type": "run", "cmd": "python backup_manifest.py files.json", "exit": 0},
+      {"type": "file_match", "path": "manifest.txt", "text": "4 files, 273678336 bytes"},
+      {"type": "file_match", "path": "manifest.txt", "text": "a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6"}
+    ],
+    "tags": ["python", "sysadmin", "backup", "manifest"]
+  },
+  {
+    "id": "mb-330",
+    "cat": "sysadmin",
+    "diff": "easy",
+    "title": "Extract Error Lines from Syslog",
+    "src": "m/agents",
+    "prompt": "Write a Python script `syslog_errors.py` that reads a syslog-style file (first argument) and extracts all lines containing the words `error`, `critical`, or `fatal` (case-insensitive). Write matching lines to `errors.txt` preserving original order. Write a summary to `error_summary.txt` with counts: `error: N`, `critical: N`, `fatal: N`, `total: N`.",
+    "input": {
+      "syslog": "Apr 10 08:00:01 server1 systemd[1]: Started Session 42.\nApr 10 08:00:05 server1 kernel: EXT4-fs error (device sda1): bad inode\nApr 10 08:01:12 server1 sshd[2345]: Accepted publickey for admin\nApr 10 08:02:30 server1 nginx[789]: 2026/04/10 08:02:30 [error] upstream timed out\nApr 10 08:03:45 server1 kernel: CRITICAL: thermal zone 0 exceeded threshold\nApr 10 08:04:00 server1 cron[101]: (root) CMD (/usr/local/bin/check.sh)\nApr 10 08:05:22 server1 app[456]: FATAL: database connection refused\nApr 10 08:06:10 server1 systemd[1]: Started Daily Cleanup.\nApr 10 08:07:33 server1 kernel: Error: NMI watchdog: BUG: soft lockup\nApr 10 08:08:00 server1 sshd[2346]: Failed password for invalid user test"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "syslog_errors.py"},
+      {"type": "run", "cmd": "python syslog_errors.py syslog", "exit": 0},
+      {"type": "line_count", "path": "errors.txt", "min": 5, "max": 5},
+      {"type": "file_match", "path": "error_summary.txt", "text": "total: 5"}
+    ],
+    "tags": ["python", "sysadmin", "logs", "syslog"]
+  },
+  {
+    "id": "mb-331",
+    "cat": "sysadmin",
+    "diff": "easy",
+    "title": "Check SSL Certificate Expiry Dates",
+    "src": "m/agents",
+    "prompt": "Write a Python script `cert_check.py` that reads a JSON file (first argument) with an array of objects containing `domain`, `issuer`, and `expiry_date` (YYYY-MM-DD format). The script should check each certificate against the date 2026-04-10. Write `cert_report.txt` with one line per domain: `domain — VALID (N days remaining)` or `domain — EXPIRED (N days ago)`. End with `Expired: N, Valid: M`.",
+    "input": {
+      "certs.json": "[{\"domain\":\"example.com\",\"issuer\":\"Let's Encrypt\",\"expiry_date\":\"2026-06-15\"},{\"domain\":\"api.example.com\",\"issuer\":\"DigiCert\",\"expiry_date\":\"2026-03-01\"},{\"domain\":\"staging.example.com\",\"issuer\":\"Let's Encrypt\",\"expiry_date\":\"2026-04-12\"},{\"domain\":\"legacy.example.com\",\"issuer\":\"Comodo\",\"expiry_date\":\"2025-12-31\"},{\"domain\":\"shop.example.com\",\"issuer\":\"Let's Encrypt\",\"expiry_date\":\"2026-08-20\"}]"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "cert_check.py"},
+      {"type": "run", "cmd": "python cert_check.py certs.json", "exit": 0},
+      {"type": "file_match", "path": "cert_report.txt", "text": "example.com"},
+      {"type": "file_match", "path": "cert_report.txt", "text": "Expired: 2, Valid: 3"}
+    ],
+    "tags": ["python", "sysadmin", "ssl", "certificates"]
+  },
+  {
+    "id": "mb-332",
+    "cat": "sysadmin",
+    "diff": "easy",
+    "title": "Parse Ping Output for Latency Stats",
+    "src": "m/agents",
+    "prompt": "Write a Python script `ping_stats.py` that reads a file (first argument) containing ping-like output lines in the format `64 bytes from HOST: icmp_seq=N ttl=T time=X.Y ms`. Extract all time values and write `ping_report.txt` with: `Packets: N`, `Min: X.XX ms`, `Max: X.XX ms`, `Avg: X.XX ms`, `Packet loss: 0%` (assume all packets arrived).",
+    "input": {
+      "ping.txt": "PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.\n64 bytes from 8.8.8.8: icmp_seq=1 ttl=117 time=12.3 ms\n64 bytes from 8.8.8.8: icmp_seq=2 ttl=117 time=11.8 ms\n64 bytes from 8.8.8.8: icmp_seq=3 ttl=117 time=45.2 ms\n64 bytes from 8.8.8.8: icmp_seq=4 ttl=117 time=13.1 ms\n64 bytes from 8.8.8.8: icmp_seq=5 ttl=117 time=10.5 ms\n64 bytes from 8.8.8.8: icmp_seq=6 ttl=117 time=11.0 ms\n64 bytes from 8.8.8.8: icmp_seq=7 ttl=117 time=14.7 ms\n64 bytes from 8.8.8.8: icmp_seq=8 ttl=117 time=12.0 ms\n\n--- 8.8.8.8 ping statistics ---\n8 packets transmitted, 8 received, 0% packet loss, time 7010ms\nrtt min/avg/max/mdev = 10.5/16.325/45.2/10.873 ms"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "ping_stats.py"},
+      {"type": "run", "cmd": "python ping_stats.py ping.txt", "exit": 0},
+      {"type": "file_match", "path": "ping_report.txt", "text": "Packets: 8"},
+      {"type": "file_match", "path": "ping_report.txt", "text": "Min: 10.50 ms"}
+    ],
+    "tags": ["python", "sysadmin", "network", "ping"]
+  },
+  {
+    "id": "mb-333",
+    "cat": "sysadmin",
+    "diff": "easy",
+    "title": "Server Inventory Summary from CSV",
+    "src": "m/builds",
+    "prompt": "Write a Python script `inventory.py` that reads a CSV file (first argument) with columns `hostname,ip,os,role,status` and generates `inventory_report.txt`. The report should contain: count of servers per OS, count per role, count per status, and total server count. Format each section with a header like `--- By OS ---` followed by `OS_NAME: COUNT` lines sorted alphabetically.",
+    "input": {
+      "servers.csv": "hostname,ip,os,role,status\nweb01,192.168.1.10,Ubuntu 22.04,web,active\nweb02,192.168.1.11,Ubuntu 22.04,web,active\ndb01,192.168.1.20,CentOS 9,database,active\ndb02,192.168.1.21,CentOS 9,database,maintenance\ncache01,192.168.1.30,Ubuntu 22.04,cache,active\nmonitor01,192.168.1.40,Debian 12,monitoring,active\nci01,192.168.1.50,Ubuntu 22.04,ci,active\nbackup01,192.168.1.60,Debian 12,backup,active\nstaging01,192.168.1.70,CentOS 9,web,inactive\nlb01,192.168.1.80,Ubuntu 22.04,loadbalancer,active"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "inventory.py"},
+      {"type": "run", "cmd": "python inventory.py servers.csv", "exit": 0},
+      {"type": "file_match", "path": "inventory_report.txt", "text": "Ubuntu 22.04: 5"},
+      {"type": "file_match", "path": "inventory_report.txt", "text": "Total: 10"}
+    ],
+    "tags": ["python", "sysadmin", "inventory", "csv"]
+  },
+  {
+    "id": "mb-334",
+    "cat": "sysadmin",
+    "diff": "easy",
+    "title": "Identify Failed SSH Logins",
+    "src": "m/agents",
+    "prompt": "Write a Python script `ssh_fails.py` that reads an auth-log-style file (first argument) and extracts all lines containing `Failed password`. Count failures per source IP. Write `ssh_fail_report.txt` with lines formatted as `IP: COUNT failures` sorted by count descending. End with `Total failed attempts: N`.",
+    "input": {
+      "auth.log": "Apr 10 08:01:00 server sshd[1001]: Accepted publickey for admin from 10.0.0.1 port 22\nApr 10 08:02:15 server sshd[1002]: Failed password for root from 203.0.113.50 port 22\nApr 10 08:02:18 server sshd[1003]: Failed password for root from 203.0.113.50 port 22\nApr 10 08:02:20 server sshd[1004]: Failed password for root from 203.0.113.50 port 22\nApr 10 08:03:00 server sshd[1005]: Accepted password for deploy from 10.0.0.2 port 22\nApr 10 08:04:10 server sshd[1006]: Failed password for admin from 198.51.100.23 port 22\nApr 10 08:04:12 server sshd[1007]: Failed password for admin from 198.51.100.23 port 22\nApr 10 08:05:30 server sshd[1008]: Failed password for invalid user test from 192.0.2.100 port 22\nApr 10 08:06:00 server sshd[1009]: Accepted publickey for admin from 10.0.0.1 port 22\nApr 10 08:07:45 server sshd[1010]: Failed password for root from 203.0.113.50 port 22"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "ssh_fails.py"},
+      {"type": "run", "cmd": "python ssh_fails.py auth.log", "exit": 0},
+      {"type": "file_match", "path": "ssh_fail_report.txt", "text": "203.0.113.50: 4 failures"},
+      {"type": "file_match", "path": "ssh_fail_report.txt", "text": "Total failed attempts: 7"}
+    ],
+    "tags": ["python", "sysadmin", "ssh", "security", "logs"]
+  },
+  {
+    "id": "mb-335",
+    "cat": "sysadmin",
+    "diff": "medium",
+    "title": "Nginx Config Generator from JSON",
+    "src": "m/automation",
+    "prompt": "Write a Python script `nginx_gen.py` that reads a JSON file (first argument) containing an array of site definitions, each with `domain`, `port`, `root`, and optional `ssl` (boolean). Generate a valid nginx config file `sites.conf` with one `server` block per site. SSL sites should listen on 443 with `ssl_certificate` and `ssl_certificate_key` paths at `/etc/ssl/DOMAIN.crt` and `/etc/ssl/DOMAIN.key`. Non-SSL sites listen on 80. Each block must include `server_name`, `root`, and a `location /` with `proxy_pass http://127.0.0.1:PORT`.",
+    "input": {
+      "sites.json": "[{\"domain\":\"example.com\",\"port\":3000,\"root\":\"/var/www/example\",\"ssl\":true},{\"domain\":\"api.example.com\",\"port\":8080,\"root\":\"/var/www/api\",\"ssl\":true},{\"domain\":\"staging.example.com\",\"port\":3001,\"root\":\"/var/www/staging\",\"ssl\":false},{\"domain\":\"internal.local\",\"port\":9090,\"root\":\"/var/www/internal\",\"ssl\":false}]"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "nginx_gen.py"},
+      {"type": "run", "cmd": "python nginx_gen.py sites.json", "exit": 0},
+      {"type": "file_match", "path": "sites.conf", "text": "server_name example.com"},
+      {"type": "file_match", "path": "sites.conf", "text": "proxy_pass http://127.0.0.1:8080"},
+      {"type": "file_match", "path": "sites.conf", "text": "/etc/ssl/example.com.crt"}
+    ],
+    "tags": ["python", "sysadmin", "nginx", "config", "generation"]
+  },
+  {
+    "id": "mb-336",
+    "cat": "sysadmin",
+    "diff": "medium",
+    "title": "Log Rotation Simulator",
+    "src": "m/automation",
+    "prompt": "Write a Python script `logrotate.py` that simulates log rotation. It takes a log file path (first argument) and a max size in bytes (second argument). If the file exceeds the max size, it should: (1) rename the existing file by appending `.1` (if `.1` exists, rename it to `.2`, etc., up to `.3` — delete `.3` if it exists before shifting), (2) create a new empty file with the original name. Write a summary to `rotation_log.txt` listing actions taken. If the file does not exceed the max size, write `No rotation needed — FILE_SIZE bytes < MAX_SIZE bytes`.",
+    "input": {
+      "app.log": "2026-04-10 08:00:01 INFO Application started successfully\n2026-04-10 08:00:02 DEBUG Loading configuration from /etc/app/config.yml\n2026-04-10 08:00:03 INFO Connected to database at 10.0.0.50:5432\n2026-04-10 08:00:04 WARN Connection pool nearing capacity: 45/50\n2026-04-10 08:00:05 ERROR Failed to process request ID 12345: timeout after 30s\n2026-04-10 08:00:06 INFO Request processed: GET /api/users — 200 OK — 45ms\n2026-04-10 08:00:07 DEBUG Cache hit ratio: 0.87\n2026-04-10 08:00:08 INFO Health check passed: all services responsive\n2026-04-10 08:00:09 WARN Disk usage at 85% on /var/log\n2026-04-10 08:00:10 ERROR Authentication failed for user admin from 203.0.113.50"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "logrotate.py"},
+      {"type": "run", "cmd": "python logrotate.py app.log 100", "exit": 0},
+      {"type": "file_exists", "path": "app.log.1"},
+      {"type": "file_exists", "path": "rotation_log.txt"},
+      {"type": "file_match", "path": "rotation_log.txt", "text": "app.log"}
+    ],
+    "tags": ["python", "sysadmin", "logrotate", "file-management"]
+  },
+  {
+    "id": "mb-337",
+    "cat": "sysadmin",
+    "diff": "medium",
+    "title": "CPU and Memory Trend Analysis",
+    "src": "m/agents",
+    "prompt": "Write a Python script `resource_trend.py` that reads a CSV file (first argument) with columns `timestamp,cpu_percent,memory_percent,disk_percent`. Compute: average, min, max for each metric. Detect any metric that exceeds 90% and list those timestamps as alerts. Write `resource_report.txt` with sections `--- CPU ---`, `--- Memory ---`, `--- Disk ---` each with Avg/Min/Max lines, then a `--- Alerts ---` section listing `TIMESTAMP: METRIC at VALUE%`. End with `Alert count: N`.",
+    "input": {
+      "metrics.csv": "timestamp,cpu_percent,memory_percent,disk_percent\n2026-04-10T08:00:00,45.2,62.1,71.0\n2026-04-10T08:05:00,52.8,65.3,71.0\n2026-04-10T08:10:00,91.5,68.0,71.1\n2026-04-10T08:15:00,38.1,92.4,71.1\n2026-04-10T08:20:00,55.0,70.2,71.2\n2026-04-10T08:25:00,48.3,66.8,91.5\n2026-04-10T08:30:00,95.2,88.5,71.2\n2026-04-10T08:35:00,42.0,63.1,71.3\n2026-04-10T08:40:00,50.5,67.9,71.3\n2026-04-10T08:45:00,44.8,64.5,71.4"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "resource_trend.py"},
+      {"type": "run", "cmd": "python resource_trend.py metrics.csv", "exit": 0},
+      {"type": "file_match", "path": "resource_report.txt", "text": "--- CPU ---"},
+      {"type": "file_match", "path": "resource_report.txt", "text": "Alert count: 4"}
+    ],
+    "tags": ["python", "sysadmin", "monitoring", "resources", "csv"]
+  },
+  {
+    "id": "mb-338",
+    "cat": "sysadmin",
+    "diff": "medium",
+    "title": "Health Check Script with Port Simulation",
+    "src": "m/agents",
+    "prompt": "Write a Python script `health_check.py` that reads a JSON config file (first argument) defining services to check, each with `name`, `host`, `port`, and `expected_status`. Since we cannot do real network checks, the script should read a second JSON file `service_state.json` (second argument) that maps `host:port` to `up` or `down`. Compare actual state to expected. Write `health_report.txt` with one line per service: `[OK] name (host:port)` or `[FAIL] name (host:port) — expected STATUS, got ACTUAL`. End with `Healthy: N/M`.",
+    "input": {
+      "services.json": "[{\"name\":\"Web Server\",\"host\":\"192.168.1.10\",\"port\":80,\"expected_status\":\"up\"},{\"name\":\"Database\",\"host\":\"192.168.1.20\",\"port\":5432,\"expected_status\":\"up\"},{\"name\":\"Cache\",\"host\":\"192.168.1.30\",\"port\":6379,\"expected_status\":\"up\"},{\"name\":\"Queue\",\"host\":\"192.168.1.40\",\"port\":5672,\"expected_status\":\"up\"},{\"name\":\"Search\",\"host\":\"192.168.1.50\",\"port\":9200,\"expected_status\":\"up\"}]",
+      "service_state.json": "{\"192.168.1.10:80\":\"up\",\"192.168.1.20:5432\":\"up\",\"192.168.1.30:6379\":\"down\",\"192.168.1.40:5672\":\"up\",\"192.168.1.50:9200\":\"down\"}"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "health_check.py"},
+      {"type": "run", "cmd": "python health_check.py services.json service_state.json", "exit": 0},
+      {"type": "file_match", "path": "health_report.txt", "text": "[OK] Web Server"},
+      {"type": "file_match", "path": "health_report.txt", "text": "[FAIL] Cache"},
+      {"type": "file_match", "path": "health_report.txt", "text": "Healthy: 3/5"}
+    ],
+    "tags": ["python", "sysadmin", "health-check", "monitoring"]
+  },
+  {
+    "id": "mb-339",
+    "cat": "sysadmin",
+    "diff": "medium",
+    "title": "Backup Rotation Policy Enforcer",
+    "src": "m/automation",
+    "prompt": "Write a Python script `backup_rotate.py` that reads a JSON file (first argument) containing an array of backup records with `filename`, `date` (YYYY-MM-DD), and `size_bytes`. Apply a retention policy: keep all backups from the last 7 days (relative to 2026-04-10), keep only one per week for 8-30 days old (the newest in each week), delete anything older than 30 days. Write `retention_plan.txt` listing each backup as `KEEP filename (reason)` or `DELETE filename (reason)`. End with `Keep: N, Delete: M, Space saved: S bytes`.",
+    "input": {
+      "backups.json": "[{\"filename\":\"backup-2026-04-10.tar.gz\",\"date\":\"2026-04-10\",\"size_bytes\":5242880},{\"filename\":\"backup-2026-04-09.tar.gz\",\"date\":\"2026-04-09\",\"size_bytes\":5300000},{\"filename\":\"backup-2026-04-08.tar.gz\",\"date\":\"2026-04-08\",\"size_bytes\":5100000},{\"filename\":\"backup-2026-04-05.tar.gz\",\"date\":\"2026-04-05\",\"size_bytes\":4900000},{\"filename\":\"backup-2026-04-04.tar.gz\",\"date\":\"2026-04-04\",\"size_bytes\":5000000},{\"filename\":\"backup-2026-04-01.tar.gz\",\"date\":\"2026-04-01\",\"size_bytes\":5150000},{\"filename\":\"backup-2026-03-28.tar.gz\",\"date\":\"2026-03-28\",\"size_bytes\":4800000},{\"filename\":\"backup-2026-03-25.tar.gz\",\"date\":\"2026-03-25\",\"size_bytes\":4700000},{\"filename\":\"backup-2026-03-20.tar.gz\",\"date\":\"2026-03-20\",\"size_bytes\":4600000},{\"filename\":\"backup-2026-03-15.tar.gz\",\"date\":\"2026-03-15\",\"size_bytes\":4500000},{\"filename\":\"backup-2026-03-01.tar.gz\",\"date\":\"2026-03-01\",\"size_bytes\":4400000},{\"filename\":\"backup-2026-02-15.tar.gz\",\"date\":\"2026-02-15\",\"size_bytes\":4300000}]"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "backup_rotate.py"},
+      {"type": "run", "cmd": "python backup_rotate.py backups.json", "exit": 0},
+      {"type": "file_match", "path": "retention_plan.txt", "text": "KEEP backup-2026-04-10.tar.gz"},
+      {"type": "file_match", "path": "retention_plan.txt", "text": "DELETE backup-2026-02-15.tar.gz"},
+      {"type": "file_match", "path": "retention_plan.txt", "text": "Space saved:"}
+    ],
+    "tags": ["python", "sysadmin", "backup", "retention", "policy"]
+  },
+  {
+    "id": "mb-340",
+    "cat": "sysadmin",
+    "diff": "medium",
+    "title": "Alert Rule Evaluator Against Metrics",
+    "src": "m/agents",
+    "prompt": "Write a Python script `alert_eval.py` that reads two JSON files: a rules file (first argument) with an array of objects containing `name`, `metric`, `operator` (gt, lt, gte, lte, eq), `threshold`, and `severity`; and a metrics file (second argument) with an object mapping metric names to current values. Evaluate each rule against the metrics. Write `alert_output.json` as a JSON array of triggered alerts with `rule_name`, `metric`, `current_value`, `threshold`, `severity`. Also write `alert_summary.txt` with `Rules evaluated: N`, `Alerts triggered: M`, and one line per triggered alert: `[SEVERITY] rule_name: metric = value (threshold: OP threshold)`.",
+    "input": {
+      "rules.json": "[{\"name\":\"High CPU\",\"metric\":\"cpu_percent\",\"operator\":\"gt\",\"threshold\":80,\"severity\":\"critical\"},{\"name\":\"Memory Warning\",\"metric\":\"memory_percent\",\"operator\":\"gt\",\"threshold\":70,\"severity\":\"warning\"},{\"name\":\"Low Disk\",\"metric\":\"disk_free_gb\",\"operator\":\"lt\",\"threshold\":10,\"severity\":\"critical\"},{\"name\":\"High Latency\",\"metric\":\"response_ms\",\"operator\":\"gt\",\"threshold\":500,\"severity\":\"warning\"},{\"name\":\"Error Rate\",\"metric\":\"error_rate\",\"operator\":\"gt\",\"threshold\":0.05,\"severity\":\"critical\"},{\"name\":\"Queue Depth\",\"metric\":\"queue_size\",\"operator\":\"gt\",\"threshold\":1000,\"severity\":\"warning\"}]",
+      "metrics.json": "{\"cpu_percent\":85.3,\"memory_percent\":68.2,\"disk_free_gb\":5.1,\"response_ms\":320,\"error_rate\":0.08,\"queue_size\":450}"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "alert_eval.py"},
+      {"type": "run", "cmd": "python alert_eval.py rules.json metrics.json", "exit": 0},
+      {"type": "json_valid", "path": "alert_output.json", "is_array": true, "min_length": 3},
+      {"type": "file_match", "path": "alert_summary.txt", "text": "Alerts triggered: 3"}
+    ],
+    "tags": ["python", "sysadmin", "alerting", "monitoring", "json"]
+  },
+  {
+    "id": "mb-341",
+    "cat": "sysadmin",
+    "diff": "medium",
+    "title": "Parse Traceroute and Detect Latency Spikes",
+    "src": "m/agents",
+    "prompt": "Write a Python script `traceroute_analyze.py` that reads a traceroute-style output file (first argument). Each hop line has format `N  HOSTNAME (IP)  TIME1 ms  TIME2 ms  TIME3 ms` (some may show `* * *` for timeouts). Compute average latency per hop, identify hops where average latency exceeds the previous hop by more than 50ms (latency spike), and detect timeout hops. Write `traceroute_report.txt` with each hop as `Hop N: HOST (IP) avg=X.XX ms` or `Hop N: * * * (timeout)`, a `--- Spikes ---` section listing spike hops, and `--- Summary ---` with total hops, timeout count, and spike count.",
+    "input": {
+      "traceroute.txt": "traceroute to example.com (93.184.216.34), 15 hops max, 60 byte packets\n 1  gateway (192.168.1.1)  1.234 ms  0.987 ms  1.102 ms\n 2  isp-router (10.0.0.1)  8.543 ms  9.012 ms  8.234 ms\n 3  core-router.isp.net (172.16.0.1)  12.456 ms  11.987 ms  12.102 ms\n 4  * * *\n 5  peer1.exchange.net (198.51.100.1)  15.678 ms  14.234 ms  15.102 ms\n 6  backbone.carrier.net (203.0.113.10)  85.432 ms  82.109 ms  87.654 ms\n 7  edge.cdn.net (203.0.113.50)  90.123 ms  88.456 ms  91.234 ms\n 8  example.com (93.184.216.34)  92.345 ms  91.012 ms  93.456 ms"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "traceroute_analyze.py"},
+      {"type": "run", "cmd": "python traceroute_analyze.py traceroute.txt", "exit": 0},
+      {"type": "file_match", "path": "traceroute_report.txt", "text": "timeout"},
+      {"type": "file_match", "path": "traceroute_report.txt", "text": "--- Spikes ---"}
+    ],
+    "tags": ["python", "sysadmin", "network", "traceroute", "diagnostics"]
+  },
+  {
+    "id": "mb-342",
+    "cat": "sysadmin",
+    "diff": "medium",
+    "title": "Multi-Service Log Aggregator",
+    "src": "m/builds",
+    "prompt": "Write a Python script `log_aggregate.py` that reads multiple log files specified as command-line arguments. Each log line starts with a timestamp in ISO format `YYYY-MM-DDTHH:MM:SS`. The script must: (1) merge all lines chronologically, (2) tag each line with its source filename, (3) write the merged output to `merged.log` with format `[SOURCE] ORIGINAL_LINE`. Also write `aggregate_stats.txt` with per-file line counts and the total across all files.",
+    "input": {
+      "web.log": "2026-04-10T08:00:01 GET /index.html 200\n2026-04-10T08:00:05 GET /api/data 200\n2026-04-10T08:00:12 POST /api/submit 201\n2026-04-10T08:00:20 GET /static/app.js 304",
+      "app.log": "2026-04-10T08:00:02 INFO Starting request handler\n2026-04-10T08:00:06 DEBUG Processing API call\n2026-04-10T08:00:13 INFO Form submission received\n2026-04-10T08:00:15 WARN Slow query detected: 250ms",
+      "db.log": "2026-04-10T08:00:03 QUERY SELECT * FROM users LIMIT 10 — 5ms\n2026-04-10T08:00:07 QUERY SELECT * FROM data WHERE id=42 — 12ms\n2026-04-10T08:00:14 INSERT INTO submissions VALUES(...) — 8ms"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "log_aggregate.py"},
+      {"type": "run", "cmd": "python log_aggregate.py web.log app.log db.log", "exit": 0},
+      {"type": "file_match", "path": "merged.log", "text": "[web.log]"},
+      {"type": "line_count", "path": "merged.log", "min": 11, "max": 11},
+      {"type": "file_match", "path": "aggregate_stats.txt", "text": "Total: 11"}
+    ],
+    "tags": ["python", "sysadmin", "logs", "aggregation", "merge"]
+  },
+  {
+    "id": "mb-343",
+    "cat": "sysadmin",
+    "diff": "medium",
+    "title": "Firewall Rule Conflict Detector",
+    "src": "m/agents",
+    "prompt": "Write a Python script `fw_check.py` that reads a JSON file (first argument) containing firewall rules, each with `id`, `action` (allow/deny), `protocol` (tcp/udp/any), `src_ip` (CIDR or `any`), `dst_port` (integer or `any`), and `priority` (lower = higher priority). Detect conflicts: two rules that match the same traffic (overlapping src_ip and dst_port and protocol) but have different actions. Write `fw_report.txt` listing each conflict pair as `CONFLICT: rule ID1 (ACTION) vs rule ID2 (ACTION) — REASON`. End with `Total conflicts: N`. For this task, treat `any` as matching everything, and two IPs conflict if they are identical or either is `any`.",
+    "input": {
+      "rules.json": "[{\"id\":\"R1\",\"action\":\"allow\",\"protocol\":\"tcp\",\"src_ip\":\"any\",\"dst_port\":80,\"priority\":10},{\"id\":\"R2\",\"action\":\"deny\",\"protocol\":\"tcp\",\"src_ip\":\"192.168.1.0/24\",\"dst_port\":80,\"priority\":20},{\"id\":\"R3\",\"action\":\"allow\",\"protocol\":\"tcp\",\"src_ip\":\"10.0.0.0/8\",\"dst_port\":443,\"priority\":10},{\"id\":\"R4\",\"action\":\"deny\",\"protocol\":\"any\",\"src_ip\":\"any\",\"dst_port\":\"any\",\"priority\":100},{\"id\":\"R5\",\"action\":\"allow\",\"protocol\":\"udp\",\"src_ip\":\"any\",\"dst_port\":53,\"priority\":5},{\"id\":\"R6\",\"action\":\"allow\",\"protocol\":\"tcp\",\"src_ip\":\"172.16.0.0/12\",\"dst_port\":22,\"priority\":15}]"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "fw_check.py"},
+      {"type": "run", "cmd": "python fw_check.py rules.json", "exit": 0},
+      {"type": "file_match", "path": "fw_report.txt", "text": "CONFLICT"},
+      {"type": "file_match", "path": "fw_report.txt", "text": "Total conflicts:"}
+    ],
+    "tags": ["python", "sysadmin", "firewall", "security", "network"]
+  },
+  {
+    "id": "mb-344",
+    "cat": "sysadmin",
+    "diff": "medium",
+    "title": "DNS Zone File Validator",
+    "src": "m/agents",
+    "prompt": "Write a Python script `dns_validate.py` that reads a simplified DNS zone file (first argument). Valid record types are A, AAAA, CNAME, MX, TXT, NS. Each line has format `NAME TTL TYPE VALUE` (space-separated, TTL is an integer). Validate: (1) TTL must be between 60 and 86400, (2) A records must have valid IPv4 addresses, (3) CNAME records cannot coexist with other records for the same NAME, (4) MX records must have format `PRIORITY DOMAIN`. Write `dns_report.txt` with `[VALID] line` or `[ERROR] line — reason` for each record, and a summary `Valid: N, Errors: M`.",
+    "input": {
+      "zone.txt": "@ 3600 A 93.184.216.34\n@ 3600 AAAA 2606:2800:220:1:248:1893:25c8:1946\nwww 300 CNAME example.com.\nmail 3600 A 93.184.216.35\nmail 3600 MX 10 mail.example.com.\n@ 3600 NS ns1.example.com.\n@ 3600 NS ns2.example.com.\ntest 50 A 10.0.0.1\nbad 3600 A 999.999.999.999\nwww 3600 A 93.184.216.36\nftp 100000 A 93.184.216.37"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "dns_validate.py"},
+      {"type": "run", "cmd": "python dns_validate.py zone.txt", "exit": 0},
+      {"type": "file_match", "path": "dns_report.txt", "text": "[ERROR]"},
+      {"type": "file_match", "path": "dns_report.txt", "text": "Errors:"}
+    ],
+    "tags": ["python", "sysadmin", "dns", "validation", "config"]
+  },
+  {
+    "id": "mb-345",
+    "cat": "sysadmin",
+    "diff": "medium",
+    "title": "Apache VHost Analyzer",
+    "src": "m/automation",
+    "prompt": "Write a Python script `vhost_analyze.py` that reads an Apache-style VirtualHost configuration file (first argument) and extracts information about each VirtualHost block. For each block, capture the `ServerName`, `DocumentRoot`, `Port` (from the `<VirtualHost *:PORT>` line), and whether SSL is enabled (look for `SSLEngine on`). Write `vhost_report.json` as a JSON array of objects with fields `server_name`, `document_root`, `port`, `ssl_enabled`. Also write `vhost_summary.txt` with total VHosts count, SSL-enabled count, and a list of all server names.",
+    "input": {
+      "vhosts.conf": "<VirtualHost *:80>\n    ServerName example.com\n    DocumentRoot /var/www/example\n    ErrorLog ${APACHE_LOG_DIR}/example-error.log\n</VirtualHost>\n\n<VirtualHost *:443>\n    ServerName secure.example.com\n    DocumentRoot /var/www/secure\n    SSLEngine on\n    SSLCertificateFile /etc/ssl/secure.crt\n    SSLCertificateKeyFile /etc/ssl/secure.key\n</VirtualHost>\n\n<VirtualHost *:80>\n    ServerName blog.example.com\n    DocumentRoot /var/www/blog\n    ErrorLog ${APACHE_LOG_DIR}/blog-error.log\n</VirtualHost>\n\n<VirtualHost *:443>\n    ServerName api.example.com\n    DocumentRoot /var/www/api\n    SSLEngine on\n    SSLCertificateFile /etc/ssl/api.crt\n    SSLCertificateKeyFile /etc/ssl/api.key\n</VirtualHost>\n\n<VirtualHost *:8080>\n    ServerName internal.example.com\n    DocumentRoot /var/www/internal\n</VirtualHost>"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "vhost_analyze.py"},
+      {"type": "run", "cmd": "python vhost_analyze.py vhosts.conf", "exit": 0},
+      {"type": "json_valid", "path": "vhost_report.json", "is_array": true, "min_length": 5},
+      {"type": "file_match", "path": "vhost_summary.txt", "text": "SSL-enabled: 2"}
+    ],
+    "tags": ["python", "sysadmin", "apache", "config", "analysis"]
+  },
+  {
+    "id": "mb-346",
+    "cat": "sysadmin",
+    "diff": "medium",
+    "title": "Cron Schedule Conflict Finder",
+    "src": "m/automation",
+    "prompt": "Write a Python script `cron_conflicts.py` that reads a crontab file (first argument) and detects jobs that would run at the same time. Parse standard 5-field cron expressions (minute hour dom month dow). Two jobs conflict if they share any common execution time within a 24-hour window (use 2026-04-10 as the reference day). Write `cron_conflicts.txt` with each conflict pair on a line: `CONFLICT: \"CMD1\" and \"CMD2\" both run at HH:MM`. End with `Total conflicts: N`.",
+    "input": {
+      "crontab": "0 2 * * * /usr/local/bin/backup.sh\n0 2 * * * /usr/local/bin/cleanup.sh\n30 3 * * * /opt/scripts/report.sh\n*/30 * * * * /usr/bin/health_check.sh\n0 * * * * /usr/bin/log_rotate.sh\n15 4 * * * /home/admin/update.sh\n0 4 * * * /usr/bin/log_rotate.sh"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "cron_conflicts.py"},
+      {"type": "run", "cmd": "python cron_conflicts.py crontab", "exit": 0},
+      {"type": "file_match", "path": "cron_conflicts.txt", "text": "CONFLICT"},
+      {"type": "file_match", "path": "cron_conflicts.txt", "text": "backup.sh"},
+      {"type": "file_match", "path": "cron_conflicts.txt", "text": "Total conflicts:"}
+    ],
+    "tags": ["python", "sysadmin", "cron", "scheduling", "conflict"]
+  },
+  {
+    "id": "mb-347",
+    "cat": "sysadmin",
+    "diff": "medium",
+    "title": "Permission Audit from File Listing",
+    "src": "m/agents",
+    "prompt": "Write a Python script `perm_audit.py` that reads a file (first argument) containing `ls -la` style output. Detect security issues: (1) world-writable files (permissions ending in `w`), (2) SUID/SGID binaries (permissions with `s`), (3) files owned by root that are group/world writable. Write `perm_audit.txt` with each finding as `[RISK_LEVEL] path — reason` where RISK_LEVEL is HIGH, MEDIUM, or LOW. End with counts per risk level and total findings.",
+    "input": {
+      "filelist.txt": "total 48\ndrwxr-xr-x  5 root  root   4096 Apr 10 08:00 .\n-rwxr-xr-x  1 root  root  15232 Apr 10 08:00 server_binary\n-rwsr-xr-x  1 root  root  22840 Apr 10 08:00 passwd_helper\n-rw-rw-rw-  1 www   www    1024 Apr 10 08:01 temp_upload.txt\n-rwxr-xr-x  1 deploy deploy 8192 Apr 10 08:00 deploy.sh\n-rw-r--r--  1 root  root    512 Apr 10 08:00 config.yml\n-rwxrwxrwx  1 root  root   4096 Apr 10 08:01 maintenance.sh\n-rwsr-sr-x  1 root  root  11264 Apr 10 08:00 network_tool\n-rw-rw-r--  1 root  staff  2048 Apr 10 08:00 shared_data.csv\ndrwxrwxrwt  2 root  root   4096 Apr 10 08:01 tmp\n-rw-r--r--  1 admin admin   256 Apr 10 08:00 notes.txt"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "perm_audit.py"},
+      {"type": "run", "cmd": "python perm_audit.py filelist.txt", "exit": 0},
+      {"type": "file_match", "path": "perm_audit.txt", "text": "[HIGH]"},
+      {"type": "file_match", "path": "perm_audit.txt", "text": "maintenance.sh"}
+    ],
+    "tags": ["python", "sysadmin", "security", "permissions", "audit"]
+  },
+  {
+    "id": "mb-348",
+    "cat": "sysadmin",
+    "diff": "hard",
+    "title": "Systemd Service Dependency Grapher",
+    "src": "m/builds",
+    "prompt": "Write a Python script `service_deps.py` that reads a JSON file (first argument) containing systemd-like service definitions, each with `name`, `requires` (array of service names), and `wanted_by` (array). Build a dependency graph and detect: (1) circular dependencies, (2) missing dependencies (required service not defined), (3) the correct startup order (topological sort, ignoring cycles). Write `service_order.txt` with the startup order (one service per line) and `service_issues.txt` listing any circular or missing dependency issues found.",
+    "input": {
+      "services.json": "[{\"name\":\"network.service\",\"requires\":[],\"wanted_by\":[\"multi-user.target\"]},{\"name\":\"database.service\",\"requires\":[\"network.service\"],\"wanted_by\":[\"multi-user.target\"]},{\"name\":\"cache.service\",\"requires\":[\"network.service\"],\"wanted_by\":[\"multi-user.target\"]},{\"name\":\"webapp.service\",\"requires\":[\"database.service\",\"cache.service\"],\"wanted_by\":[\"multi-user.target\"]},{\"name\":\"monitoring.service\",\"requires\":[\"webapp.service\",\"network.service\"],\"wanted_by\":[\"multi-user.target\"]},{\"name\":\"backup.service\",\"requires\":[\"database.service\",\"storage.service\"],\"wanted_by\":[\"multi-user.target\"]},{\"name\":\"cycleA.service\",\"requires\":[\"cycleB.service\"],\"wanted_by\":[]},{\"name\":\"cycleB.service\",\"requires\":[\"cycleA.service\"],\"wanted_by\":[]}]"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "service_deps.py"},
+      {"type": "run", "cmd": "python service_deps.py services.json", "exit": 0},
+      {"type": "file_match", "path": "service_issues.txt", "text": "circular"},
+      {"type": "file_match", "path": "service_issues.txt", "text": "storage.service"},
+      {"type": "file_match", "path": "service_order.txt", "text": "network.service"}
+    ],
+    "tags": ["python", "sysadmin", "systemd", "dependencies", "graph"]
+  },
+  {
+    "id": "mb-349",
+    "cat": "sysadmin",
+    "diff": "medium",
+    "title": "Log-Based Request Rate Limiter Simulator",
+    "src": "m/agents",
+    "prompt": "Write a Python script `rate_limit.py` that reads an access log (first argument) and a rate limit config (second argument, JSON with `requests_per_minute` and `ban_duration_minutes`). For each IP, count requests per minute window. If any IP exceeds the limit in any window, flag it. Write `rate_limit_report.txt` with: per-IP max requests/minute, flagged IPs with their peak rate and the minute window when the violation occurred, and total flagged IPs count.",
+    "input": {
+      "access.log": "192.168.1.10 - - [10/Apr/2026:08:00:05 +0000] \"GET / HTTP/1.1\" 200 5123\n192.168.1.10 - - [10/Apr/2026:08:00:10 +0000] \"GET /page HTTP/1.1\" 200 3000\n192.168.1.10 - - [10/Apr/2026:08:00:15 +0000] \"GET /api HTTP/1.1\" 200 500\n192.168.1.10 - - [10/Apr/2026:08:00:20 +0000] \"GET /data HTTP/1.1\" 200 800\n192.168.1.10 - - [10/Apr/2026:08:00:25 +0000] \"GET /more HTTP/1.1\" 200 600\n192.168.1.10 - - [10/Apr/2026:08:00:30 +0000] \"GET /extra HTTP/1.1\" 200 400\n10.0.0.5 - - [10/Apr/2026:08:00:05 +0000] \"GET / HTTP/1.1\" 200 5123\n10.0.0.5 - - [10/Apr/2026:08:01:05 +0000] \"GET /page HTTP/1.1\" 200 3000\n172.16.0.1 - - [10/Apr/2026:08:00:01 +0000] \"POST /login HTTP/1.1\" 200 100\n172.16.0.1 - - [10/Apr/2026:08:00:02 +0000] \"POST /login HTTP/1.1\" 401 50\n172.16.0.1 - - [10/Apr/2026:08:00:03 +0000] \"POST /login HTTP/1.1\" 401 50\n172.16.0.1 - - [10/Apr/2026:08:00:04 +0000] \"POST /login HTTP/1.1\" 401 50\n172.16.0.1 - - [10/Apr/2026:08:00:05 +0000] \"POST /login HTTP/1.1\" 401 50\n172.16.0.1 - - [10/Apr/2026:08:00:06 +0000] \"POST /login HTTP/1.1\" 401 50",
+      "config.json": "{\"requests_per_minute\": 5, \"ban_duration_minutes\": 10}"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "rate_limit.py"},
+      {"type": "run", "cmd": "python rate_limit.py access.log config.json", "exit": 0},
+      {"type": "file_match", "path": "rate_limit_report.txt", "text": "192.168.1.10"},
+      {"type": "file_match", "path": "rate_limit_report.txt", "text": "172.16.0.1"}
+    ],
+    "tags": ["python", "sysadmin", "rate-limiting", "logs", "security"]
+  },
+  {
+    "id": "mb-350",
+    "cat": "sysadmin",
+    "diff": "hard",
+    "title": "Full Infrastructure Monitoring Dashboard Generator",
+    "src": "m/builds",
+    "prompt": "Write a Python script `dashboard_gen.py` that reads a JSON file (first argument) containing an array of server objects, each with `hostname`, `ip`, `cpu_percent`, `memory_percent`, `disk_percent`, `uptime_seconds`, `services` (array of objects with `name` and `status`). Generate: (1) `dashboard.html` — a self-contained HTML page with a table showing all servers color-coded (green < 70%, yellow 70-90%, red > 90% for resource metrics), service status, and uptime formatted as `Xd Xh Xm`. (2) `dashboard_data.json` — summary JSON with `total_servers`, `healthy_count` (all metrics < 90% and all services running), `critical_count`, `avg_cpu`, `avg_memory`, `avg_disk`. (3) `alerts.txt` — one line per critical condition found.",
+    "input": {
+      "servers.json": "[{\"hostname\":\"web01\",\"ip\":\"192.168.1.10\",\"cpu_percent\":45.2,\"memory_percent\":62.1,\"disk_percent\":71.0,\"uptime_seconds\":864000,\"services\":[{\"name\":\"nginx\",\"status\":\"running\"},{\"name\":\"php-fpm\",\"status\":\"running\"}]},{\"hostname\":\"web02\",\"ip\":\"192.168.1.11\",\"cpu_percent\":92.8,\"memory_percent\":88.3,\"disk_percent\":65.0,\"uptime_seconds\":432000,\"services\":[{\"name\":\"nginx\",\"status\":\"running\"},{\"name\":\"php-fpm\",\"status\":\"stopped\"}]},{\"hostname\":\"db01\",\"ip\":\"192.168.1.20\",\"cpu_percent\":38.1,\"memory_percent\":95.4,\"disk_percent\":82.1,\"uptime_seconds\":1728000,\"services\":[{\"name\":\"postgresql\",\"status\":\"running\"},{\"name\":\"pgbouncer\",\"status\":\"running\"}]},{\"hostname\":\"cache01\",\"ip\":\"192.168.1.30\",\"cpu_percent\":12.5,\"memory_percent\":45.0,\"disk_percent\":30.2,\"uptime_seconds\":2592000,\"services\":[{\"name\":\"redis\",\"status\":\"running\"}]},{\"hostname\":\"monitor01\",\"ip\":\"192.168.1.40\",\"cpu_percent\":55.3,\"memory_percent\":72.8,\"disk_percent\":91.5,\"uptime_seconds\":86400,\"services\":[{\"name\":\"prometheus\",\"status\":\"running\"},{\"name\":\"grafana\",\"status\":\"running\"},{\"name\":\"alertmanager\",\"status\":\"stopped\"}]}]"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "dashboard_gen.py"},
+      {"type": "run", "cmd": "python dashboard_gen.py servers.json", "exit": 0},
+      {"type": "file_match", "path": "dashboard.html", "text": "<table"},
+      {"type": "json_valid", "path": "dashboard_data.json", "has_key": "total_servers"},
+      {"type": "file_match", "path": "alerts.txt", "text": "web02"}
+    ],
+    "tags": ["python", "sysadmin", "monitoring", "dashboard", "html"]
+  },
+  {
+    "id": "mb-351",
+    "cat": "sysadmin",
+    "diff": "hard",
+    "title": "Incident Timeline Reconstructor",
+    "src": "m/agents",
+    "prompt": "Write a Python script `incident_timeline.py` that reads multiple log files (all .log files listed as arguments) and a JSON incident definition file (last argument, has `start_time`, `end_time` in ISO format, and `keywords` array). The script must: (1) filter all log entries within the incident time window, (2) highlight entries matching any keyword, (3) build a chronological timeline merging all sources, (4) identify the first occurrence of each keyword across all logs. Write `timeline.txt` with format `[TIMESTAMP] [SOURCE] [MATCHED_KEYWORDS or -] LINE`. Write `incident_summary.json` with `total_events`, `matched_events`, `sources` (array), `keyword_first_seen` (object mapping keyword to first timestamp), `event_rate_per_minute`.",
+    "input": {
+      "web.log": "2026-04-10T08:00:01 INFO Request GET /health — 200\n2026-04-10T08:15:30 WARN High response time: 2500ms for /api/query\n2026-04-10T08:16:00 ERROR Connection pool exhausted\n2026-04-10T08:16:15 ERROR Upstream timeout: database unreachable\n2026-04-10T08:16:30 ERROR 503 Service Unavailable returned to client\n2026-04-10T08:17:00 WARN Circuit breaker OPEN for database\n2026-04-10T08:20:00 INFO Circuit breaker HALF-OPEN, retrying\n2026-04-10T08:20:30 INFO Database connection restored\n2026-04-10T08:21:00 INFO Service recovered, all health checks passing",
+      "db.log": "2026-04-10T08:00:00 INFO PostgreSQL ready, accepting connections\n2026-04-10T08:15:00 WARN Replication lag increasing: 5s\n2026-04-10T08:15:45 ERROR Max connections reached: 200/200\n2026-04-10T08:16:05 FATAL Out of shared memory\n2026-04-10T08:16:10 ERROR Rejecting new connections\n2026-04-10T08:18:00 INFO Emergency connection cleanup initiated\n2026-04-10T08:19:30 INFO Shared memory recovered\n2026-04-10T08:20:15 INFO Accepting connections again",
+      "monitor.log": "2026-04-10T08:00:00 OK All services healthy\n2026-04-10T08:15:00 OK All services healthy\n2026-04-10T08:16:00 ALERT web01 — response time > 2000ms\n2026-04-10T08:16:10 ALERT db01 — connection refused\n2026-04-10T08:16:30 ALERT web01 — service unavailable\n2026-04-10T08:17:00 ALERT web02 — service unavailable\n2026-04-10T08:20:00 RECOVERY web01 — service restored\n2026-04-10T08:20:30 RECOVERY db01 — connections accepting\n2026-04-10T08:21:00 OK All services healthy",
+      "incident.json": "{\"start_time\":\"2026-04-10T08:15:00\",\"end_time\":\"2026-04-10T08:21:00\",\"keywords\":[\"ERROR\",\"FATAL\",\"ALERT\",\"timeout\",\"exhausted\",\"unreachable\"]}"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "incident_timeline.py"},
+      {"type": "run", "cmd": "python incident_timeline.py web.log db.log monitor.log incident.json", "exit": 0},
+      {"type": "file_match", "path": "timeline.txt", "text": "[web.log]"},
+      {"type": "json_valid", "path": "incident_summary.json", "has_key": "keyword_first_seen"},
+      {"type": "file_match", "path": "incident_summary.json", "text": "FATAL"}
+    ],
+    "tags": ["python", "sysadmin", "incident", "timeline", "logs", "forensics"]
+  },
+  {
+    "id": "mb-352",
+    "cat": "sysadmin",
+    "diff": "hard",
+    "title": "Automated Runbook Generator",
+    "src": "m/automation",
+    "prompt": "Write a Python script `runbook_gen.py` that reads a JSON file (first argument) defining a service architecture with `services` (array of objects with `name`, `port`, `health_endpoint`, `depends_on`, `restart_cmd`, `log_path`) and `alert_rules` (array with `name`, `condition`, `service`, `severity`). Generate `runbook.md` — a Markdown runbook document with: (1) a service overview table, (2) a dependency diagram in text art showing the service graph, (3) for each alert rule, a troubleshooting section with step-by-step instructions including checking logs, verifying dependencies, and restart procedures. Also generate `quick_ref.txt` with a condensed one-line-per-service reference: `SERVICE PORT HEALTH_URL RESTART_CMD`.",
+    "input": {
+      "architecture.json": "{\"services\":[{\"name\":\"nginx\",\"port\":80,\"health_endpoint\":\"/health\",\"depends_on\":[],\"restart_cmd\":\"systemctl restart nginx\",\"log_path\":\"/var/log/nginx/error.log\"},{\"name\":\"webapp\",\"port\":3000,\"health_endpoint\":\"/api/health\",\"depends_on\":[\"nginx\",\"postgres\",\"redis\"],\"restart_cmd\":\"systemctl restart webapp\",\"log_path\":\"/var/log/webapp/app.log\"},{\"name\":\"postgres\",\"port\":5432,\"health_endpoint\":null,\"depends_on\":[],\"restart_cmd\":\"systemctl restart postgresql\",\"log_path\":\"/var/log/postgresql/postgresql-14-main.log\"},{\"name\":\"redis\",\"port\":6379,\"health_endpoint\":null,\"depends_on\":[],\"restart_cmd\":\"systemctl restart redis\",\"log_path\":\"/var/log/redis/redis-server.log\"},{\"name\":\"worker\",\"port\":null,\"health_endpoint\":null,\"depends_on\":[\"postgres\",\"redis\"],\"restart_cmd\":\"systemctl restart worker\",\"log_path\":\"/var/log/worker/worker.log\"},{\"name\":\"scheduler\",\"port\":null,\"health_endpoint\":null,\"depends_on\":[\"postgres\"],\"restart_cmd\":\"systemctl restart scheduler\",\"log_path\":\"/var/log/scheduler/scheduler.log\"}],\"alert_rules\":[{\"name\":\"WebappDown\",\"condition\":\"health check fails 3 times\",\"service\":\"webapp\",\"severity\":\"critical\"},{\"name\":\"HighCPU\",\"condition\":\"CPU > 90% for 5 min\",\"service\":\"webapp\",\"severity\":\"warning\"},{\"name\":\"DBConnExhausted\",\"condition\":\"active connections > 190\",\"service\":\"postgres\",\"severity\":\"critical\"},{\"name\":\"RedisMemory\",\"condition\":\"memory usage > 80%\",\"service\":\"redis\",\"severity\":\"warning\"},{\"name\":\"WorkerBacklog\",\"condition\":\"queue depth > 10000\",\"service\":\"worker\",\"severity\":\"warning\"}]}"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "runbook_gen.py"},
+      {"type": "run", "cmd": "python runbook_gen.py architecture.json", "exit": 0},
+      {"type": "file_match", "path": "runbook.md", "text": "## Troubleshooting"},
+      {"type": "file_match", "path": "runbook.md", "text": "WebappDown"},
+      {"type": "file_match", "path": "quick_ref.txt", "text": "nginx"},
+      {"type": "line_count", "path": "quick_ref.txt", "min": 6, "max": 8}
+    ],
+    "tags": ["python", "sysadmin", "runbook", "automation", "documentation"]
+  },
+  {
+    "id": "mb-353",
+    "cat": "sysadmin",
+    "diff": "hard",
+    "title": "Capacity Planning Forecaster",
+    "src": "m/agents",
+    "prompt": "Write a Python script `capacity_plan.py` that reads a CSV file (first argument) with columns `date,cpu_avg,memory_avg,disk_used_gb,request_count` containing 30 days of historical data. The script must: (1) compute daily growth rates for each metric, (2) use linear regression (from scratch, no numpy — use the least squares formula) to forecast when each metric will hit a critical threshold (CPU 90%, Memory 90%, Disk at capacity given in second argument as total GB), (3) determine which resource will hit capacity first. Write `capacity_forecast.json` with per-metric growth rate, projected critical date, and days remaining. Write `capacity_report.txt` with a human-readable summary including recommendations (add capacity, optimize, etc. based on urgency).",
+    "input": {
+      "metrics.csv": "date,cpu_avg,memory_avg,disk_used_gb,request_count\n2026-03-11,42.1,55.0,180.5,45000\n2026-03-12,42.5,55.3,181.2,45500\n2026-03-13,43.0,55.8,181.9,46200\n2026-03-14,42.8,56.1,182.5,46800\n2026-03-15,43.5,56.5,183.2,47100\n2026-03-16,44.0,56.9,183.8,47600\n2026-03-17,43.8,57.2,184.5,48000\n2026-03-18,44.5,57.6,185.1,48500\n2026-03-19,45.0,58.0,185.8,49000\n2026-03-20,45.3,58.3,186.4,49300\n2026-03-21,45.8,58.8,187.1,49800\n2026-03-22,46.2,59.1,187.7,50200\n2026-03-23,46.5,59.5,188.4,50700\n2026-03-24,47.0,59.9,189.0,51100\n2026-03-25,47.3,60.2,189.7,51500\n2026-03-26,47.8,60.7,190.3,52000\n2026-03-27,48.2,61.0,191.0,52400\n2026-03-28,48.5,61.4,191.6,52800\n2026-03-29,49.0,61.8,192.3,53200\n2026-03-30,49.3,62.1,192.9,53700\n2026-03-31,49.8,62.6,193.6,54100\n2026-04-01,50.2,63.0,194.2,54500\n2026-04-02,50.5,63.3,194.9,55000\n2026-04-03,51.0,63.8,195.5,55400\n2026-04-04,51.3,64.1,196.2,55800\n2026-04-05,51.8,64.5,196.8,56200\n2026-04-06,52.2,65.0,197.5,56700\n2026-04-07,52.5,65.3,198.1,57100\n2026-04-08,53.0,65.8,198.8,57500\n2026-04-09,53.3,66.1,199.4,57900\n2026-04-10,53.8,66.5,200.1,58300",
+      "disk_capacity_gb": "500"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "capacity_plan.py"},
+      {"type": "run", "cmd": "python capacity_plan.py metrics.csv 500", "exit": 0},
+      {"type": "json_valid", "path": "capacity_forecast.json", "has_key": "cpu_avg"},
+      {"type": "file_match", "path": "capacity_report.txt", "text": "days"},
+      {"type": "file_match", "path": "capacity_report.txt", "text": "capacity"}
+    ],
+    "tags": ["python", "sysadmin", "capacity", "forecasting", "regression"]
+  },
+  {
+    "id": "mb-354",
+    "cat": "sysadmin",
+    "diff": "hard",
+    "title": "Infrastructure-as-Code Config Drift Detector",
+    "src": "m/builds",
+    "prompt": "Write a Python script `drift_detect.py` that compares a desired state configuration (first argument, JSON) against an actual state (second argument, JSON). Both files describe servers with nested structures: `hostname`, `packages` (dict of name:version), `services` (dict of name:status), `firewall_rules` (array of rule objects), `users` (array of user objects with `name` and `groups`). The script must detect: added/removed/changed packages, service status mismatches, extra/missing firewall rules, user/group differences. Write `drift_report.json` with structured diff per server. Write `drift_summary.txt` with a human-readable report listing each server's drift items, categorized by type, with a total drift score (count of all differences) per server and overall.",
+    "input": {
+      "desired.json": "{\"servers\":[{\"hostname\":\"web01\",\"packages\":{\"nginx\":\"1.24.0\",\"python3\":\"3.11.2\",\"certbot\":\"2.6.0\",\"fail2ban\":\"0.11.2\"},\"services\":{\"nginx\":\"running\",\"fail2ban\":\"running\",\"certbot.timer\":\"active\"},\"firewall_rules\":[{\"port\":80,\"protocol\":\"tcp\",\"action\":\"allow\"},{\"port\":443,\"protocol\":\"tcp\",\"action\":\"allow\"},{\"port\":22,\"protocol\":\"tcp\",\"action\":\"allow\",\"src\":\"10.0.0.0/8\"}],\"users\":[{\"name\":\"deploy\",\"groups\":[\"www-data\",\"docker\"]},{\"name\":\"monitor\",\"groups\":[\"adm\"]}]},{\"hostname\":\"db01\",\"packages\":{\"postgresql-14\":\"14.10\",\"pgbouncer\":\"1.21.0\",\"barman\":\"3.7.0\"},\"services\":{\"postgresql\":\"running\",\"pgbouncer\":\"running\",\"barman-cron.timer\":\"active\"},\"firewall_rules\":[{\"port\":5432,\"protocol\":\"tcp\",\"action\":\"allow\",\"src\":\"192.168.1.0/24\"},{\"port\":22,\"protocol\":\"tcp\",\"action\":\"allow\",\"src\":\"10.0.0.0/8\"}],\"users\":[{\"name\":\"postgres\",\"groups\":[\"ssl-cert\"]},{\"name\":\"barman\",\"groups\":[\"postgres\"]}]}]}",
+      "actual.json": "{\"servers\":[{\"hostname\":\"web01\",\"packages\":{\"nginx\":\"1.22.1\",\"python3\":\"3.11.2\",\"fail2ban\":\"0.11.2\",\"htop\":\"3.2.1\"},\"services\":{\"nginx\":\"running\",\"fail2ban\":\"stopped\",\"certbot.timer\":\"active\"},\"firewall_rules\":[{\"port\":80,\"protocol\":\"tcp\",\"action\":\"allow\"},{\"port\":443,\"protocol\":\"tcp\",\"action\":\"allow\"},{\"port\":22,\"protocol\":\"tcp\",\"action\":\"allow\",\"src\":\"0.0.0.0/0\"},{\"port\":8080,\"protocol\":\"tcp\",\"action\":\"allow\"}],\"users\":[{\"name\":\"deploy\",\"groups\":[\"www-data\"]},{\"name\":\"monitor\",\"groups\":[\"adm\"]},{\"name\":\"testuser\",\"groups\":[\"sudo\"]}]},{\"hostname\":\"db01\",\"packages\":{\"postgresql-14\":\"14.10\",\"pgbouncer\":\"1.21.0\",\"barman\":\"3.7.0\"},\"services\":{\"postgresql\":\"running\",\"pgbouncer\":\"running\",\"barman-cron.timer\":\"inactive\"},\"firewall_rules\":[{\"port\":5432,\"protocol\":\"tcp\",\"action\":\"allow\",\"src\":\"192.168.1.0/24\"},{\"port\":22,\"protocol\":\"tcp\",\"action\":\"allow\",\"src\":\"10.0.0.0/8\"}],\"users\":[{\"name\":\"postgres\",\"groups\":[\"ssl-cert\"]},{\"name\":\"barman\",\"groups\":[\"postgres\"]}]}]}"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "drift_detect.py"},
+      {"type": "run", "cmd": "python drift_detect.py desired.json actual.json", "exit": 0},
+      {"type": "json_valid", "path": "drift_report.json"},
+      {"type": "file_match", "path": "drift_summary.txt", "text": "nginx"},
+      {"type": "file_match", "path": "drift_summary.txt", "text": "web01"},
+      {"type": "file_match", "path": "drift_summary.txt", "text": "drift"}
+    ],
+    "tags": ["python", "sysadmin", "iac", "drift", "config-management"]
+  },
+  {
+    "id": "mb-355",
+    "cat": "sysadmin",
+    "diff": "hard",
+    "title": "Post-Mortem Report Generator from Logs",
+    "src": "m/agents",
+    "prompt": "Write a Python script `postmortem.py` that reads an incident metadata JSON file (first argument) with `title`, `severity`, `start_time`, `end_time`, `responders` (array of names), `affected_services` (array), and multiple log files (remaining arguments). The script must: (1) extract all log entries within the incident window, (2) automatically detect the sequence of events by parsing timestamps and severity keywords, (3) identify the likely root cause by finding the earliest ERROR/FATAL entry, (4) compute time-to-detect (first ALERT after first ERROR) and time-to-resolve (end_time minus start_time). Generate `postmortem.md` with sections: Summary, Timeline (chronological events with source), Root Cause Analysis, Impact (duration and affected services), Resolution, and Action Items (auto-generated based on findings — e.g., if connection exhaustion is found, suggest connection pool tuning). Also generate `postmortem_data.json` with structured fields: `duration_minutes`, `root_cause_event`, `time_to_detect_seconds`, `total_events`, `events_by_severity`.",
+    "input": {
+      "incident.json": "{\"title\":\"Production Database Outage\",\"severity\":\"P1\",\"start_time\":\"2026-04-10T14:30:00\",\"end_time\":\"2026-04-10T15:15:00\",\"responders\":[\"alice\",\"bob\",\"charlie\"],\"affected_services\":[\"webapp\",\"api\",\"worker\"]}",
+      "webapp.log": "2026-04-10T14:00:00 INFO Health check OK\n2026-04-10T14:25:00 INFO Health check OK\n2026-04-10T14:30:05 WARN Response time degraded: avg 1200ms\n2026-04-10T14:31:00 ERROR Database connection timeout after 30s\n2026-04-10T14:31:30 ERROR Connection pool exhausted: 0/50 available\n2026-04-10T14:32:00 ERROR Returning 503 to all requests\n2026-04-10T14:35:00 WARN Circuit breaker OPEN for database\n2026-04-10T14:50:00 INFO Circuit breaker HALF-OPEN, testing\n2026-04-10T14:55:00 INFO Database connections restored\n2026-04-10T15:00:00 INFO Service fully recovered\n2026-04-10T15:15:00 INFO Post-incident health check OK",
+      "database.log": "2026-04-10T14:00:00 INFO PostgreSQL: 45/200 connections active\n2026-04-10T14:28:00 WARN PostgreSQL: 180/200 connections active\n2026-04-10T14:29:30 ERROR PostgreSQL: connection limit reached 200/200\n2026-04-10T14:30:00 FATAL PostgreSQL: out of shared memory, cannot accept connections\n2026-04-10T14:30:10 ERROR Rejecting all new connection attempts\n2026-04-10T14:45:00 INFO Emergency: killed 100 idle connections\n2026-04-10T14:48:00 INFO Shared memory recovered, 50/200 connections\n2026-04-10T14:52:00 INFO Normal operation resumed: 60/200 connections",
+      "monitor.log": "2026-04-10T14:00:00 OK All checks passing\n2026-04-10T14:30:00 OK All checks passing\n2026-04-10T14:31:30 ALERT webapp: health check FAILED\n2026-04-10T14:31:45 ALERT api: health check FAILED\n2026-04-10T14:32:00 ALERT database: connection refused\n2026-04-10T14:33:00 PAGE P1 incident created, paging responders\n2026-04-10T14:55:00 RECOVERY webapp: health check PASSED\n2026-04-10T14:55:30 RECOVERY api: health check PASSED\n2026-04-10T14:56:00 RECOVERY database: accepting connections\n2026-04-10T15:10:00 OK All checks passing for 15 minutes\n2026-04-10T15:15:00 OK Incident resolved"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "postmortem.py"},
+      {"type": "run", "cmd": "python postmortem.py incident.json webapp.log database.log monitor.log", "exit": 0},
+      {"type": "file_match", "path": "postmortem.md", "text": "## Timeline"},
+      {"type": "file_match", "path": "postmortem.md", "text": "Root Cause"},
+      {"type": "file_match", "path": "postmortem.md", "text": "connection"},
+      {"type": "json_valid", "path": "postmortem_data.json", "has_key": "duration_minutes"}
+    ],
+    "tags": ["python", "sysadmin", "postmortem", "incident", "forensics", "reporting"]
+  }
+]

@@ -1,0 +1,995 @@
+[
+  {
+    "id": "mb-191",
+    "cat": "file_ops",
+    "diff": "easy",
+    "title": "Sort Files by Extension",
+    "src": "m/openclaw-explorers",
+    "prompt": "Write a Python script `sort_by_ext.py` that reads all files in the current directory (excluding itself and any directories) and copies each file into a subdirectory named after its extension (without the dot). Files with no extension go into a folder called `no_ext`. Example: `photo.jpg` -> `jpg/photo.jpg`.",
+    "input": {
+      "report.txt": "Quarterly earnings report",
+      "photo.jpg": "FAKE_JPG_DATA",
+      "notes.txt": "Meeting notes from Tuesday",
+      "script.py": "print('hello')",
+      "data.csv": "name,age\nAlice,30\nBob,25",
+      "README": "This is a readme with no extension"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "sort_by_ext.py"},
+      {"type": "run", "cmd": "python sort_by_ext.py", "exit": 0},
+      {"type": "file_exists", "path": "txt/report.txt"},
+      {"type": "file_exists", "path": "no_ext/README"}
+    ],
+    "tags": ["python", "files", "organize"]
+  },
+  {
+    "id": "mb-192",
+    "cat": "file_ops",
+    "diff": "easy",
+    "title": "Sequential File Renamer",
+    "src": "m/automation",
+    "prompt": "Write a Python script `rename_seq.py` that renames all `.txt` files in the current directory to `file_001.txt`, `file_002.txt`, etc., in alphabetical order of their original names. Print each rename operation as `old_name -> new_name` to stdout.",
+    "input": {
+      "zebra.txt": "zebra content",
+      "apple.txt": "apple content",
+      "mango.txt": "mango content"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "rename_seq.py"},
+      {"type": "run", "cmd": "python rename_seq.py", "exit": 0, "stdout": "apple.txt -> file_001.txt"},
+      {"type": "file_exists", "path": "file_001.txt"},
+      {"type": "file_match", "path": "file_001.txt", "text": "apple content"}
+    ],
+    "tags": ["python", "rename", "files"]
+  },
+  {
+    "id": "mb-193",
+    "cat": "file_ops",
+    "diff": "easy",
+    "title": "Create Project Scaffold",
+    "src": "m/openclaw-explorers",
+    "prompt": "Write a Python script `scaffold.py` that creates the following project directory structure:\n\n```\nmyproject/\n  src/\n    __init__.py  (empty)\n    main.py      (contains: if __name__ == '__main__':\\n    print('Hello'))\n  tests/\n    __init__.py  (empty)\n    test_main.py (contains: # TODO: add tests)\n  docs/\n  README.md      (contains: # MyProject)\n  setup.py       (contains: # setup)\n```\n\nAll directories must exist, including empty `docs/`.",
+    "input": {},
+    "checks": [
+      {"type": "run", "cmd": "python scaffold.py", "exit": 0},
+      {"type": "file_exists", "path": "myproject/src/__init__.py"},
+      {"type": "file_exists", "path": "myproject/tests/test_main.py"},
+      {"type": "file_match", "path": "myproject/README.md", "text": "# MyProject"}
+    ],
+    "tags": ["python", "scaffold", "directories"]
+  },
+  {
+    "id": "mb-194",
+    "cat": "file_ops",
+    "diff": "easy",
+    "title": "Line Count Report",
+    "src": "m/agents",
+    "prompt": "Write a Python script `line_count.py` that counts the number of lines in every `.txt` file in the current directory and writes a report to `line_report.txt`. Each line of the report should be: `filename: N lines`. Sort by filename. The last line should be `Total: N lines`.",
+    "input": {
+      "a.txt": "one\ntwo\nthree",
+      "b.txt": "hello",
+      "c.txt": "line1\nline2\nline3\nline4\nline5"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python line_count.py", "exit": 0},
+      {"type": "file_exists", "path": "line_report.txt"},
+      {"type": "file_match", "path": "line_report.txt", "text": "a.txt: 3 lines"},
+      {"type": "file_match", "path": "line_report.txt", "text": "Total: 9 lines"}
+    ],
+    "tags": ["python", "files", "metadata"]
+  },
+  {
+    "id": "mb-195",
+    "cat": "file_ops",
+    "diff": "easy",
+    "title": "Merge Text Files",
+    "src": "m/openclaw-explorers",
+    "prompt": "Write a Python script `merge.py` that reads all `.txt` files in the current directory in alphabetical order and combines them into a single file called `merged.txt`. Insert a blank line between each file's content. Do not include `merged.txt` itself if it already exists.",
+    "input": {
+      "part_a.txt": "First section content.\nMore of part A.",
+      "part_b.txt": "Second section here.",
+      "part_c.txt": "Final section.\nEnd of document."
+    },
+    "checks": [
+      {"type": "run", "cmd": "python merge.py", "exit": 0},
+      {"type": "file_exists", "path": "merged.txt"},
+      {"type": "file_match", "path": "merged.txt", "text": "First section content."},
+      {"type": "file_match", "path": "merged.txt", "text": "Final section."}
+    ],
+    "tags": ["python", "merge", "files"]
+  },
+  {
+    "id": "mb-196",
+    "cat": "file_ops",
+    "diff": "easy",
+    "title": "Find and Replace in Files",
+    "src": "m/automation",
+    "prompt": "Write a Python script `find_replace.py` that replaces all occurrences of the word `foo` with `bar` in every `.txt` file in the current directory. Modify files in-place. Print the number of replacements made per file to stdout as `filename: N replacements`.",
+    "input": {
+      "data1.txt": "foo is great\nI love foo\nfoo foo foo",
+      "data2.txt": "no matches here",
+      "data3.txt": "foo at start\nend with foo"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python find_replace.py", "exit": 0, "stdout": "data1.txt: 5 replacements"},
+      {"type": "file_match", "path": "data1.txt", "text": "bar is great"},
+      {"type": "file_not_match", "path": "data1.txt", "text": "foo"}
+    ],
+    "tags": ["python", "search-replace", "files"]
+  },
+  {
+    "id": "mb-197",
+    "cat": "file_ops",
+    "diff": "easy",
+    "title": "File Size Inventory",
+    "src": "m/agents",
+    "prompt": "Write a Python script `inventory.py` that generates a JSON file `inventory.json` listing every file in the current directory (excluding `inventory.py` and `inventory.json`). Each entry should have keys: `name`, `size_bytes`, `extension`. The JSON should be a list of objects sorted by file size descending.",
+    "input": {
+      "small.txt": "hi",
+      "medium.csv": "a,b,c\n1,2,3\n4,5,6\n7,8,9",
+      "large.log": "WARNING: something happened\nERROR: something broke\nINFO: recovered\nDEBUG: details here\nWARNING: again\nERROR: fatal"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python inventory.py", "exit": 0},
+      {"type": "json_valid", "path": "inventory.json", "is_array": true, "min_length": 3},
+      {"type": "file_match", "path": "inventory.json", "text": "size_bytes"}
+    ],
+    "tags": ["python", "json", "metadata"]
+  },
+  {
+    "id": "mb-198",
+    "cat": "file_ops",
+    "diff": "easy",
+    "title": "Split File by Lines",
+    "src": "m/openclaw-explorers",
+    "prompt": "Write a Python script `split_file.py` that splits `input.txt` into chunks of 3 lines each. Output files should be named `chunk_001.txt`, `chunk_002.txt`, etc. The last chunk may have fewer than 3 lines.",
+    "input": {
+      "input.txt": "line1\nline2\nline3\nline4\nline5\nline6\nline7\nline8\nline9\nline10"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python split_file.py", "exit": 0},
+      {"type": "file_exists", "path": "chunk_001.txt"},
+      {"type": "file_exists", "path": "chunk_004.txt"},
+      {"type": "file_match", "path": "chunk_001.txt", "text": "line1"}
+    ],
+    "tags": ["python", "split", "files"]
+  },
+  {
+    "id": "mb-199",
+    "cat": "file_ops",
+    "diff": "easy",
+    "title": "Empty Directory Cleanup",
+    "src": "m/automation",
+    "prompt": "Write a Python script `cleanup.py` that:\n1. Creates these directories: `empty1/`, `empty2/`, `has_files/`, `nested/deep/empty/`\n2. Creates a file `has_files/keep.txt` with content `keep me`\n3. Then removes all empty directories (including nested empty ones)\n4. Writes the names of removed directories to `removed.txt`, one per line, sorted alphabetically.",
+    "input": {},
+    "checks": [
+      {"type": "run", "cmd": "python cleanup.py", "exit": 0},
+      {"type": "file_exists", "path": "has_files/keep.txt"},
+      {"type": "file_exists", "path": "removed.txt"},
+      {"type": "file_match", "path": "removed.txt", "text": "empty1"}
+    ],
+    "tags": ["python", "cleanup", "directories"]
+  },
+  {
+    "id": "mb-200",
+    "cat": "file_ops",
+    "diff": "easy",
+    "title": "Date Prefix Renamer",
+    "src": "m/agents",
+    "prompt": "Write a Python script `date_prefix.py` that renames every `.txt` file in the current directory by prepending today's date in YYYY-MM-DD format. For example, `notes.txt` becomes `2026-04-17_notes.txt`. Use the actual current date. Print each rename to stdout.",
+    "input": {
+      "notes.txt": "some notes",
+      "todo.txt": "buy milk",
+      "draft.txt": "rough draft"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "date_prefix.py"},
+      {"type": "run", "cmd": "python date_prefix.py", "exit": 0},
+      {"type": "file_count", "dir": ".", "min": 4}
+    ],
+    "tags": ["python", "rename", "dates"]
+  },
+  {
+    "id": "mb-201",
+    "cat": "file_ops",
+    "diff": "easy",
+    "title": "Directory Tree Generator",
+    "src": "m/openclaw-explorers",
+    "prompt": "Write a Python script `tree.py` that generates a visual directory tree of the current directory and writes it to `tree.txt`. Use indentation with `|-- ` for entries and `|   ` for nested levels. Exclude `tree.py` and `tree.txt` from the output. Sort entries alphabetically, directories first.",
+    "input": {
+      "src/main.py": "print('main')",
+      "src/utils.py": "# utils",
+      "docs/guide.md": "# Guide",
+      "README.md": "# Project"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python tree.py", "exit": 0},
+      {"type": "file_exists", "path": "tree.txt"},
+      {"type": "file_match", "path": "tree.txt", "text": "src"},
+      {"type": "file_match", "path": "tree.txt", "text": "main.py"}
+    ],
+    "tags": ["python", "tree", "visualization"]
+  },
+  {
+    "id": "mb-202",
+    "cat": "file_ops",
+    "diff": "easy",
+    "title": "CSV to Individual Files",
+    "src": "m/automation",
+    "prompt": "Write a Python script `csv_split.py` that reads `people.csv` and creates one text file per row in an `output/` directory. Each file should be named `{name}.txt` (using the name column) and contain `Name: {name}\\nAge: {age}\\nCity: {city}`.",
+    "input": {
+      "people.csv": "name,age,city\nAlice,30,Paris\nBob,25,London\nCharlie,35,Tokyo"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python csv_split.py", "exit": 0},
+      {"type": "file_exists", "path": "output/Alice.txt"},
+      {"type": "file_match", "path": "output/Bob.txt", "text": "City: London"},
+      {"type": "file_count", "dir": "output/", "min": 3}
+    ],
+    "tags": ["python", "csv", "files"]
+  },
+  {
+    "id": "mb-203",
+    "cat": "file_ops",
+    "diff": "easy",
+    "title": "Backup with Timestamp",
+    "src": "m/agents",
+    "prompt": "Write a Python script `backup.py` that copies every file in the current directory (excluding `backup.py` and the `backups/` directory) into a `backups/` subdirectory. Each copied file should have `_bak` appended before the extension, e.g., `data.txt` -> `backups/data_bak.txt`. Print the count of backed-up files to stdout.",
+    "input": {
+      "config.ini": "[main]\nkey=value",
+      "data.txt": "important data",
+      "notes.md": "# Notes\nSome notes here"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python backup.py", "exit": 0, "stdout": "3"},
+      {"type": "file_exists", "path": "backups/data_bak.txt"},
+      {"type": "file_match", "path": "backups/config_bak.ini", "text": "key=value"}
+    ],
+    "tags": ["python", "backup", "files"]
+  },
+  {
+    "id": "mb-204",
+    "cat": "file_ops",
+    "diff": "easy",
+    "title": "Extension Changer",
+    "src": "m/openclaw-explorers",
+    "prompt": "Write a Python script `change_ext.py` that changes the extension of all `.txt` files in the current directory to `.md`. Do not modify the script file itself. Print each change to stdout as `old -> new`.",
+    "input": {
+      "readme.txt": "# Readme content",
+      "notes.txt": "Some notes",
+      "data.csv": "a,b\n1,2",
+      "log.txt": "Log entry 1"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python change_ext.py", "exit": 0},
+      {"type": "file_exists", "path": "readme.md"},
+      {"type": "file_exists", "path": "data.csv"},
+      {"type": "file_match", "path": "notes.md", "text": "Some notes"}
+    ],
+    "tags": ["python", "rename", "extensions"]
+  },
+  {
+    "id": "mb-205",
+    "cat": "file_ops",
+    "diff": "easy",
+    "title": "File Grep Tool",
+    "src": "m/automation",
+    "prompt": "Write a Python script `filegrep.py` that searches all `.log` files in the current directory for lines containing the word `ERROR`. Write all matching lines to `errors.txt`, prefixed with the source filename and line number like `access.log:3: ERROR something broke`. Sort output by filename then line number.",
+    "input": {
+      "access.log": "INFO request ok\nINFO another\nERROR timeout\nINFO done",
+      "app.log": "ERROR startup failed\nINFO running\nERROR null pointer\nINFO shutdown",
+      "debug.log": "DEBUG trace\nDEBUG more trace"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python filegrep.py", "exit": 0},
+      {"type": "file_exists", "path": "errors.txt"},
+      {"type": "file_match", "path": "errors.txt", "text": "access.log:3: ERROR timeout"},
+      {"type": "line_count", "path": "errors.txt", "min": 3, "max": 3}
+    ],
+    "tags": ["python", "search", "log"]
+  },
+  {
+    "id": "mb-206",
+    "cat": "file_ops",
+    "diff": "easy",
+    "title": "Head and Tail Extractor",
+    "src": "m/agents",
+    "prompt": "Write a Python script `headtail.py` that reads `input.txt` and creates two files: `head.txt` containing the first 3 lines and `tail.txt` containing the last 3 lines.",
+    "input": {
+      "input.txt": "Line 1\nLine 2\nLine 3\nLine 4\nLine 5\nLine 6\nLine 7\nLine 8\nLine 9\nLine 10"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python headtail.py", "exit": 0},
+      {"type": "file_match", "path": "head.txt", "text": "Line 1"},
+      {"type": "file_not_match", "path": "head.txt", "text": "Line 4"},
+      {"type": "file_match", "path": "tail.txt", "text": "Line 10"}
+    ],
+    "tags": ["python", "files", "text"]
+  },
+  {
+    "id": "mb-207",
+    "cat": "file_ops",
+    "diff": "easy",
+    "title": "Duplicate Line Remover",
+    "src": "m/openclaw-explorers",
+    "prompt": "Write a Python script `dedup_lines.py` that reads `input.txt`, removes duplicate lines (keeping the first occurrence), and writes the result to `output.txt`. Print the number of duplicates removed to stdout.",
+    "input": {
+      "input.txt": "apple\nbanana\napple\ncherry\nbanana\ndate\napple\ndate"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python dedup_lines.py", "exit": 0, "stdout": "4"},
+      {"type": "file_exists", "path": "output.txt"},
+      {"type": "line_count", "path": "output.txt", "min": 4, "max": 4},
+      {"type": "file_match", "path": "output.txt", "text": "cherry"}
+    ],
+    "tags": ["python", "dedup", "text"]
+  },
+  {
+    "id": "mb-208",
+    "cat": "file_ops",
+    "diff": "easy",
+    "title": "File Concatenation with Headers",
+    "src": "m/automation",
+    "prompt": "Write a Python script `concat.py` that concatenates all `.txt` files in the current directory (alphabetical order) into `combined.txt`. Before each file's content, insert a header line: `=== filename.txt ===`. Do not include `combined.txt` in the concatenation.",
+    "input": {
+      "alpha.txt": "First file content",
+      "beta.txt": "Second file content\nWith two lines",
+      "gamma.txt": "Third and last"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python concat.py", "exit": 0},
+      {"type": "file_exists", "path": "combined.txt"},
+      {"type": "file_match", "path": "combined.txt", "text": "=== alpha.txt ==="},
+      {"type": "file_match", "path": "combined.txt", "text": "=== gamma.txt ==="}
+    ],
+    "tags": ["python", "merge", "files"]
+  },
+  {
+    "id": "mb-209",
+    "cat": "file_ops",
+    "diff": "easy",
+    "title": "Whitespace Trimmer",
+    "src": "m/agents",
+    "prompt": "Write a Python script `trim.py` that processes all `.txt` files in the current directory: strip trailing whitespace from each line, remove blank lines at the start and end of each file, and save in-place. Write a summary to `trim_report.txt` showing `filename: N lines trimmed` for each file.",
+    "input": {
+      "messy1.txt": "  hello   \n  world  \n\n  foo  \n",
+      "messy2.txt": "\n\ndata here   \n  more data\n\n"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python trim.py", "exit": 0},
+      {"type": "file_not_match", "path": "messy1.txt", "text": "hello   "},
+      {"type": "file_exists", "path": "trim_report.txt"}
+    ],
+    "tags": ["python", "text", "cleanup"]
+  },
+  {
+    "id": "mb-210",
+    "cat": "file_ops",
+    "diff": "easy",
+    "title": "JSON Formatter",
+    "src": "m/openclaw-explorers",
+    "prompt": "Write a Python script `prettify.py` that reads `data.json` (a compact single-line JSON), formats it with 2-space indentation and sorted keys, and writes the result to `data_pretty.json`.",
+    "input": {
+      "data.json": "{\"zebra\":1,\"apple\":[1,2,3],\"mango\":{\"nested\":true,\"count\":5}}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python prettify.py", "exit": 0},
+      {"type": "json_valid", "path": "data_pretty.json", "has_key": "apple"},
+      {"type": "file_match", "path": "data_pretty.json", "pattern": "^\\{\\n  \"apple\""}
+    ],
+    "tags": ["python", "json", "formatting"]
+  },
+  {
+    "id": "mb-211",
+    "cat": "file_ops",
+    "diff": "medium",
+    "title": "File Deduplication by Hash",
+    "src": "m/openclaw-explorers",
+    "prompt": "Write a Python script `dedup.py` that scans all files in the current directory (excluding itself) and finds files with identical content using MD5 hashes. Write a JSON report to `duplicates.json` as an array of objects, each with keys `hash` and `files` (list of filenames). Only include groups with 2+ files. Sort groups by hash.",
+    "input": {
+      "original.txt": "This is the content",
+      "copy1.txt": "This is the content",
+      "copy2.txt": "This is the content",
+      "unique.txt": "Different content",
+      "another.txt": "Also unique",
+      "clone.txt": "Also unique"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python dedup.py", "exit": 0},
+      {"type": "json_valid", "path": "duplicates.json", "is_array": true, "min_length": 2},
+      {"type": "file_match", "path": "duplicates.json", "text": "original.txt"},
+      {"type": "file_match", "path": "duplicates.json", "text": "clone.txt"}
+    ],
+    "tags": ["python", "dedup", "hash"]
+  },
+  {
+    "id": "mb-212",
+    "cat": "file_ops",
+    "diff": "medium",
+    "title": "Regex Batch Rename",
+    "src": "m/automation",
+    "prompt": "Write a Python script `regex_rename.py` that renames files matching the pattern `IMG_YYYYMMDD_NNN.jpg` to `photo_YYYY-MM-DD_NNN.jpg`. For example, `IMG_20260101_001.jpg` becomes `photo_2026-01-01_001.jpg`. Print each rename to stdout. Skip files that don't match the pattern.",
+    "input": {
+      "IMG_20260115_001.jpg": "JPEG1",
+      "IMG_20260115_002.jpg": "JPEG2",
+      "IMG_20260220_001.jpg": "JPEG3",
+      "random.txt": "not a photo",
+      "IMG_bad_format.jpg": "bad format"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python regex_rename.py", "exit": 0},
+      {"type": "file_exists", "path": "photo_2026-01-15_001.jpg"},
+      {"type": "file_exists", "path": "photo_2026-02-20_001.jpg"},
+      {"type": "file_exists", "path": "random.txt"}
+    ],
+    "tags": ["python", "regex", "rename"]
+  },
+  {
+    "id": "mb-213",
+    "cat": "file_ops",
+    "diff": "medium",
+    "title": "ZIP Archive Creator",
+    "src": "m/openclaw-explorers",
+    "prompt": "Write a Python script `archive.py` that creates a ZIP archive called `archive.zip` containing all `.txt` and `.csv` files in the current directory, preserving any subdirectory structure. After creating the archive, write a manifest to `manifest.txt` listing each file in the archive with its compressed size.",
+    "input": {
+      "readme.txt": "Project readme",
+      "data/records.csv": "id,name\n1,Alice\n2,Bob",
+      "data/notes.txt": "Some notes about the data",
+      "image.png": "FAKE_PNG_DATA",
+      "config.ini": "[settings]\nmode=production"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python archive.py", "exit": 0},
+      {"type": "file_exists", "path": "archive.zip"},
+      {"type": "file_exists", "path": "manifest.txt"},
+      {"type": "file_match", "path": "manifest.txt", "text": "records.csv"}
+    ],
+    "tags": ["python", "zip", "archive"]
+  },
+  {
+    "id": "mb-214",
+    "cat": "file_ops",
+    "diff": "medium",
+    "title": "Multi-Pattern Search and Replace",
+    "src": "m/agents",
+    "prompt": "Write a Python script `multi_replace.py` that reads replacement rules from `rules.json` (an array of {\"find\": \"...\", \"replace\": \"...\"} objects) and applies ALL rules to ALL `.txt` files in the current directory. Modify files in-place. Write a summary to `replace_log.txt` showing total replacements per file.",
+    "input": {
+      "rules.json": "[{\"find\": \"cat\", \"replace\": \"dog\"}, {\"find\": \"red\", \"replace\": \"blue\"}, {\"find\": \"old\", \"replace\": \"new\"}]",
+      "story.txt": "The red cat sat on the old mat.\nThe cat was red and old.",
+      "note.txt": "Nothing to change here.",
+      "memo.txt": "The old red cat jumped high."
+    },
+    "checks": [
+      {"type": "run", "cmd": "python multi_replace.py", "exit": 0},
+      {"type": "file_match", "path": "story.txt", "text": "blue dog"},
+      {"type": "file_not_match", "path": "story.txt", "text": "cat"},
+      {"type": "file_exists", "path": "replace_log.txt"}
+    ],
+    "tags": ["python", "search-replace", "json"]
+  },
+  {
+    "id": "mb-215",
+    "cat": "file_ops",
+    "diff": "medium",
+    "title": "File Comparison Report",
+    "src": "m/openclaw-explorers",
+    "prompt": "Write a Python script `diff_files.py` that compares `file_a.txt` and `file_b.txt` line by line and generates `diff_report.txt`. For each differing line, output the line number and both versions. Format: `Line N:\\n  A: <content from a>\\n  B: <content from b>`. At the end, print a summary line: `X of Y lines differ`.",
+    "input": {
+      "file_a.txt": "The quick brown fox\njumps over\nthe lazy dog\nfoo bar\nend",
+      "file_b.txt": "The quick red fox\njumps over\nthe sleepy dog\nfoo baz\nend"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python diff_files.py", "exit": 0},
+      {"type": "file_exists", "path": "diff_report.txt"},
+      {"type": "file_match", "path": "diff_report.txt", "text": "brown fox"},
+      {"type": "file_match", "path": "diff_report.txt", "text": "3 of 5 lines differ"}
+    ],
+    "tags": ["python", "diff", "comparison"]
+  },
+  {
+    "id": "mb-216",
+    "cat": "file_ops",
+    "diff": "medium",
+    "title": "File Organizer by Size",
+    "src": "m/automation",
+    "prompt": "Write a Python script `organize_size.py` that sorts files in the current directory (excluding itself) into subdirectories based on size: `small/` (under 50 bytes), `medium/` (50-200 bytes), `large/` (over 200 bytes). Move files into the appropriate directory. Write a summary JSON to `size_report.json` with keys `small`, `medium`, `large`, each containing a list of filenames.",
+    "input": {
+      "tiny.txt": "hi",
+      "short.txt": "a short text file with some words",
+      "essay.txt": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor.",
+      "note.txt": "A moderately sized note that has enough content to be in the medium range for this particular test"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python organize_size.py", "exit": 0},
+      {"type": "file_exists", "path": "small/tiny.txt"},
+      {"type": "json_valid", "path": "size_report.json", "has_key": "small"},
+      {"type": "file_match", "path": "size_report.json", "text": "essay.txt"}
+    ],
+    "tags": ["python", "organize", "files"]
+  },
+  {
+    "id": "mb-217",
+    "cat": "file_ops",
+    "diff": "medium",
+    "title": "Index File Generator",
+    "src": "m/agents",
+    "prompt": "Write a Python script `indexer.py` that walks the current directory recursively and generates `index.json` -- a nested JSON object mirroring the directory structure. Files are represented as `{\"type\": \"file\", \"size\": N}` and directories as `{\"type\": \"dir\", \"children\": {...}}`. Exclude `indexer.py` and `index.json`.",
+    "input": {
+      "readme.md": "# Hello",
+      "src/main.py": "print('main')",
+      "src/lib/utils.py": "# utils module",
+      "data/input.csv": "a,b\n1,2"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python indexer.py", "exit": 0},
+      {"type": "json_valid", "path": "index.json", "has_key": "src"},
+      {"type": "file_match", "path": "index.json", "text": "main.py"},
+      {"type": "file_match", "path": "index.json", "text": "\"type\": \"dir\""}
+    ],
+    "tags": ["python", "json", "tree"]
+  },
+  {
+    "id": "mb-218",
+    "cat": "file_ops",
+    "diff": "medium",
+    "title": "Template File Generator",
+    "src": "m/openclaw-explorers",
+    "prompt": "Write a Python script `template.py` that reads `template.txt` and `vars.json`, replaces all `{{key}}` placeholders in the template with values from the JSON, and writes the result to `output.txt`. If a placeholder has no corresponding key, leave it as-is. Report any unresolved placeholders to stdout.",
+    "input": {
+      "template.txt": "Dear {{name}},\n\nYour order #{{order_id}} has been {{status}}.\nShipping to: {{address}}\n\nThank you,\n{{company}}",
+      "vars.json": "{\"name\": \"Alice\", \"order_id\": \"12345\", \"status\": \"shipped\", \"company\": \"WidgetCo\"}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python template.py", "exit": 0, "stdout": "address"},
+      {"type": "file_exists", "path": "output.txt"},
+      {"type": "file_match", "path": "output.txt", "text": "Dear Alice"},
+      {"type": "file_match", "path": "output.txt", "text": "{{address}}"}
+    ],
+    "tags": ["python", "template", "text"]
+  },
+  {
+    "id": "mb-219",
+    "cat": "file_ops",
+    "diff": "medium",
+    "title": "Log File Rotator",
+    "src": "m/automation",
+    "prompt": "Write a Python script `rotate_logs.py` that implements log rotation: if `app.log` exists, rename it to `app.log.1`. If `app.log.1` exists, rename it to `app.log.2`, and so on up to `app.log.3`. Delete anything that would become `app.log.4` or higher. Then create a fresh empty `app.log`. Process the renames from highest number down to avoid collisions.",
+    "input": {
+      "app.log": "Current log entry\nAnother entry",
+      "app.log.1": "Previous log data",
+      "app.log.2": "Older log data",
+      "app.log.3": "Very old data"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python rotate_logs.py", "exit": 0},
+      {"type": "file_exists", "path": "app.log"},
+      {"type": "file_match", "path": "app.log.1", "text": "Current log entry"},
+      {"type": "file_match", "path": "app.log.2", "text": "Previous log data"}
+    ],
+    "tags": ["python", "logs", "rotation"]
+  },
+  {
+    "id": "mb-220",
+    "cat": "file_ops",
+    "diff": "medium",
+    "title": "Path Normalizer",
+    "src": "m/agents",
+    "prompt": "Write a Python script `normalize_paths.py` that reads `paths.txt` (one path per line), normalizes each path (resolve `.` and `..`, convert backslashes to forward slashes, remove trailing slashes), and writes the cleaned paths to `normalized.txt`. Also compute and write relative paths from `/home/user/project` to each normalized path in `relative.txt`.",
+    "input": {
+      "paths.txt": "/home/user/project/./src/../src/main.py\n/home/user/project/docs/../../user/project/docs/guide.md\n/home/user\\data\\input.csv\n/home/user/project/src/lib/\n/var/log/app.log"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python normalize_paths.py", "exit": 0},
+      {"type": "file_exists", "path": "normalized.txt"},
+      {"type": "file_exists", "path": "relative.txt"},
+      {"type": "file_match", "path": "normalized.txt", "text": "/home/user/project/src/main.py"}
+    ],
+    "tags": ["python", "paths", "normalize"]
+  },
+  {
+    "id": "mb-221",
+    "cat": "file_ops",
+    "diff": "medium",
+    "title": "Markdown Link Checker",
+    "src": "m/openclaw-explorers",
+    "prompt": "Write a Python script `check_links.py` that scans all `.md` files for local file links (like `[text](path/to/file)` -- exclude URLs starting with http). Check whether each referenced file exists. Write a report to `link_report.txt` listing each link and whether it is OK or BROKEN. Print the count of broken links to stdout.",
+    "input": {
+      "readme.md": "# Project\nSee [guide](docs/guide.md) and [API](docs/api.md)\nAlso check [setup](setup.txt) and [home](https://example.com)",
+      "docs/guide.md": "# Guide\nBack to [readme](../readme.md)\nSee [missing](../oops.txt)",
+      "setup.txt": "Setup instructions"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python check_links.py", "exit": 0, "stdout": "2"},
+      {"type": "file_exists", "path": "link_report.txt"},
+      {"type": "file_match", "path": "link_report.txt", "text": "BROKEN"},
+      {"type": "file_match", "path": "link_report.txt", "text": "OK"}
+    ],
+    "tags": ["python", "markdown", "validation"]
+  },
+  {
+    "id": "mb-222",
+    "cat": "file_ops",
+    "diff": "medium",
+    "title": "CSV File Merger",
+    "src": "m/automation",
+    "prompt": "Write a Python script `merge_csv.py` that merges all `.csv` files in the current directory into `merged.csv`. All files share the same column headers. The merged file should have the header row only once, followed by all data rows. Sort rows by the first column. Include a comment line at the top: `# Merged from N files`.",
+    "input": {
+      "east.csv": "name,sales,region\nAlice,500,East\nBob,300,East",
+      "west.csv": "name,sales,region\nCharlie,400,West\nDiana,600,West",
+      "north.csv": "name,sales,region\nEve,350,North"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python merge_csv.py", "exit": 0},
+      {"type": "file_exists", "path": "merged.csv"},
+      {"type": "file_match", "path": "merged.csv", "text": "# Merged from 3 files"},
+      {"type": "line_count", "path": "merged.csv", "min": 7, "max": 7}
+    ],
+    "tags": ["python", "csv", "merge"]
+  },
+  {
+    "id": "mb-223",
+    "cat": "file_ops",
+    "diff": "medium",
+    "title": "File Watcher Simulator",
+    "src": "m/agents",
+    "prompt": "Write a Python script `watch_sim.py` that simulates a file watcher. It should:\n1. Read `events.json` (a list of {\"action\": \"create|modify|delete\", \"file\": \"name\", \"content\": \"...\"} objects)\n2. Process each event in order, actually creating/modifying/deleting files\n3. Write an event log to `watch_log.txt` with timestamps and actions\n4. Print the total number of events processed to stdout.",
+    "input": {
+      "events.json": "[{\"action\":\"create\",\"file\":\"hello.txt\",\"content\":\"hello world\"},{\"action\":\"create\",\"file\":\"temp.txt\",\"content\":\"temporary\"},{\"action\":\"modify\",\"file\":\"hello.txt\",\"content\":\"hello universe\"},{\"action\":\"delete\",\"file\":\"temp.txt\"},{\"action\":\"create\",\"file\":\"final.txt\",\"content\":\"done\"}]"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python watch_sim.py", "exit": 0, "stdout": "5"},
+      {"type": "file_match", "path": "hello.txt", "text": "hello universe"},
+      {"type": "file_exists", "path": "final.txt"},
+      {"type": "file_exists", "path": "watch_log.txt"}
+    ],
+    "tags": ["python", "simulation", "events"]
+  },
+  {
+    "id": "mb-224",
+    "cat": "file_ops",
+    "diff": "medium",
+    "title": "Sorted File Splitter by Key",
+    "src": "m/openclaw-explorers",
+    "prompt": "Write a Python script `split_by_key.py` that reads `data.csv` and splits it into separate CSV files based on the `department` column. Each output file should be named `dept_{department}.csv` (lowercase, spaces replaced with underscores) in an `output/` directory. Each file should include the header row.",
+    "input": {
+      "data.csv": "name,department,salary\nAlice,Engineering,90000\nBob,Marketing,70000\nCharlie,Engineering,95000\nDiana,HR,65000\nEve,Marketing,72000\nFrank,HR,68000"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python split_by_key.py", "exit": 0},
+      {"type": "file_exists", "path": "output/dept_engineering.csv"},
+      {"type": "file_exists", "path": "output/dept_hr.csv"},
+      {"type": "file_count", "dir": "output/", "min": 3}
+    ],
+    "tags": ["python", "csv", "split"]
+  },
+  {
+    "id": "mb-225",
+    "cat": "file_ops",
+    "diff": "medium",
+    "title": "Config File Merger",
+    "src": "m/automation",
+    "prompt": "Write a Python script `merge_config.py` that reads `default.json` and `override.json` as configuration objects. Merge them such that override values replace default values (deep merge for nested objects). Write the result to `merged_config.json` with 2-space indentation. Print the number of overridden keys (at any level) to stdout.",
+    "input": {
+      "default.json": "{\"app\": {\"name\": \"MyApp\", \"version\": \"1.0\", \"debug\": false}, \"db\": {\"host\": \"localhost\", \"port\": 5432}, \"logging\": {\"level\": \"INFO\"}}",
+      "override.json": "{\"app\": {\"debug\": true, \"version\": \"2.0\"}, \"db\": {\"host\": \"prod-server\"}, \"cache\": {\"ttl\": 300}}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python merge_config.py", "exit": 0},
+      {"type": "json_valid", "path": "merged_config.json", "has_key": "cache"},
+      {"type": "file_match", "path": "merged_config.json", "text": "prod-server"},
+      {"type": "file_match", "path": "merged_config.json", "text": "\"debug\": true"}
+    ],
+    "tags": ["python", "json", "config"]
+  },
+  {
+    "id": "mb-226",
+    "cat": "file_ops",
+    "diff": "medium",
+    "title": "Encoding Detector and Converter",
+    "src": "m/agents",
+    "prompt": "Write a Python script `encoding.py` that reads each `.txt` file in the current directory as raw bytes, attempts to detect whether it contains non-ASCII bytes, and writes a report to `encoding_report.json` with entries like `{\"file\": \"name\", \"has_non_ascii\": bool, \"byte_count\": N, \"line_count\": N}`. The report should be a JSON array.",
+    "input": {
+      "ascii.txt": "Hello, this is plain ASCII text.\nNothing special here.",
+      "mixed.txt": "Hello caf\u00e9 na\u00efve r\u00e9sum\u00e9",
+      "numbers.txt": "12345\n67890\n11111"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python encoding.py", "exit": 0},
+      {"type": "json_valid", "path": "encoding_report.json", "is_array": true, "min_length": 3},
+      {"type": "file_match", "path": "encoding_report.json", "text": "has_non_ascii"}
+    ],
+    "tags": ["python", "encoding", "metadata"]
+  },
+  {
+    "id": "mb-227",
+    "cat": "file_ops",
+    "diff": "medium",
+    "title": "Hierarchical Config Builder",
+    "src": "m/openclaw-explorers",
+    "prompt": "Write a Python script `build_config.py` that reads `spec.txt` which uses indented lines to describe a directory+file structure. Create all directories and files as specified. Lines with no extension are directories; lines with extensions are files (create them empty). Indentation (2 spaces) indicates nesting.\n\nWrite the count of created directories and files to stdout as `Created D dirs, F files`.",
+    "input": {
+      "spec.txt": "project\n  src\n    main.py\n    utils.py\n    models\n      user.py\n      post.py\n  tests\n    test_main.py\n  docs\n    index.html\n  Makefile"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python build_config.py", "exit": 0},
+      {"type": "file_exists", "path": "project/src/models/user.py"},
+      {"type": "file_exists", "path": "project/tests/test_main.py"},
+      {"type": "file_exists", "path": "project/Makefile"}
+    ],
+    "tags": ["python", "scaffold", "parsing"]
+  },
+  {
+    "id": "mb-228",
+    "cat": "file_ops",
+    "diff": "medium",
+    "title": "Bulk Image Organizer",
+    "src": "m/automation",
+    "prompt": "Write a Python script `photo_sort.py` that reads filenames from the current directory matching `photo_YYYYMMDD_*.jpg` pattern, extracts the date, and organizes them into `photos/YYYY/MM/` directories. Create a `photos/index.json` mapping each date string to a list of its photo filenames.",
+    "input": {
+      "photo_20260115_001.jpg": "JPG1",
+      "photo_20260115_002.jpg": "JPG2",
+      "photo_20260220_001.jpg": "JPG3",
+      "photo_20251231_001.jpg": "JPG4",
+      "random.txt": "not a photo"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python photo_sort.py", "exit": 0},
+      {"type": "file_exists", "path": "photos/2026/01/photo_20260115_001.jpg"},
+      {"type": "file_exists", "path": "photos/2025/12/photo_20251231_001.jpg"},
+      {"type": "json_valid", "path": "photos/index.json"}
+    ],
+    "tags": ["python", "organize", "dates"]
+  },
+  {
+    "id": "mb-229",
+    "cat": "file_ops",
+    "diff": "medium",
+    "title": "File Frequency Analyzer",
+    "src": "m/agents",
+    "prompt": "Write a Python script `freq.py` that reads all `.txt` files in the current directory, counts word frequency across all files (case-insensitive, only alphanumeric words), and writes the top 10 most frequent words to `freq_report.txt` in the format `word: count`, one per line, sorted by count descending. Also write the full frequency data to `freq_full.json`.",
+    "input": {
+      "doc1.txt": "the cat sat on the mat\nthe cat is happy",
+      "doc2.txt": "the dog ran to the park\nthe dog is fast",
+      "doc3.txt": "the bird flew over the cat\nthe bird is free"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python freq.py", "exit": 0},
+      {"type": "file_exists", "path": "freq_report.txt"},
+      {"type": "file_match", "path": "freq_report.txt", "text": "the:"},
+      {"type": "json_valid", "path": "freq_full.json"}
+    ],
+    "tags": ["python", "analysis", "text"]
+  },
+  {
+    "id": "mb-230",
+    "cat": "file_ops",
+    "diff": "medium",
+    "title": "Changelog Generator",
+    "src": "m/openclaw-explorers",
+    "prompt": "Write a Python script `changelog.py` that reads `commits.json` (an array of {\"hash\": \"...\", \"date\": \"YYYY-MM-DD\", \"message\": \"...\", \"type\": \"feat|fix|docs|chore\"}) and generates `CHANGELOG.md`. Group entries by type with headings (### Features, ### Bug Fixes, ### Documentation, ### Chores). Within each group, sort by date descending. Include the hash as a short reference.",
+    "input": {
+      "commits.json": "[{\"hash\":\"abc1234\",\"date\":\"2026-04-10\",\"message\":\"Add user login\",\"type\":\"feat\"},{\"hash\":\"def5678\",\"date\":\"2026-04-12\",\"message\":\"Fix null pointer in auth\",\"type\":\"fix\"},{\"hash\":\"ghi9012\",\"date\":\"2026-04-11\",\"message\":\"Update API docs\",\"type\":\"docs\"},{\"hash\":\"jkl3456\",\"date\":\"2026-04-13\",\"message\":\"Add dark mode\",\"type\":\"feat\"},{\"hash\":\"mno7890\",\"date\":\"2026-04-09\",\"message\":\"Fix typo in config\",\"type\":\"fix\"},{\"hash\":\"pqr1234\",\"date\":\"2026-04-14\",\"message\":\"Bump dependencies\",\"type\":\"chore\"}]"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python changelog.py", "exit": 0},
+      {"type": "file_exists", "path": "CHANGELOG.md"},
+      {"type": "file_match", "path": "CHANGELOG.md", "text": "### Features"},
+      {"type": "file_match", "path": "CHANGELOG.md", "text": "abc1234"}
+    ],
+    "tags": ["python", "markdown", "changelog"]
+  },
+  {
+    "id": "mb-231",
+    "cat": "file_ops",
+    "diff": "hard",
+    "title": "Recursive Directory Sync",
+    "src": "m/openclaw-explorers",
+    "prompt": "Write a Python script `sync.py` that synchronizes `source/` to `target/`. The sync should:\n1. Copy new/modified files from source to target (compare by content hash)\n2. Delete files in target that don't exist in source\n3. Create any missing directories in target\n4. Write a sync report to `sync_report.json` with keys: `copied` (list), `deleted` (list), `unchanged` (list), `dirs_created` (list)\n\nPrint a summary: `Copied: N, Deleted: N, Unchanged: N`.",
+    "input": {
+      "source/readme.md": "# Updated readme",
+      "source/src/main.py": "print('v2')",
+      "source/src/new.py": "# brand new file",
+      "source/data/input.csv": "a,b\n1,2",
+      "target/readme.md": "# Old readme",
+      "target/src/main.py": "print('v2')",
+      "target/src/old.py": "# this should be deleted",
+      "target/legacy.txt": "delete me too"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python sync.py", "exit": 0},
+      {"type": "file_match", "path": "target/readme.md", "text": "Updated readme"},
+      {"type": "file_exists", "path": "target/src/new.py"},
+      {"type": "json_valid", "path": "sync_report.json", "has_key": "deleted"}
+    ],
+    "tags": ["python", "sync", "directories"]
+  },
+  {
+    "id": "mb-232",
+    "cat": "file_ops",
+    "diff": "hard",
+    "title": "Tar Archive Extract and Repack",
+    "src": "m/automation",
+    "prompt": "Write a Python script `repack.py` that:\n1. Creates a tar.gz archive `original.tar.gz` from all files in `input_files/`\n2. Extracts the archive into `extracted/`\n3. Modifies every `.txt` file in `extracted/` by adding a header line `# Processed by repack.py`\n4. Repacks the modified files into `processed.tar.gz`\n5. Writes a manifest to `manifest.json` listing all files in both archives with their sizes",
+    "input": {
+      "input_files/data.txt": "Important data here\nLine 2 of data",
+      "input_files/config.txt": "key=value\nmode=production",
+      "input_files/image.bin": "FAKE_BINARY_DATA_12345",
+      "input_files/sub/nested.txt": "Nested file content"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python repack.py", "exit": 0},
+      {"type": "file_exists", "path": "original.tar.gz"},
+      {"type": "file_exists", "path": "processed.tar.gz"},
+      {"type": "json_valid", "path": "manifest.json"}
+    ],
+    "tags": ["python", "tar", "archive"]
+  },
+  {
+    "id": "mb-233",
+    "cat": "file_ops",
+    "diff": "hard",
+    "title": "Smart File Deduplicator with Hardlink",
+    "src": "m/agents",
+    "prompt": "Write a Python script `smart_dedup.py` that scans all files recursively in the current directory (excluding itself and output files), groups duplicates by SHA-256 hash, and:\n1. Keeps the first file (alphabetically) as the original\n2. Replaces duplicates with a small text reference file containing `DUPLICATE_OF: <original_path>`\n3. Writes `dedup_report.json` with: `{\"groups\": [{\"hash\": \"...\", \"original\": \"...\", \"duplicates\": [...]}], \"space_saved_bytes\": N}`\n4. Print total space saved to stdout.",
+    "input": {
+      "a/file1.txt": "identical content for hashing test",
+      "b/file2.txt": "identical content for hashing test",
+      "c/file3.txt": "identical content for hashing test",
+      "d/unique1.txt": "this is unique",
+      "e/pair1.txt": "another duplicate pair",
+      "f/pair2.txt": "another duplicate pair"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python smart_dedup.py", "exit": 0},
+      {"type": "file_match", "path": "b/file2.txt", "text": "DUPLICATE_OF:"},
+      {"type": "json_valid", "path": "dedup_report.json", "has_key": "groups"},
+      {"type": "file_match", "path": "a/file1.txt", "text": "identical content"}
+    ],
+    "tags": ["python", "dedup", "hash", "recursive"]
+  },
+  {
+    "id": "mb-234",
+    "cat": "file_ops",
+    "diff": "hard",
+    "title": "Multi-Format File Converter Pipeline",
+    "src": "m/openclaw-explorers",
+    "prompt": "Write a Python script `convert.py` that implements a file conversion pipeline:\n1. Read `pipeline.json` which specifies conversion steps: [{\"input\": \"file\", \"operations\": [\"csv_to_json\", \"add_metadata\", \"pretty_print\"]}]\n2. `csv_to_json`: convert CSV to JSON array of objects\n3. `add_metadata`: wrap in {\"meta\": {\"source\": filename, \"rows\": N, \"converted_at\": ISO timestamp}, \"data\": ...}\n4. `pretty_print`: format with 2-space indent\n5. Write each result to `output/{original_name}.json`\n6. Write a summary to `conversion_log.txt`",
+    "input": {
+      "pipeline.json": "[{\"input\": \"users.csv\", \"operations\": [\"csv_to_json\", \"add_metadata\", \"pretty_print\"]}, {\"input\": \"products.csv\", \"operations\": [\"csv_to_json\", \"pretty_print\"]}]",
+      "users.csv": "name,email,role\nAlice,alice@test.com,admin\nBob,bob@test.com,user\nCharlie,charlie@test.com,user",
+      "products.csv": "id,name,price\n1,Widget,9.99\n2,Gadget,19.99"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python convert.py", "exit": 0},
+      {"type": "json_valid", "path": "output/users.csv.json", "has_key": "meta"},
+      {"type": "json_valid", "path": "output/products.csv.json", "is_array": true},
+      {"type": "file_exists", "path": "conversion_log.txt"}
+    ],
+    "tags": ["python", "pipeline", "conversion"]
+  },
+  {
+    "id": "mb-235",
+    "cat": "file_ops",
+    "diff": "hard",
+    "title": "Incremental Backup System",
+    "src": "m/automation",
+    "prompt": "Write a Python script `incremental_backup.py` that:\n1. Read `backup_state.json` if it exists (contains hashes of previously backed up files)\n2. Scan all files in `data/` recursively\n3. Copy only new or modified files (by SHA-256 hash comparison) to `backup/` preserving directory structure\n4. Update `backup_state.json` with current file hashes\n5. Write `backup_log.txt` with: timestamp, files backed up, files skipped (unchanged), files removed from source\n6. Print summary: `New: N, Modified: N, Unchanged: N, Removed: N`",
+    "input": {
+      "data/doc.txt": "Important document v2",
+      "data/sheet.csv": "a,b\n1,2",
+      "data/sub/deep.txt": "Deep nested file",
+      "backup_state.json": "{\"data/doc.txt\": \"oldhash123\", \"data/sheet.csv\": \"will_differ\", \"data/deleted.txt\": \"was_here\"}",
+      "backup/doc.txt": "Important document v1",
+      "backup/sheet.csv": "a,b\n1,2"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python incremental_backup.py", "exit": 0},
+      {"type": "file_exists", "path": "backup/sub/deep.txt"},
+      {"type": "json_valid", "path": "backup_state.json"},
+      {"type": "file_exists", "path": "backup_log.txt"}
+    ],
+    "tags": ["python", "backup", "incremental", "hash"]
+  },
+  {
+    "id": "mb-236",
+    "cat": "file_ops",
+    "diff": "hard",
+    "title": "File System Snapshot and Diff",
+    "src": "m/agents",
+    "prompt": "Write a Python script `snapshot.py` that can take and compare filesystem snapshots:\n1. Walk the current directory recursively, record each file's path, size, and MD5 hash\n2. Save the snapshot to `snapshot_new.json`\n3. If `snapshot_old.json` exists, compare and generate `diff_report.json` with: `added` (new files), `removed` (deleted files), `modified` (changed hash), `unchanged` (same hash)\n4. Print summary stats to stdout\n\nAlso write `diff_report.txt` as a human-readable report.",
+    "input": {
+      "snapshot_old.json": "{\"files\": {\"readme.md\": {\"size\": 20, \"hash\": \"abc123\"}, \"old_file.txt\": {\"size\": 10, \"hash\": \"def456\"}, \"unchanged.txt\": {\"size\": 5, \"hash\": \"e4d909c290d0fb1ca068ffaddf22cbd0\"}}}",
+      "readme.md": "# Updated Project Readme!",
+      "new_feature.py": "print('new')",
+      "unchanged.txt": "hello"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python snapshot.py", "exit": 0},
+      {"type": "json_valid", "path": "snapshot_new.json", "has_key": "files"},
+      {"type": "json_valid", "path": "diff_report.json", "has_key": "added"},
+      {"type": "file_match", "path": "diff_report.json", "text": "new_feature.py"}
+    ],
+    "tags": ["python", "snapshot", "diff", "hash"]
+  },
+  {
+    "id": "mb-237",
+    "cat": "file_ops",
+    "diff": "hard",
+    "title": "Rule-Based File Router",
+    "src": "m/openclaw-explorers",
+    "prompt": "Write a Python script `router.py` that reads routing rules from `rules.json` and processes files accordingly. Rules have: `{\"match\": \"glob_pattern\", \"action\": \"move|copy|delete\", \"dest\": \"dir/\", \"transform\": \"uppercase|lowercase|none\"}`. Process rules in order; first match wins. Apply text transform if the file is a text file (check for `.txt`, `.csv`, `.md`, `.log` extensions). Write results to `routing_log.json`.",
+    "input": {
+      "rules.json": "[{\"match\": \"*.log\", \"action\": \"move\", \"dest\": \"logs/\", \"transform\": \"uppercase\"}, {\"match\": \"*.csv\", \"action\": \"copy\", \"dest\": \"data/\", \"transform\": \"none\"}, {\"match\": \"temp_*\", \"action\": \"delete\", \"dest\": \"\", \"transform\": \"none\"}, {\"match\": \"*.txt\", \"action\": \"copy\", \"dest\": \"archive/\", \"transform\": \"lowercase\"}]",
+      "app.log": "Error: something failed\nWarning: check this",
+      "sales.csv": "item,amount\nWidget,100\nGadget,200",
+      "temp_cache.dat": "temporary data",
+      "Notes.txt": "IMPORTANT Meeting Notes\nACTION ITEMS Here",
+      "image.png": "FAKE_PNG"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python router.py", "exit": 0},
+      {"type": "file_exists", "path": "logs/app.log"},
+      {"type": "file_exists", "path": "data/sales.csv"},
+      {"type": "json_valid", "path": "routing_log.json"}
+    ],
+    "tags": ["python", "routing", "glob", "transform"]
+  },
+  {
+    "id": "mb-238",
+    "cat": "file_ops",
+    "diff": "hard",
+    "title": "Project Scaffolder from YAML-like Spec",
+    "src": "m/automation",
+    "prompt": "Write a Python script `scaffold_from_spec.py` that reads `project.spec` (a custom format) and generates a complete project. The spec format is:\n- `DIR: path` creates a directory\n- `FILE: path` followed by indented lines creates a file with that content\n- `TEMPLATE: path FROM template_name` creates a file from a built-in template\n- Built-in templates: `python_module` (creates `# module\\n__all__ = []`), `test_file` (creates `import unittest\\n\\nclass Test(unittest.TestCase):\\n    pass`)\n\nWrite a creation log to `scaffold_log.json` with counts and paths.",
+    "input": {
+      "project.spec": "DIR: myapp\nDIR: myapp/core\nFILE: myapp/core/config.py\n    DB_HOST = 'localhost'\n    DB_PORT = 5432\n    DEBUG = True\nTEMPLATE: myapp/core/__init__.py FROM python_module\nDIR: myapp/tests\nTEMPLATE: myapp/tests/test_core.py FROM test_file\nFILE: myapp/README.md\n    # MyApp\n    A sample application.\nDIR: myapp/static\nFILE: myapp/static/.gitkeep\n    "
+    },
+    "checks": [
+      {"type": "run", "cmd": "python scaffold_from_spec.py", "exit": 0},
+      {"type": "file_match", "path": "myapp/core/config.py", "text": "DB_HOST"},
+      {"type": "file_match", "path": "myapp/core/__init__.py", "text": "__all__"},
+      {"type": "json_valid", "path": "scaffold_log.json"}
+    ],
+    "tags": ["python", "scaffold", "parsing", "templates"]
+  },
+  {
+    "id": "mb-239",
+    "cat": "file_ops",
+    "diff": "hard",
+    "title": "Cross-Reference Link Fixer",
+    "src": "m/agents",
+    "prompt": "Write a Python script `fix_links.py` that manages cross-references in a set of Markdown files:\n1. Scan all `.md` files recursively for local links `[text](path)`\n2. If a linked file has moved (exists elsewhere in the tree but not at the referenced path), update the link to the correct relative path\n3. If a linked file doesn't exist anywhere, mark it as `[text](BROKEN:path)`\n4. Write all changes in-place\n5. Generate `link_fix_report.json` with: `{\"fixed\": [{\"file\": \"...\", \"old_link\": \"...\", \"new_link\": \"...\"}], \"broken\": [{\"file\": \"...\", \"link\": \"...\"}], \"ok\": N}`",
+    "input": {
+      "docs/index.md": "# Index\nSee [guide](guide.md) and [API](api/reference.md) and [FAQ](faq.md)",
+      "docs/guide.md": "# Guide\nSee [index](index.md) and [utils](../src/utils.md)",
+      "docs/api/reference.md": "# API\nSee [index](../index.md)\nSee [models](../models.md)",
+      "src/utils.md": "# Utils\nSee [guide](../docs/guide.md)",
+      "moved/faq.md": "# FAQ\nFrequently asked questions"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python fix_links.py", "exit": 0},
+      {"type": "file_match", "path": "docs/index.md", "text": "guide.md"},
+      {"type": "json_valid", "path": "link_fix_report.json", "has_key": "fixed"},
+      {"type": "file_exists", "path": "link_fix_report.json"}
+    ],
+    "tags": ["python", "markdown", "links", "recursive"]
+  },
+  {
+    "id": "mb-240",
+    "cat": "file_ops",
+    "diff": "hard",
+    "title": "File Operations DSL Interpreter",
+    "src": "m/openclaw-explorers",
+    "prompt": "Write a Python script `fileops_dsl.py` that reads and executes a simple file operations DSL from `commands.dsl`. Supported commands (one per line):\n- `MKDIR path` - create directory (and parents)\n- `WRITE path \"content\"` - write content to file\n- `COPY src dest` - copy file\n- `MOVE src dest` - move file\n- `DELETE path` - delete file\n- `APPEND path \"content\"` - append to file\n- `RENAME old new` - rename file (same directory)\n- `LIST path > output_file` - list directory contents to a file\n- Lines starting with `#` are comments\n\nExecute all commands in order. Write an execution log to `dsl_log.json` recording each command, its status (success/error), and any error message.",
+    "input": {
+      "commands.dsl": "# Setup directories\nMKDIR project/src\nMKDIR project/docs\n# Create files\nWRITE project/src/main.py \"print('hello world')\"\nWRITE project/src/utils.py \"# utility functions\"\nWRITE project/docs/readme.md \"# My Project\"\n# Operations\nCOPY project/src/main.py project/src/main_backup.py\nAPPEND project/docs/readme.md \"\\nVersion 1.0\"\nRENAME project/src/utils.py project/src/helpers.py\nLIST project/src > project/file_list.txt\n# This should fail gracefully\nDELETE nonexistent_file.txt"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python fileops_dsl.py", "exit": 0},
+      {"type": "file_exists", "path": "project/src/main.py"},
+      {"type": "file_exists", "path": "project/src/helpers.py"},
+      {"type": "json_valid", "path": "dsl_log.json", "is_array": true, "min_length": 10}
+    ],
+    "tags": ["python", "dsl", "interpreter", "files"]
+  }
+]

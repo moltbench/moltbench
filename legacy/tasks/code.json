@@ -1,0 +1,1206 @@
+[
+  {
+    "id": "mb-001",
+    "cat": "code",
+    "diff": "easy",
+    "title": "FizzBuzz to File",
+    "src": "m/coding",
+    "prompt": "Write a Python script `fizzbuzz.py` that prints FizzBuzz for numbers 1 through 100 to stdout. For multiples of 3 print 'Fizz', multiples of 5 print 'Buzz', multiples of both print 'FizzBuzz', otherwise print the number. Also write the same output to a file called `output.txt`, one entry per line.",
+    "input": {},
+    "checks": [
+      {"type": "file_exists", "path": "fizzbuzz.py"},
+      {"type": "run", "cmd": "python fizzbuzz.py", "exit": 0, "stdout": "FizzBuzz"},
+      {"type": "file_match", "path": "output.txt", "text": "FizzBuzz"},
+      {"type": "line_count", "path": "output.txt", "min": 100, "max": 100}
+    ],
+    "tags": ["basics", "file-io"]
+  },
+  {
+    "id": "mb-002",
+    "cat": "code",
+    "diff": "easy",
+    "title": "CSV Column Sum",
+    "src": "m/coding",
+    "prompt": "Write a Python script `colsum.py` that reads `data.csv` and prints the sum of the 'amount' column to stdout. The output should be a single number (integer or float).",
+    "input": {
+      "data.csv": "name,amount,category\nAlice,150,food\nBob,200,transport\nCharlie,50,food\nDiana,300,transport\nEve,100,food\n"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "colsum.py"},
+      {"type": "run", "cmd": "python colsum.py", "exit": 0, "stdout": "800"}
+    ],
+    "tags": ["csv", "data-processing"]
+  },
+  {
+    "id": "mb-003",
+    "cat": "code",
+    "diff": "easy",
+    "title": "Reverse Lines in File",
+    "src": "m/coding",
+    "prompt": "Write a Python script `reverse_lines.py` that reads `input.txt`, reverses the order of lines, and writes the result to `reversed.txt`.",
+    "input": {
+      "input.txt": "alpha\nbravo\ncharlie\ndelta\necho\n"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "reverse_lines.py"},
+      {"type": "run", "cmd": "python reverse_lines.py", "exit": 0},
+      {"type": "file_match", "path": "reversed.txt", "text": "echo\ndelta\ncharlie\nbravo\nalpha"}
+    ],
+    "tags": ["file-io", "string"]
+  },
+  {
+    "id": "mb-004",
+    "cat": "code",
+    "diff": "easy",
+    "title": "Word Frequency Counter",
+    "src": "m/coding",
+    "prompt": "Write a Python script `wordfreq.py` that reads `passage.txt`, counts the frequency of each word (case-insensitive, split on whitespace), and writes the results to `freq.json` as a JSON object mapping word to count. The JSON keys should be lowercase.",
+    "input": {
+      "passage.txt": "The cat sat on the mat\nThe cat ate the rat\nThe rat ran from the cat\n"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "wordfreq.py"},
+      {"type": "run", "cmd": "python wordfreq.py", "exit": 0},
+      {"type": "json_valid", "path": "freq.json", "has_key": "the"},
+      {"type": "file_match", "path": "freq.json", "pattern": "\"the\"\\s*:\\s*6"}
+    ],
+    "tags": ["json", "text-analysis"]
+  },
+  {
+    "id": "mb-005",
+    "cat": "code",
+    "diff": "easy",
+    "title": "Temperature Converter CLI",
+    "src": "m/coding",
+    "prompt": "Write a Python script `tempconv.py` that takes two command-line arguments: a temperature value and a unit ('C' or 'F'). It converts Celsius to Fahrenheit or vice versa and prints the result rounded to 1 decimal place. Example: `python tempconv.py 100 C` should print `212.0`. Exit with code 1 if arguments are invalid.",
+    "input": {},
+    "checks": [
+      {"type": "file_exists", "path": "tempconv.py"},
+      {"type": "run", "cmd": "python tempconv.py 100 C", "exit": 0, "stdout": "212.0"},
+      {"type": "run", "cmd": "python tempconv.py 32 F", "exit": 0, "stdout": "0.0"},
+      {"type": "run", "cmd": "python tempconv.py abc X", "exit": 1}
+    ],
+    "tags": ["cli", "conversion"]
+  },
+  {
+    "id": "mb-006",
+    "cat": "code",
+    "diff": "easy",
+    "title": "Palindrome Checker",
+    "src": "m/coding",
+    "prompt": "Write a Python script `palindrome.py` that takes a string as a command-line argument and prints 'YES' if it is a palindrome (case-insensitive, ignoring non-alphanumeric characters) or 'NO' otherwise.",
+    "input": {},
+    "checks": [
+      {"type": "file_exists", "path": "palindrome.py"},
+      {"type": "run", "cmd": "python palindrome.py racecar", "exit": 0, "stdout": "YES"},
+      {"type": "run", "cmd": "python palindrome.py hello", "exit": 0, "stdout": "NO"},
+      {"type": "run", "cmd": "python palindrome.py \"A man a plan a canal Panama\"", "exit": 0, "stdout": "YES"}
+    ],
+    "tags": ["string", "cli"]
+  },
+  {
+    "id": "mb-007",
+    "cat": "code",
+    "diff": "easy",
+    "title": "JSON to CSV Converter",
+    "src": "m/coding",
+    "prompt": "Write a Python script `json2csv.py` that reads `records.json` (a JSON array of objects with the same keys) and writes `records.csv` with a header row and one data row per object.",
+    "input": {
+      "records.json": "[{\"name\":\"Alice\",\"age\":30,\"city\":\"NYC\"},{\"name\":\"Bob\",\"age\":25,\"city\":\"LA\"},{\"name\":\"Charlie\",\"age\":35,\"city\":\"Chicago\"}]"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "json2csv.py"},
+      {"type": "run", "cmd": "python json2csv.py", "exit": 0},
+      {"type": "file_match", "path": "records.csv", "text": "name"},
+      {"type": "file_match", "path": "records.csv", "text": "Alice"}
+    ],
+    "tags": ["json", "csv", "conversion"]
+  },
+  {
+    "id": "mb-008",
+    "cat": "code",
+    "diff": "easy",
+    "title": "Simple Calculator",
+    "src": "m/coding",
+    "prompt": "Write a Python script `calc.py` that takes three command-line arguments: number, operator (+, -, *, /), number. Print the result. Handle division by zero by printing 'ERROR' and exiting with code 1.",
+    "input": {},
+    "checks": [
+      {"type": "file_exists", "path": "calc.py"},
+      {"type": "run", "cmd": "python calc.py 10 + 5", "exit": 0, "stdout": "15"},
+      {"type": "run", "cmd": "python calc.py 10 / 0", "exit": 1, "stdout": "ERROR"}
+    ],
+    "tags": ["cli", "math"]
+  },
+  {
+    "id": "mb-009",
+    "cat": "code",
+    "diff": "easy",
+    "title": "Duplicate Line Remover",
+    "src": "m/coding",
+    "prompt": "Write a Python script `dedup.py` that reads `input.txt`, removes duplicate lines while preserving the order of first appearance, and writes the result to `deduped.txt`.",
+    "input": {
+      "input.txt": "apple\nbanana\napple\ncherry\nbanana\ndate\ncherry\nfig\n"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "dedup.py"},
+      {"type": "run", "cmd": "python dedup.py", "exit": 0},
+      {"type": "file_match", "path": "deduped.txt", "text": "apple\nbanana\ncherry\ndate\nfig"},
+      {"type": "line_count", "path": "deduped.txt", "min": 5, "max": 5}
+    ],
+    "tags": ["file-io", "deduplication"]
+  },
+  {
+    "id": "mb-010",
+    "cat": "code",
+    "diff": "easy",
+    "title": "Markdown Table Generator",
+    "src": "m/coding",
+    "prompt": "Write a Python script `mktable.py` that reads `data.csv` and outputs a Markdown-formatted table to `table.md`. The first row of the CSV is the header, followed by a separator row of dashes, then data rows.",
+    "input": {
+      "data.csv": "Language,Year,Creator\nPython,1991,Guido van Rossum\nJava,1995,James Gosling\nRust,2010,Graydon Hoare\n"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "mktable.py"},
+      {"type": "run", "cmd": "python mktable.py", "exit": 0},
+      {"type": "file_match", "path": "table.md", "text": "| Language"},
+      {"type": "file_match", "path": "table.md", "pattern": "---"}
+    ],
+    "tags": ["csv", "markdown", "conversion"]
+  },
+  {
+    "id": "mb-011",
+    "cat": "code",
+    "diff": "easy",
+    "title": "ROT13 Encoder",
+    "src": "m/coding",
+    "prompt": "Write a Python script `rot13.py` that takes a string as a command-line argument and prints the ROT13 encoded result. Only rotate ASCII letters; leave other characters unchanged.",
+    "input": {},
+    "checks": [
+      {"type": "file_exists", "path": "rot13.py"},
+      {"type": "run", "cmd": "python rot13.py Hello", "exit": 0, "stdout": "Uryyb"},
+      {"type": "run", "cmd": "python rot13.py \"Test 123!\"", "exit": 0, "stdout": "Grfg 123!"}
+    ],
+    "tags": ["cipher", "string"]
+  },
+  {
+    "id": "mb-012",
+    "cat": "code",
+    "diff": "easy",
+    "title": "File Extension Counter",
+    "src": "m/builds",
+    "prompt": "Write a Python script `extcount.py` that reads `filelist.txt` (one filename per line) and writes `extensions.json` — a JSON object mapping each file extension (including the dot, e.g. '.py') to its count. Files with no extension should be counted under the key '(none)'.",
+    "input": {
+      "filelist.txt": "main.py\nutils.py\nREADME.md\nsetup.cfg\ntest_main.py\nLICENSE\ndata.json\nstyle.css\napp.py\nMakefile\n"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "extcount.py"},
+      {"type": "run", "cmd": "python extcount.py", "exit": 0},
+      {"type": "json_valid", "path": "extensions.json", "has_key": ".py"},
+      {"type": "file_match", "path": "extensions.json", "pattern": "\\.py\"\\s*:\\s*4"}
+    ],
+    "tags": ["json", "file-analysis"]
+  },
+  {
+    "id": "mb-013",
+    "cat": "code",
+    "diff": "easy",
+    "title": "Number Guessing Game (Deterministic)",
+    "src": "m/coding",
+    "prompt": "Write a Python script `guess.py` that implements a binary search to guess a number between 1 and 100. The secret number is provided as a command-line argument. The script should print each guess on a separate line, ending with 'Found: N' where N is the secret number. It must find the number in at most 7 guesses.",
+    "input": {},
+    "checks": [
+      {"type": "file_exists", "path": "guess.py"},
+      {"type": "run", "cmd": "python guess.py 42", "exit": 0, "stdout": "Found: 42"},
+      {"type": "run", "cmd": "python guess.py 1", "exit": 0, "stdout": "Found: 1"},
+      {"type": "run", "cmd": "python guess.py 100", "exit": 0, "stdout": "Found: 100"}
+    ],
+    "tags": ["algorithm", "binary-search"]
+  },
+  {
+    "id": "mb-014",
+    "cat": "code",
+    "diff": "easy",
+    "title": "Roman Numeral Converter",
+    "src": "m/coding",
+    "prompt": "Write a Python script `roman.py` that takes an integer (1-3999) as a command-line argument and prints its Roman numeral representation. Exit with code 1 for out-of-range input.",
+    "input": {},
+    "checks": [
+      {"type": "file_exists", "path": "roman.py"},
+      {"type": "run", "cmd": "python roman.py 2024", "exit": 0, "stdout": "MMXXIV"},
+      {"type": "run", "cmd": "python roman.py 14", "exit": 0, "stdout": "XIV"},
+      {"type": "run", "cmd": "python roman.py 5000", "exit": 1}
+    ],
+    "tags": ["conversion", "math"]
+  },
+  {
+    "id": "mb-015",
+    "cat": "code",
+    "diff": "easy",
+    "title": "Base64 Encode/Decode CLI",
+    "src": "m/coding",
+    "prompt": "Write a Python script `b64.py` that takes two command-line arguments: a mode ('encode' or 'decode') and a string. In encode mode, print the base64-encoded version. In decode mode, print the decoded string. Exit with code 1 if mode is invalid or decoding fails.",
+    "input": {},
+    "checks": [
+      {"type": "file_exists", "path": "b64.py"},
+      {"type": "run", "cmd": "python b64.py encode HelloWorld", "exit": 0, "stdout": "SGVsbG9Xb3JsZA=="},
+      {"type": "run", "cmd": "python b64.py decode SGVsbG9Xb3JsZA==", "exit": 0, "stdout": "HelloWorld"},
+      {"type": "run", "cmd": "python b64.py invalid test", "exit": 1}
+    ],
+    "tags": ["encoding", "cli"]
+  },
+  {
+    "id": "mb-016",
+    "cat": "code",
+    "diff": "easy",
+    "title": "Pascal's Triangle",
+    "src": "m/coding",
+    "prompt": "Write a Python script `pascal.py` that takes an integer N as a command-line argument and prints the first N rows of Pascal's Triangle. Each row should be space-separated numbers on their own line. Also write the output to `triangle.txt`.",
+    "input": {},
+    "checks": [
+      {"type": "file_exists", "path": "pascal.py"},
+      {"type": "run", "cmd": "python pascal.py 5", "exit": 0, "stdout": "1 4 6 4 1"},
+      {"type": "file_exists", "path": "triangle.txt"},
+      {"type": "line_count", "path": "triangle.txt", "min": 5, "max": 5}
+    ],
+    "tags": ["math", "algorithm"]
+  },
+  {
+    "id": "mb-017",
+    "cat": "code",
+    "diff": "easy",
+    "title": "Slug Generator",
+    "src": "m/coding",
+    "prompt": "Write a Python script `slugify.py` that reads titles from `titles.txt` (one per line) and writes URL-friendly slugs to `slugs.txt` (one per line). A slug is lowercase, spaces replaced with hyphens, non-alphanumeric characters (except hyphens) removed, and consecutive hyphens collapsed to one.",
+    "input": {
+      "titles.txt": "Hello World!\nMy  Amazing   Blog Post\nPython 3.12: What's New?\n100% Organic & Fresh\nSimple Test\n"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "slugify.py"},
+      {"type": "run", "cmd": "python slugify.py", "exit": 0},
+      {"type": "file_match", "path": "slugs.txt", "text": "hello-world"},
+      {"type": "file_match", "path": "slugs.txt", "text": "python-312-whats-new"}
+    ],
+    "tags": ["string", "text-processing"]
+  },
+  {
+    "id": "mb-018",
+    "cat": "code",
+    "diff": "easy",
+    "title": "Prime Number Sieve",
+    "src": "m/coding",
+    "prompt": "Write a Python script `primes.py` that takes an integer N as a command-line argument and prints all prime numbers up to N (inclusive), one per line. Use the Sieve of Eratosthenes algorithm.",
+    "input": {},
+    "checks": [
+      {"type": "file_exists", "path": "primes.py"},
+      {"type": "run", "cmd": "python primes.py 30", "exit": 0, "stdout": "29"},
+      {"type": "run", "cmd": "python primes.py 10", "exit": 0, "stdout_pattern": "^2\\n3\\n5\\n7\\n?$"}
+    ],
+    "tags": ["algorithm", "math"]
+  },
+  {
+    "id": "mb-019",
+    "cat": "code",
+    "diff": "easy",
+    "title": "INI File Parser",
+    "src": "m/coding",
+    "prompt": "Write a Python script `ini2json.py` that reads `config.ini` and writes `config.json`. The JSON should be a nested object: top-level keys are section names, values are objects of key-value pairs from that section.",
+    "input": {
+      "config.ini": "[database]\nhost = localhost\nport = 5432\nname = mydb\n\n[server]\nhost = 0.0.0.0\nport = 8080\ndebug = true\n\n[logging]\nlevel = info\nfile = app.log\n"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "ini2json.py"},
+      {"type": "run", "cmd": "python ini2json.py", "exit": 0},
+      {"type": "json_valid", "path": "config.json", "has_key": "database"},
+      {"type": "file_match", "path": "config.json", "text": "5432"}
+    ],
+    "tags": ["parser", "config", "json"]
+  },
+  {
+    "id": "mb-020",
+    "cat": "code",
+    "diff": "easy",
+    "title": "Simple Encryption: Caesar Cipher",
+    "src": "m/coding",
+    "prompt": "Write a Python script `caesar.py` that takes three arguments: mode ('encrypt' or 'decrypt'), shift (integer), and text. Print the result. Only shift ASCII letters; preserve case and leave non-letters unchanged.",
+    "input": {},
+    "checks": [
+      {"type": "file_exists", "path": "caesar.py"},
+      {"type": "run", "cmd": "python caesar.py encrypt 3 \"Hello World\"", "exit": 0, "stdout": "Khoor Zruog"},
+      {"type": "run", "cmd": "python caesar.py decrypt 3 \"Khoor Zruog\"", "exit": 0, "stdout": "Hello World"}
+    ],
+    "tags": ["cipher", "string"]
+  },
+  {
+    "id": "mb-021",
+    "cat": "code",
+    "diff": "easy",
+    "title": "Matrix Transpose",
+    "src": "m/coding",
+    "prompt": "Write a Python script `transpose.py` that reads a matrix from `matrix.txt` (space-separated numbers, one row per line), transposes it, and writes the result to `transposed.txt` in the same format.",
+    "input": {
+      "matrix.txt": "1 2 3\n4 5 6\n7 8 9\n10 11 12\n"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "transpose.py"},
+      {"type": "run", "cmd": "python transpose.py", "exit": 0},
+      {"type": "file_match", "path": "transposed.txt", "text": "1 4 7 10"},
+      {"type": "line_count", "path": "transposed.txt", "min": 3, "max": 3}
+    ],
+    "tags": ["matrix", "math"]
+  },
+  {
+    "id": "mb-022",
+    "cat": "code",
+    "diff": "easy",
+    "title": "Validate JSON Files",
+    "src": "m/builds",
+    "prompt": "Write a Python script `jsonlint.py` that takes a filename as a command-line argument, checks whether it is valid JSON, and prints 'VALID' or 'INVALID' accordingly. Exit with code 0 for valid, code 1 for invalid.",
+    "input": {
+      "good.json": "{\"name\": \"test\", \"value\": 42}",
+      "bad.json": "{\"name\": \"test\", value: 42}"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "jsonlint.py"},
+      {"type": "run", "cmd": "python jsonlint.py good.json", "exit": 0, "stdout": "VALID"},
+      {"type": "run", "cmd": "python jsonlint.py bad.json", "exit": 1, "stdout": "INVALID"}
+    ],
+    "tags": ["json", "validation", "cli"]
+  },
+  {
+    "id": "mb-023",
+    "cat": "code",
+    "diff": "easy",
+    "title": "Fibonacci Sequence Writer",
+    "src": "m/coding",
+    "prompt": "Write a Python script `fib.py` that takes an integer N as a command-line argument and writes the first N Fibonacci numbers (starting 0, 1, 1, 2, ...) to `fibonacci.txt`, one number per line.",
+    "input": {},
+    "checks": [
+      {"type": "file_exists", "path": "fib.py"},
+      {"type": "run", "cmd": "python fib.py 10", "exit": 0},
+      {"type": "file_match", "path": "fibonacci.txt", "text": "34"},
+      {"type": "line_count", "path": "fibonacci.txt", "min": 10, "max": 10}
+    ],
+    "tags": ["math", "algorithm"]
+  },
+  {
+    "id": "mb-024",
+    "cat": "code",
+    "diff": "easy",
+    "title": "Character Class Counter",
+    "src": "m/coding",
+    "prompt": "Write a Python script `charcount.py` that reads `input.txt` and prints a summary: how many uppercase letters, lowercase letters, digits, spaces, and other characters are in the file. Format each line as 'category: N'.",
+    "input": {
+      "input.txt": "Hello World! 123\nPython 3.12 is Great.\nTest@2026#OK\n"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "charcount.py"},
+      {"type": "run", "cmd": "python charcount.py", "exit": 0, "stdout_pattern": "uppercase.*6"},
+      {"type": "run", "cmd": "python charcount.py", "exit": 0, "stdout_pattern": "digits?.*9"}
+    ],
+    "tags": ["text-analysis", "counting"]
+  },
+  {
+    "id": "mb-025",
+    "cat": "code",
+    "diff": "easy",
+    "title": "Hexadecimal Color Validator",
+    "src": "m/coding",
+    "prompt": "Write a Python script `hexcolor.py` that reads color codes from `colors.txt` (one per line) and writes `results.txt`. Each line in the output should be the original color followed by a tab and either 'VALID' or 'INVALID'. Valid hex colors match the pattern #RRGGBB or #RGB (case-insensitive, only hex digits).",
+    "input": {
+      "colors.txt": "#FF5733\n#abc\n#ZZZZZZ\n123456\n#12\n#aabbcc\n#F0F\n#GGHHII\n"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "hexcolor.py"},
+      {"type": "run", "cmd": "python hexcolor.py", "exit": 0},
+      {"type": "file_match", "path": "results.txt", "text": "#FF5733\tVALID"},
+      {"type": "file_match", "path": "results.txt", "text": "#ZZZZZZ\tINVALID"}
+    ],
+    "tags": ["validation", "regex"]
+  },
+  {
+    "id": "mb-026",
+    "cat": "code",
+    "diff": "easy",
+    "title": "Directory Tree Generator",
+    "src": "m/builds",
+    "prompt": "Write a Python script `tree.py` that takes a list of file paths from `paths.txt` (one per line) and prints a tree-like directory structure to stdout. Use indentation (2 spaces per level) and '- ' prefix for each entry. Also write the output to `tree.txt`.",
+    "input": {
+      "paths.txt": "src/main.py\nsrc/utils/helpers.py\nsrc/utils/config.py\ntests/test_main.py\nREADME.md\n"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "tree.py"},
+      {"type": "run", "cmd": "python tree.py", "exit": 0, "stdout": "src"},
+      {"type": "file_exists", "path": "tree.txt"},
+      {"type": "file_match", "path": "tree.txt", "text": "helpers.py"}
+    ],
+    "tags": ["tree", "file-analysis"]
+  },
+  {
+    "id": "mb-027",
+    "cat": "code",
+    "diff": "easy",
+    "title": "Simple Text Statistics",
+    "src": "m/coding",
+    "prompt": "Write a Python script `textstats.py` that reads `document.txt` and prints: total characters, total words, total lines, total sentences (count '.', '!', '?' as sentence endings), and average word length (rounded to 1 decimal). Format as 'key: value' lines.",
+    "input": {
+      "document.txt": "The quick brown fox jumps over the lazy dog. How vexingly quick daft zebras jump! Pack my box with five dozen liquor jugs.\nThe five boxing wizards jump quickly. Sphinx of black quartz judge my vow.\n"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "textstats.py"},
+      {"type": "run", "cmd": "python textstats.py", "exit": 0, "stdout_pattern": "lines.*2"},
+      {"type": "run", "cmd": "python textstats.py", "exit": 0, "stdout_pattern": "sentences.*5"}
+    ],
+    "tags": ["text-analysis", "statistics"]
+  },
+  {
+    "id": "mb-028",
+    "cat": "code",
+    "diff": "easy",
+    "title": "Batch File Renamer Script",
+    "src": "m/builds",
+    "prompt": "Write a Python script `renamer.py` that reads `mapping.csv` (columns: old_name, new_name) and writes a bash script `rename.sh` containing mv commands for each row. The bash script should start with #!/bin/bash and each command should be on its own line.",
+    "input": {
+      "mapping.csv": "old_name,new_name\nIMG_001.jpg,vacation_beach.jpg\nIMG_002.jpg,vacation_sunset.jpg\nDOC_003.pdf,report_2026.pdf\nIMG_004.png,profile_photo.png\n"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "renamer.py"},
+      {"type": "run", "cmd": "python renamer.py", "exit": 0},
+      {"type": "file_match", "path": "rename.sh", "text": "#!/bin/bash"},
+      {"type": "file_match", "path": "rename.sh", "text": "mv IMG_001.jpg vacation_beach.jpg"}
+    ],
+    "tags": ["code-generation", "bash"]
+  },
+  {
+    "id": "mb-029",
+    "cat": "code",
+    "diff": "medium",
+    "title": "Fix Broken Merge Sort",
+    "src": "m/coding",
+    "prompt": "The file `sort.py` contains a broken merge sort implementation. It has bugs that cause incorrect sorting. Fix all bugs and save the corrected version as `sort_fixed.py`. The fixed script should accept space-separated integers as command-line arguments and print the sorted result as space-separated integers.",
+    "input": {
+      "sort.py": "import sys\n\ndef merge_sort(arr):\n    if len(arr) <= 1:\n        return arr\n    mid = len(arr) // 2\n    left = merge_sort(arr[:mid])\n    right = merge_sort(arr[mid:])\n    return merge(left, right)\n\ndef merge(left, right):\n    result = []\n    i = j = 0\n    while i < len(left) and j < len(right):\n        if left[i] <= right[j]:\n            result.append(left[i])\n            i += 1\n        else:\n            result.append(right[j])\n            i += 1  # BUG: should increment j\n    result.extend(left[i:])\n    # BUG: missing right[j:]\n    return result\n\nif __name__ == '__main__':\n    nums = [int(x) for x in sys.argv[1:]]\n    sorted_nums = merge_sort(nums)\n    print(' '.join(str(x) for x in sorted_nums))\n"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "sort_fixed.py"},
+      {"type": "run", "cmd": "python sort_fixed.py 5 3 8 1 9 2 7 4 6", "exit": 0, "stdout": "1 2 3 4 5 6 7 8 9"},
+      {"type": "run", "cmd": "python sort_fixed.py 10 1", "exit": 0, "stdout": "1 10"},
+      {"type": "file_not_match", "path": "sort_fixed.py", "text": "i += 1  # BUG"}
+    ],
+    "tags": ["bugfix", "sorting", "algorithm"]
+  },
+  {
+    "id": "mb-030",
+    "cat": "code",
+    "diff": "medium",
+    "title": "CSV to SQLite Loader",
+    "src": "m/coding",
+    "prompt": "Write a Python script `csv2db.py` that reads `employees.csv` and creates an SQLite database `employees.db` with a table called 'employees'. Column types should be inferred: integer for numeric columns, text otherwise. After loading, the script should print the row count.",
+    "input": {
+      "employees.csv": "id,name,department,salary\n1,Alice Smith,Engineering,95000\n2,Bob Jones,Marketing,72000\n3,Charlie Brown,Engineering,88000\n4,Diana Prince,HR,67000\n5,Eve Wilson,Marketing,71000\n6,Frank Miller,Engineering,102000\n"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "csv2db.py"},
+      {"type": "run", "cmd": "python csv2db.py", "exit": 0, "stdout": "6"},
+      {"type": "file_exists", "path": "employees.db"},
+      {"type": "run", "cmd": "python -c \"import sqlite3; c=sqlite3.connect('employees.db'); print(c.execute('SELECT name FROM employees WHERE salary>90000').fetchall())\"", "exit": 0, "stdout": "Alice"}
+    ],
+    "tags": ["database", "sqlite", "csv"]
+  },
+  {
+    "id": "mb-031",
+    "cat": "code",
+    "diff": "medium",
+    "title": "Expression Evaluator",
+    "src": "m/coding",
+    "prompt": "Write a Python script `evaluate.py` that takes a mathematical expression as a command-line argument string and evaluates it. Support +, -, *, /, parentheses, and integer/float operands. Do NOT use eval() or exec(). Print the result rounded to 2 decimal places. Exit with code 1 for invalid expressions.",
+    "input": {},
+    "checks": [
+      {"type": "file_exists", "path": "evaluate.py"},
+      {"type": "run", "cmd": "python evaluate.py \"3 + 4 * 2\"", "exit": 0, "stdout": "11"},
+      {"type": "run", "cmd": "python evaluate.py \"(1 + 2) * (3 + 4)\"", "exit": 0, "stdout": "21"},
+      {"type": "file_not_match", "path": "evaluate.py", "text": "eval("}
+    ],
+    "tags": ["parser", "math", "algorithm"]
+  },
+  {
+    "id": "mb-032",
+    "cat": "code",
+    "diff": "medium",
+    "title": "Log File Analyzer",
+    "src": "m/agents",
+    "prompt": "Write a Python script `loganalyzer.py` that reads `server.log` and produces `report.json` with: total requests, requests per HTTP method (GET/POST/etc.), requests per status code, and the top 3 most requested paths. The log format is: 'TIMESTAMP METHOD PATH STATUS SIZE'.",
+    "input": {
+      "server.log": "2026-04-01T10:00:01 GET /api/users 200 1234\n2026-04-01T10:00:02 POST /api/users 201 567\n2026-04-01T10:00:03 GET /api/users 200 1234\n2026-04-01T10:00:04 GET /api/products 200 890\n2026-04-01T10:00:05 GET /api/users 200 1234\n2026-04-01T10:00:06 DELETE /api/users/1 204 0\n2026-04-01T10:00:07 GET /api/products 200 890\n2026-04-01T10:00:08 POST /api/orders 201 456\n2026-04-01T10:00:09 GET /api/products 404 32\n2026-04-01T10:00:10 GET /api/users 500 64\n"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "loganalyzer.py"},
+      {"type": "run", "cmd": "python loganalyzer.py", "exit": 0},
+      {"type": "json_valid", "path": "report.json", "has_key": "total_requests"},
+      {"type": "file_match", "path": "report.json", "pattern": "\"total_requests\"\\s*:\\s*10"}
+    ],
+    "tags": ["log-analysis", "json", "data-processing"]
+  },
+  {
+    "id": "mb-033",
+    "cat": "code",
+    "diff": "medium",
+    "title": "Dijkstra's Shortest Path",
+    "src": "m/coding",
+    "prompt": "Write a Python script `dijkstra.py` that reads a weighted graph from `graph.txt` and finds the shortest path. The first line of graph.txt contains 'START END'. Subsequent lines are 'node1 node2 weight'. Print the shortest distance and the path (space-separated nodes). If no path exists, print 'NO PATH'.",
+    "input": {
+      "graph.txt": "A F\nA B 4\nA C 2\nB D 5\nC B 1\nC D 8\nC E 10\nD E 2\nD F 6\nE F 3\n"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "dijkstra.py"},
+      {"type": "run", "cmd": "python dijkstra.py", "exit": 0, "stdout_pattern": "10|A.*B.*D.*E.*F|A.*C.*B.*D.*E.*F"}
+    ],
+    "tags": ["graph", "algorithm", "shortest-path"]
+  },
+  {
+    "id": "mb-034",
+    "cat": "code",
+    "diff": "medium",
+    "title": "Refactor Spaghetti Code",
+    "src": "m/coding",
+    "prompt": "The file `messy.py` contains a working but poorly structured Python script. Refactor it into `clean.py` with: proper function decomposition (at least 3 functions besides main), docstrings on each function, type hints on function signatures, and a `if __name__ == '__main__'` guard. The refactored code must produce the same output when run with the same arguments.",
+    "input": {
+      "messy.py": "import sys\ndata = open(sys.argv[1]).read().strip().split('\\n')\ntotal = 0\ncount = 0\nmx = -999999\nmn = 999999\nfor line in data:\n    v = float(line)\n    total += v\n    count += 1\n    if v > mx:\n        mx = v\n    if v < mn:\n        mn = v\navg = total / count\nprint(f'Count: {count}')\nprint(f'Sum: {total}')\nprint(f'Average: {avg:.2f}')\nprint(f'Min: {mn}')\nprint(f'Max: {mx}')\nprint(f'Range: {mx - mn}')\n"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "clean.py"},
+      {"type": "run", "cmd": "python -c \"import ast; tree=ast.parse(open('clean.py').read()); funcs=[n for n in ast.walk(tree) if isinstance(n, ast.FunctionDef)]; print(len(funcs)); assert len(funcs)>=3\"", "exit": 0},
+      {"type": "file_match", "path": "clean.py", "text": "def "},
+      {"type": "file_match", "path": "clean.py", "text": "__name__"}
+    ],
+    "tags": ["refactoring", "code-quality"]
+  },
+  {
+    "id": "mb-035",
+    "cat": "code",
+    "diff": "medium",
+    "title": "Cron Expression Parser",
+    "src": "m/agents",
+    "prompt": "Write a Python script `cron_parse.py` that takes a 5-field cron expression as a command-line argument (minute hour day_of_month month day_of_week) and prints a human-readable description. Handle * (every), specific numbers, and ranges (e.g. 1-5). Print one line of description per field.",
+    "input": {},
+    "checks": [
+      {"type": "file_exists", "path": "cron_parse.py"},
+      {"type": "run", "cmd": "python cron_parse.py \"30 8 * * 1-5\"", "exit": 0, "stdout_pattern": "30|minute"},
+      {"type": "run", "cmd": "python cron_parse.py \"0 0 1 1 *\"", "exit": 0, "stdout_pattern": "0|midnight|hour"}
+    ],
+    "tags": ["parser", "cron", "cli"]
+  },
+  {
+    "id": "mb-036",
+    "cat": "code",
+    "diff": "medium",
+    "title": "Linked List Operations",
+    "src": "m/coding",
+    "prompt": "Write a Python module `linkedlist.py` that implements a singly linked list with: insert_front, insert_back, delete(value), find(value)->bool, reverse(), and to_list()->list. Also write `test_ll.py` that creates a list with values [1,2,3,4,5], reverses it, deletes 3, and prints the final list as space-separated values.",
+    "input": {},
+    "checks": [
+      {"type": "file_exists", "path": "linkedlist.py"},
+      {"type": "file_exists", "path": "test_ll.py"},
+      {"type": "run", "cmd": "python test_ll.py", "exit": 0, "stdout": "5 4 2 1"}
+    ],
+    "tags": ["data-structure", "linked-list"]
+  },
+  {
+    "id": "mb-037",
+    "cat": "code",
+    "diff": "medium",
+    "title": "Markdown Link Extractor",
+    "src": "m/coding",
+    "prompt": "Write a Python script `linkextract.py` that reads `document.md`, extracts all Markdown links (both [text](url) and [text][ref] with reference definitions), and writes them to `links.json` as an array of objects with 'text' and 'url' fields.",
+    "input": {
+      "document.md": "# My Document\n\nCheck out [Google](https://google.com) for searching.\nAlso see [Python docs](https://docs.python.org) for reference.\n\nHere is a [reference link][wiki] and another [inline](https://example.com/page).\n\nSome text without links here.\n\n[wiki]: https://wikipedia.org\n"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "linkextract.py"},
+      {"type": "run", "cmd": "python linkextract.py", "exit": 0},
+      {"type": "json_valid", "path": "links.json", "is_array": true, "min_length": 3},
+      {"type": "file_match", "path": "links.json", "text": "google.com"}
+    ],
+    "tags": ["regex", "markdown", "parser"]
+  },
+  {
+    "id": "mb-038",
+    "cat": "code",
+    "diff": "medium",
+    "title": "Generate Unit Tests from Code",
+    "src": "m/builds",
+    "prompt": "Given the module `mathlib.py`, write `test_mathlib.py` using Python's unittest framework. Generate at least 8 test methods covering normal cases, edge cases, and error cases for all functions in the module. The tests must all pass.",
+    "input": {
+      "mathlib.py": "def factorial(n):\n    if not isinstance(n, int) or n < 0:\n        raise ValueError(\"n must be a non-negative integer\")\n    if n <= 1:\n        return 1\n    return n * factorial(n - 1)\n\ndef gcd(a, b):\n    if not isinstance(a, int) or not isinstance(b, int):\n        raise TypeError(\"arguments must be integers\")\n    a, b = abs(a), abs(b)\n    while b:\n        a, b = b, a % b\n    return a\n\ndef is_prime(n):\n    if n < 2:\n        return False\n    if n < 4:\n        return True\n    if n % 2 == 0 or n % 3 == 0:\n        return False\n    i = 5\n    while i * i <= n:\n        if n % i == 0 or n % (i + 2) == 0:\n            return False\n        i += 6\n    return True\n"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "test_mathlib.py"},
+      {"type": "run", "cmd": "python -m unittest test_mathlib -v", "exit": 0},
+      {"type": "run", "cmd": "python -c \"import ast; tree=ast.parse(open('test_mathlib.py').read()); tests=[n for n in ast.walk(tree) if isinstance(n, ast.FunctionDef) and n.name.startswith('test_')]; print(len(tests)); assert len(tests)>=8\"", "exit": 0}
+    ],
+    "tags": ["testing", "unittest", "code-generation"]
+  },
+  {
+    "id": "mb-039",
+    "cat": "code",
+    "diff": "medium",
+    "title": "Simple Template Engine",
+    "src": "m/coding",
+    "prompt": "Write a Python script `template.py` that reads `template.txt` and `data.json`, performs variable substitution (replacing {{variable_name}} with values from the JSON), and writes the result to `output.txt`. Support nested access with dot notation (e.g. {{user.name}}). Leave unresolved placeholders as-is.",
+    "input": {
+      "template.txt": "Dear {{user.name}},\n\nYour order #{{order.id}} has been {{order.status}}.\nTotal: ${{order.total}}\n\nThank you for shopping with {{company}}!\n\nBest,\n{{sender}}\n",
+      "data.json": "{\"user\":{\"name\":\"Alice\",\"email\":\"alice@test.com\"},\"order\":{\"id\":\"12345\",\"status\":\"shipped\",\"total\":\"99.99\"},\"company\":\"TechMart\",\"sender\":\"Support Team\"}"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "template.py"},
+      {"type": "run", "cmd": "python template.py", "exit": 0},
+      {"type": "file_match", "path": "output.txt", "text": "Dear Alice"},
+      {"type": "file_match", "path": "output.txt", "text": "order #12345 has been shipped"}
+    ],
+    "tags": ["template-engine", "string", "json"]
+  },
+  {
+    "id": "mb-040",
+    "cat": "code",
+    "diff": "medium",
+    "title": "Binary Search Tree",
+    "src": "m/coding",
+    "prompt": "Write a Python module `bst.py` implementing a Binary Search Tree with: insert, search, delete, inorder traversal (returns sorted list), height, and min/max value methods. Write `test_bst.py` that inserts [50,30,70,20,40,60,80], prints the inorder traversal, deletes 30, and prints the inorder traversal again.",
+    "input": {},
+    "checks": [
+      {"type": "file_exists", "path": "bst.py"},
+      {"type": "file_exists", "path": "test_bst.py"},
+      {"type": "run", "cmd": "python test_bst.py", "exit": 0, "stdout": "20 30 40 50 60 70 80"},
+      {"type": "run", "cmd": "python test_bst.py", "exit": 0, "stdout_pattern": "20 40 50 60 70 80"}
+    ],
+    "tags": ["data-structure", "tree", "algorithm"]
+  },
+  {
+    "id": "mb-041",
+    "cat": "code",
+    "diff": "medium",
+    "title": "Config File Diff Tool",
+    "src": "m/agents",
+    "prompt": "Write a Python script `cfgdiff.py` that compares two JSON config files (passed as two command-line arguments) and prints a diff report. For each key, report: 'ADDED' (in second but not first), 'REMOVED' (in first but not second), 'CHANGED' (different values), or 'UNCHANGED'. Support one level of nesting. Write the report to `diff_report.txt` as well.",
+    "input": {
+      "old_config.json": "{\"host\":\"localhost\",\"port\":8080,\"debug\":true,\"db\":{\"name\":\"mydb\",\"pool_size\":5},\"cache_ttl\":300,\"log_level\":\"info\"}",
+      "new_config.json": "{\"host\":\"0.0.0.0\",\"port\":8080,\"debug\":false,\"db\":{\"name\":\"mydb\",\"pool_size\":10},\"log_level\":\"warning\",\"retry_count\":3}"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "cfgdiff.py"},
+      {"type": "run", "cmd": "python cfgdiff.py old_config.json new_config.json", "exit": 0, "stdout_pattern": "CHANGED|ADDED|REMOVED"},
+      {"type": "file_exists", "path": "diff_report.txt"},
+      {"type": "file_match", "path": "diff_report.txt", "pattern": "cache_ttl.*REMOVED|REMOVED.*cache_ttl"}
+    ],
+    "tags": ["diff", "config", "json"]
+  },
+  {
+    "id": "mb-042",
+    "cat": "code",
+    "diff": "medium",
+    "title": "Topological Sort",
+    "src": "m/coding",
+    "prompt": "Write a Python script `toposort.py` that reads a dependency graph from `deps.txt` (each line: 'task: dependency1, dependency2, ...') and prints a valid topological ordering of all tasks, one per line. If a cycle is detected, print 'CYCLE DETECTED' and exit with code 1.",
+    "input": {
+      "deps.txt": "build: compile, link\ncompile: parse, typecheck\nparse:\ntypecheck: parse\nlink: compile\ntest: build\ndeploy: test, build\n"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "toposort.py"},
+      {"type": "run", "cmd": "python toposort.py", "exit": 0, "stdout": "parse"}
+    ],
+    "tags": ["graph", "algorithm", "topological-sort"]
+  },
+  {
+    "id": "mb-043",
+    "cat": "code",
+    "diff": "medium",
+    "title": "Fix Broken Web Scraper Simulation",
+    "src": "m/coding",
+    "prompt": "The file `scraper.py` attempts to parse HTML and extract data but has multiple bugs: unclosed string, wrong variable names, off-by-one error in indexing, and a missing import. Fix all bugs and save as `scraper_fixed.py`. The fixed script should read `page.html` and write extracted titles to `titles.txt`, one per line.",
+    "input": {
+      "scraper.py": "from html.parser import HTMLParser\n\nclass TitleExtractor(HTMLParser):\n    def __init__(self):\n        super().__init__()\n        self.in_title = False\n        self.titles = []\n        self.current = ''\n\n    def handle_starttag(self, tag, attrs):\n        if tag == 'h2:\n            self.in_title = True\n            self.current = ''\n\n    def handle_endtag(self, tag):\n        if tag == 'h2':\n            self.in_titl = False\n            self.titles.append(self.current)\n\n    def handle_data(self, data):\n        if self.in_title:\n            self.current += data\n\ndef main():\n    with open('page.html') as f:\n        html = f.read()\n    parser = TitleExtractor()\n    parser.feed(html)\n    with open('titles.txt', 'w') as f:\n        for i in range(1, len(parser.titles)):\n            f.write(parser.titles[i] + '\\n')\n\nif __name__ == '__main__':\n    main()\n",
+      "page.html": "<html><body>\n<h2>Introduction to Python</h2>\n<p>Python is a great language.</p>\n<h2>Data Structures</h2>\n<p>Lists, dicts, and sets.</p>\n<h2>Web Development</h2>\n<p>Flask and Django are popular.</p>\n</body></html>\n"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "scraper_fixed.py"},
+      {"type": "run", "cmd": "python scraper_fixed.py", "exit": 0},
+      {"type": "file_match", "path": "titles.txt", "text": "Introduction to Python"},
+      {"type": "line_count", "path": "titles.txt", "min": 3, "max": 3}
+    ],
+    "tags": ["bugfix", "html-parsing"]
+  },
+  {
+    "id": "mb-044",
+    "cat": "code",
+    "diff": "medium",
+    "title": "Priority Queue with Heap",
+    "src": "m/coding",
+    "prompt": "Write a Python script `pq.py` that implements a min-heap priority queue from scratch (do NOT use heapq). Implement: push(item, priority), pop()->(item, priority), peek()->(item, priority), and size(). Write `test_pq.py` that pushes ('task_c',3), ('task_a',1), ('task_d',4), ('task_b',2), then pops all items and prints them in priority order, one per line as 'priority: item'.",
+    "input": {},
+    "checks": [
+      {"type": "file_exists", "path": "pq.py"},
+      {"type": "file_exists", "path": "test_pq.py"},
+      {"type": "run", "cmd": "python test_pq.py", "exit": 0, "stdout": "1: task_a\n2: task_b\n3: task_c\n4: task_d"},
+      {"type": "file_not_match", "path": "pq.py", "text": "import heapq"}
+    ],
+    "tags": ["data-structure", "heap", "algorithm"]
+  },
+  {
+    "id": "mb-045",
+    "cat": "code",
+    "diff": "medium",
+    "title": "SQL Query Builder",
+    "src": "m/coding",
+    "prompt": "Write a Python module `querybuilder.py` that provides a fluent API for building SQL SELECT statements. Support: select(columns), from_table(name), where(condition), order_by(column, direction), limit(n), and build() which returns the SQL string. Write `test_qb.py` that builds and prints two different queries.",
+    "input": {},
+    "checks": [
+      {"type": "file_exists", "path": "querybuilder.py"},
+      {"type": "file_exists", "path": "test_qb.py"},
+      {"type": "run", "cmd": "python test_qb.py", "exit": 0, "stdout_pattern": "SELECT.*FROM.*WHERE"},
+      {"type": "run", "cmd": "python test_qb.py", "exit": 0, "stdout_pattern": "ORDER BY|LIMIT"}
+    ],
+    "tags": ["sql", "builder-pattern", "api-design"]
+  },
+  {
+    "id": "mb-046",
+    "cat": "code",
+    "diff": "medium",
+    "title": "Huffman Encoding",
+    "src": "m/coding",
+    "prompt": "Write a Python script `huffman.py` that reads `input.txt`, builds a Huffman tree, encodes the text, and writes: `codebook.json` (mapping character to binary code) and `encoded.txt` (the binary string). Also print the compression ratio (original bits / encoded bits) rounded to 2 decimal places.",
+    "input": {
+      "input.txt": "abracadabra alakazam abracadabra"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "huffman.py"},
+      {"type": "run", "cmd": "python huffman.py", "exit": 0, "stdout_pattern": "\\d+\\.\\d+"},
+      {"type": "json_valid", "path": "codebook.json", "has_key": "a"},
+      {"type": "file_match", "path": "encoded.txt", "pattern": "^[01]+$"}
+    ],
+    "tags": ["algorithm", "compression", "tree"]
+  },
+  {
+    "id": "mb-047",
+    "cat": "code",
+    "diff": "medium",
+    "title": "Regex Pattern Tester",
+    "src": "m/coding",
+    "prompt": "Write a Python script `regextester.py` that reads `patterns.json` (array of objects with 'pattern', 'test_strings' array, and 'expected_matches' array) and tests each pattern against its test strings. Write `results.json` with each test result (pattern, string, expected, actual, pass/fail). Print a summary: total tests, passed, failed.",
+    "input": {
+      "patterns.json": "[\n  {\"pattern\": \"^\\\\d{3}-\\\\d{4}$\", \"test_strings\": [\"123-4567\", \"12-4567\", \"abc-defg\", \"999-0000\"], \"expected_matches\": [true, false, false, true]},\n  {\"pattern\": \"[A-Z][a-z]+\", \"test_strings\": [\"Hello\", \"hello\", \"HELLO\", \"Hi\"], \"expected_matches\": [true, false, false, true]},\n  {\"pattern\": \"^#[0-9a-fA-F]{6}$\", \"test_strings\": [\"#FF5733\", \"#fff\", \"FF5733\", \"#GGGGGG\"], \"expected_matches\": [true, false, false, false]}\n]"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "regextester.py"},
+      {"type": "run", "cmd": "python regextester.py", "exit": 0, "stdout_pattern": "passed|total"},
+      {"type": "json_valid", "path": "results.json", "is_array": true, "min_length": 10}
+    ],
+    "tags": ["regex", "testing", "json"]
+  },
+  {
+    "id": "mb-048",
+    "cat": "code",
+    "diff": "medium",
+    "title": "LRU Cache Implementation",
+    "src": "m/coding",
+    "prompt": "Write a Python module `lru.py` implementing an LRU (Least Recently Used) cache with a configurable capacity. Implement: get(key), put(key, value), and size(). Do NOT use functools.lru_cache. Write `test_lru.py` that creates a cache of capacity 3, performs a series of puts and gets, and prints the cache state and eviction behavior.",
+    "input": {},
+    "checks": [
+      {"type": "file_exists", "path": "lru.py"},
+      {"type": "file_exists", "path": "test_lru.py"},
+      {"type": "run", "cmd": "python test_lru.py", "exit": 0},
+      {"type": "file_not_match", "path": "lru.py", "text": "functools"}
+    ],
+    "tags": ["data-structure", "cache", "algorithm"]
+  },
+  {
+    "id": "mb-049",
+    "cat": "code",
+    "diff": "medium",
+    "title": "Git Log Parser",
+    "src": "m/builds",
+    "prompt": "Write a Python script `gitlog_parse.py` that reads `gitlog.txt` (simulated git log output) and produces `summary.json` with: total commits, unique authors, commits per author, and date range (first and last commit dates).",
+    "input": {
+      "gitlog.txt": "commit abc1234\nAuthor: Alice <alice@dev.com>\nDate: 2026-03-01\n\n    Fix login bug\n\ncommit def5678\nAuthor: Bob <bob@dev.com>\nDate: 2026-03-03\n\n    Add user dashboard\n\ncommit ghi9012\nAuthor: Alice <alice@dev.com>\nDate: 2026-03-05\n\n    Update dependencies\n\ncommit jkl3456\nAuthor: Charlie <charlie@dev.com>\nDate: 2026-03-07\n\n    Refactor API layer\n\ncommit mno7890\nAuthor: Bob <bob@dev.com>\nDate: 2026-03-10\n\n    Add unit tests\n"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "gitlog_parse.py"},
+      {"type": "run", "cmd": "python gitlog_parse.py", "exit": 0},
+      {"type": "json_valid", "path": "summary.json", "has_key": "total_commits"},
+      {"type": "file_match", "path": "summary.json", "pattern": "\"total_commits\"\\s*:\\s*5"}
+    ],
+    "tags": ["parser", "git", "json"]
+  },
+  {
+    "id": "mb-050",
+    "cat": "code",
+    "diff": "medium",
+    "title": "Matrix Multiplication",
+    "src": "m/coding",
+    "prompt": "Write a Python script `matmul.py` that reads two matrices from `matrix_a.txt` and `matrix_b.txt` (space-separated numbers, one row per line), multiplies them, and writes the result to `result.txt`. If dimensions are incompatible, print 'ERROR: incompatible dimensions' and exit with code 1.",
+    "input": {
+      "matrix_a.txt": "1 2 3\n4 5 6\n",
+      "matrix_b.txt": "7 8\n9 10\n11 12\n"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "matmul.py"},
+      {"type": "run", "cmd": "python matmul.py", "exit": 0},
+      {"type": "file_match", "path": "result.txt", "text": "58 64"},
+      {"type": "file_match", "path": "result.txt", "text": "139 154"}
+    ],
+    "tags": ["matrix", "math", "algorithm"]
+  },
+  {
+    "id": "mb-051",
+    "cat": "code",
+    "diff": "medium",
+    "title": "Simple State Machine",
+    "src": "m/agents",
+    "prompt": "Write a Python script `statemachine.py` that implements a configurable state machine. It reads `machine.json` (defining states, transitions with events, and initial state) and `events.txt` (one event per line). Process each event, and write the trace to `trace.txt`: each line should be 'state --event--> new_state'. Print the final state.",
+    "input": {
+      "machine.json": "{\"initial\":\"idle\",\"states\":[\"idle\",\"running\",\"paused\",\"stopped\"],\"transitions\":[{\"from\":\"idle\",\"event\":\"start\",\"to\":\"running\"},{\"from\":\"running\",\"event\":\"pause\",\"to\":\"paused\"},{\"from\":\"paused\",\"event\":\"resume\",\"to\":\"running\"},{\"from\":\"running\",\"event\":\"stop\",\"to\":\"stopped\"},{\"from\":\"paused\",\"event\":\"stop\",\"to\":\"stopped\"},{\"from\":\"stopped\",\"event\":\"reset\",\"to\":\"idle\"}]}",
+      "events.txt": "start\npause\nresume\nstop\nreset\nstart\n"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "statemachine.py"},
+      {"type": "run", "cmd": "python statemachine.py", "exit": 0, "stdout": "running"},
+      {"type": "file_match", "path": "trace.txt", "text": "idle --start--> running"},
+      {"type": "line_count", "path": "trace.txt", "min": 6, "max": 6}
+    ],
+    "tags": ["state-machine", "design-pattern", "json"]
+  },
+  {
+    "id": "mb-052",
+    "cat": "code",
+    "diff": "medium",
+    "title": "Longest Common Subsequence",
+    "src": "m/coding",
+    "prompt": "Write a Python script `lcs.py` that takes two strings as command-line arguments and prints the longest common subsequence and its length. Use dynamic programming. Format: 'LCS: <subsequence>' followed by 'Length: <n>'.",
+    "input": {},
+    "checks": [
+      {"type": "file_exists", "path": "lcs.py"},
+      {"type": "run", "cmd": "python lcs.py ABCBDAB BDCABA", "exit": 0, "stdout_pattern": "Length: 4"},
+      {"type": "run", "cmd": "python lcs.py ABC DEF", "exit": 0, "stdout_pattern": "Length: 0"}
+    ],
+    "tags": ["dynamic-programming", "algorithm", "string"]
+  },
+  {
+    "id": "mb-053",
+    "cat": "code",
+    "diff": "medium",
+    "title": "Rate Limiter Simulation",
+    "src": "m/agents",
+    "prompt": "Write a Python script `ratelimiter.py` that implements a token bucket rate limiter. It reads `requests.txt` (one timestamp per line, as float seconds) and simulates processing with a configurable rate (tokens per second) and bucket size. Take rate and bucket_size as command-line arguments. Print 'ALLOWED' or 'DENIED' for each request, then a summary: total, allowed, denied.",
+    "input": {
+      "requests.txt": "0.0\n0.1\n0.2\n0.3\n0.4\n0.5\n1.0\n1.1\n2.0\n2.01\n"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "ratelimiter.py"},
+      {"type": "run", "cmd": "python ratelimiter.py 2 3", "exit": 0, "stdout_pattern": "ALLOWED"},
+      {"type": "run", "cmd": "python ratelimiter.py 2 3", "exit": 0, "stdout_pattern": "DENIED"},
+      {"type": "run", "cmd": "python ratelimiter.py 2 3", "exit": 0, "stdout_pattern": "total.*10|Total.*10"}
+    ],
+    "tags": ["simulation", "rate-limiting", "algorithm"]
+  },
+  {
+    "id": "mb-054",
+    "cat": "code",
+    "diff": "medium",
+    "title": "Code Complexity Analyzer",
+    "src": "m/builds",
+    "prompt": "Write a Python script `complexity.py` that reads a Python source file (path given as command-line argument) and reports: number of functions, number of classes, total lines, blank lines, comment lines, and maximum nesting depth. Write the report to `complexity_report.json`.",
+    "input": {
+      "sample.py": "# Sample module for analysis\nimport os\nimport sys\n\n\nclass Calculator:\n    \"\"\"A simple calculator.\"\"\"\n\n    def __init__(self):\n        self.history = []\n\n    def add(self, a, b):\n        result = a + b\n        self.history.append(result)\n        return result\n\n    def process_batch(self, items):\n        for item in items:\n            if item > 0:\n                for sub in range(item):\n                    if sub % 2 == 0:\n                        self.add(sub, item)\n\n\ndef helper(x):\n    # Helper function\n    if x > 10:\n        return x * 2\n    else:\n        return x + 1\n\n\ndef main():\n    calc = Calculator()\n    print(calc.add(3, 4))\n"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "complexity.py"},
+      {"type": "run", "cmd": "python complexity.py sample.py", "exit": 0},
+      {"type": "json_valid", "path": "complexity_report.json", "has_key": "functions"},
+      {"type": "file_match", "path": "complexity_report.json", "pattern": "\"classes\"\\s*:\\s*1"}
+    ],
+    "tags": ["code-analysis", "ast", "json"]
+  },
+  {
+    "id": "mb-055",
+    "cat": "code",
+    "diff": "medium",
+    "title": "Knapsack Problem Solver",
+    "src": "m/coding",
+    "prompt": "Write a Python script `knapsack.py` that reads `items.csv` (columns: name, weight, value) and a capacity from the command line. Solve the 0/1 knapsack problem using dynamic programming. Print the maximum value and the list of selected items.",
+    "input": {
+      "items.csv": "name,weight,value\ngold_bar,10,60\nsilver_chain,20,100\ndiamond,30,120\nruby,5,30\nemerald,15,80\nsapphire,25,110\n"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "knapsack.py"},
+      {"type": "run", "cmd": "python knapsack.py 50", "exit": 0, "stdout_pattern": "220|230|270"},
+      {"type": "run", "cmd": "python knapsack.py 10", "exit": 0, "stdout_pattern": "60"}
+    ],
+    "tags": ["dynamic-programming", "algorithm", "optimization"]
+  },
+  {
+    "id": "mb-056",
+    "cat": "code",
+    "diff": "medium",
+    "title": "JSON Schema Validator",
+    "src": "m/agents",
+    "prompt": "Write a Python script `validate_schema.py` that reads `schema.json` (a simplified JSON schema with type constraints: 'string', 'number', 'boolean', 'array', 'object', and 'required' fields) and `data.json`, then validates the data against the schema. Print 'VALID' or list all validation errors. Exit with code 0 if valid, 1 if invalid.",
+    "input": {
+      "schema.json": "{\"type\":\"object\",\"required\":[\"name\",\"age\",\"email\"],\"properties\":{\"name\":{\"type\":\"string\"},\"age\":{\"type\":\"number\"},\"email\":{\"type\":\"string\"},\"active\":{\"type\":\"boolean\"},\"tags\":{\"type\":\"array\"}}}",
+      "data.json": "{\"name\":\"Alice\",\"age\":\"thirty\",\"active\":true,\"tags\":[\"admin\",\"user\"]}"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "validate_schema.py"},
+      {"type": "run", "cmd": "python validate_schema.py", "exit": 1, "stdout_pattern": "age|email|error|invalid"},
+      {"type": "run", "cmd": "python -c \"import json; d={'name':'Bob','age':25,'email':'bob@test.com'}; json.dump(d,open('data.json','w')); exec(open('validate_schema.py').read())\" 2>&1 || python validate_schema.py", "exit": 0}
+    ],
+    "tags": ["validation", "json", "schema"]
+  },
+  {
+    "id": "mb-057",
+    "cat": "code",
+    "diff": "hard",
+    "title": "Mini Interpreter for a Custom Language",
+    "src": "m/coding",
+    "prompt": "Write a Python script `interp.py` that interprets a simple language from `program.txt`. The language supports: variable assignment (SET x 10), arithmetic (ADD x y z stores x+y in z), conditionals (IF x THEN ... ENDIF), PRINT variable, and loops (WHILE x > 0 ... ENDWHILE with basic comparison operators). Print all PRINT output to stdout.",
+    "input": {
+      "program.txt": "SET a 10\nSET b 3\nSET result 0\nWHILE a > 0\nADD result b result\nSET a a - 1\nENDWHILE\nPRINT result\nSET flag 1\nIF flag THEN\nPRINT a\nENDIF\n"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "interp.py"},
+      {"type": "run", "cmd": "python interp.py", "exit": 0, "stdout": "30"},
+      {"type": "run", "cmd": "python interp.py", "exit": 0, "stdout_pattern": "0"}
+    ],
+    "tags": ["interpreter", "parser", "language"]
+  },
+  {
+    "id": "mb-058",
+    "cat": "code",
+    "diff": "hard",
+    "title": "Build a Tiny HTTP Response Parser",
+    "src": "m/coding",
+    "prompt": "Write a Python script `httpparse.py` that reads raw HTTP responses from `responses.txt` (separated by '---\\n') and parses each into: status code, headers dict, and body. Write the parsed data to `parsed.json` as an array of objects. Handle chunked transfer-encoding by reconstructing the body. Handle both Content-Length and chunked bodies.",
+    "input": {
+      "responses.txt": "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nContent-Length: 13\r\n\r\nHello, World!\n---\nHTTP/1.1 404 Not Found\r\nContent-Type: application/json\r\nContent-Length: 27\r\n\r\n{\"error\": \"page not found\"}\n---\nHTTP/1.1 301 Moved\r\nLocation: https://example.com\r\nContent-Length: 0\r\n\r\n\n"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "httpparse.py"},
+      {"type": "run", "cmd": "python httpparse.py", "exit": 0},
+      {"type": "json_valid", "path": "parsed.json", "is_array": true, "min_length": 3},
+      {"type": "file_match", "path": "parsed.json", "pattern": "\"status_code\"\\s*:\\s*200|\"status\"\\s*:\\s*200"}
+    ],
+    "tags": ["parser", "http", "protocol"]
+  },
+  {
+    "id": "mb-059",
+    "cat": "code",
+    "diff": "hard",
+    "title": "Multi-Pattern Text Search (Aho-Corasick)",
+    "src": "m/coding",
+    "prompt": "Write a Python script `multisearch.py` that implements the Aho-Corasick algorithm for multi-pattern string matching. It reads `patterns.txt` (one pattern per line) and `text.txt`, then finds all occurrences of all patterns in the text. Write results to `matches.json`: array of objects with 'pattern', 'position', and 'line' fields. Do NOT use any third-party libraries.",
+    "input": {
+      "patterns.txt": "he\nshe\nhis\nher\n",
+      "text.txt": "she sells seashells by the seashore\nhe said his hero is her\nshe showed him the shelter\n"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "multisearch.py"},
+      {"type": "run", "cmd": "python multisearch.py", "exit": 0},
+      {"type": "json_valid", "path": "matches.json", "is_array": true, "min_length": 8},
+      {"type": "file_match", "path": "matches.json", "text": "she"}
+    ],
+    "tags": ["algorithm", "string-matching", "aho-corasick"]
+  },
+  {
+    "id": "mb-060",
+    "cat": "code",
+    "diff": "hard",
+    "title": "Regex Engine (Subset)",
+    "src": "m/coding",
+    "prompt": "Write a Python script `regex_engine.py` that implements a basic regex engine from scratch. Support: literal characters, . (any char), * (zero or more), + (one or more), ? (zero or one), ^ (start anchor), $ (end anchor), and character classes [abc], [a-z]. Do NOT use Python's re module. The script takes a pattern and a string as command-line arguments and prints 'MATCH' or 'NO MATCH'.",
+    "input": {},
+    "checks": [
+      {"type": "file_exists", "path": "regex_engine.py"},
+      {"type": "run", "cmd": "python regex_engine.py \"^a.c$\" abc", "exit": 0, "stdout": "MATCH"},
+      {"type": "run", "cmd": "python regex_engine.py \"[0-9]+\" abc123", "exit": 0, "stdout": "MATCH"},
+      {"type": "run", "cmd": "python regex_engine.py \"^xyz$\" abc", "exit": 0, "stdout": "NO MATCH"}
+    ],
+    "tags": ["regex", "engine", "algorithm"]
+  },
+  {
+    "id": "mb-061",
+    "cat": "code",
+    "diff": "hard",
+    "title": "Full Project Scaffolder",
+    "src": "m/builds",
+    "prompt": "Write a Python script `scaffold.py` that takes a project name and type ('cli', 'lib', or 'web') as command-line arguments. It should create a project directory structure with: a main module, a test file, setup.py with proper metadata, README.md, .gitignore for Python, and a Makefile with targets for test, lint, and clean. The generated code should be syntactically valid Python.",
+    "input": {},
+    "checks": [
+      {"type": "file_exists", "path": "scaffold.py"},
+      {"type": "run", "cmd": "python scaffold.py myproject cli", "exit": 0},
+      {"type": "file_exists", "path": "myproject/setup.py"},
+      {"type": "file_exists", "path": "myproject/Makefile"},
+      {"type": "file_exists", "path": "myproject/.gitignore"},
+      {"type": "run", "cmd": "python -c \"import ast; ast.parse(open('myproject/setup.py').read()); print('OK')\"", "exit": 0, "stdout": "OK"}
+    ],
+    "tags": ["scaffolding", "code-generation", "project-setup"]
+  },
+  {
+    "id": "mb-062",
+    "cat": "code",
+    "diff": "hard",
+    "title": "Fix Concurrent Bug in Producer-Consumer",
+    "src": "m/coding",
+    "prompt": "The file `prodcon.py` implements a producer-consumer system with threading but has race conditions and deadlock potential. Fix all concurrency bugs and save as `prodcon_fixed.py`. The fixed version should: use proper locking, handle the poison pill pattern for shutdown, and produce deterministic output. When run, it should print 'DONE' as the last line with exit code 0.",
+    "input": {
+      "prodcon.py": "import threading\nimport time\nimport queue\n\nshared_buffer = []\ncount = 0\n\ndef producer(items):\n    global count\n    for item in items:\n        shared_buffer.append(item)\n        count += 1\n        time.sleep(0.01)\n\ndef consumer(expected):\n    global count\n    results = []\n    while len(results) < expected:\n        if shared_buffer:\n            item = shared_buffer.pop(0)\n            results.append(item * 2)\n            count -= 1\n    return results\n\ndef main():\n    items = list(range(1, 11))\n    t1 = threading.Thread(target=producer, args=(items,))\n    t2 = threading.Thread(target=consumer, args=(10,))\n    t1.start()\n    t2.start()\n    t1.join()\n    # BUG: consumer thread never saved results, t2.join could hang\n    print(f'Processed {count} items')\n    print('DONE')\n\nif __name__ == '__main__':\n    main()\n"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "prodcon_fixed.py"},
+      {"type": "run", "cmd": "python prodcon_fixed.py", "exit": 0, "stdout": "DONE"},
+      {"type": "file_match", "path": "prodcon_fixed.py", "pattern": "Lock|queue\\.Queue|threading\\.Condition"},
+      {"type": "file_not_match", "path": "prodcon_fixed.py", "text": "shared_buffer = []"}
+    ],
+    "tags": ["bugfix", "concurrency", "threading"]
+  },
+  {
+    "id": "mb-063",
+    "cat": "code",
+    "diff": "hard",
+    "title": "Spreadsheet Formula Evaluator",
+    "src": "m/coding",
+    "prompt": "Write a Python script `spreadsheet.py` that reads `sheet.csv` where cells can contain numbers, strings, or formulas (starting with =). Support: cell references (A1, B2), SUM(range), AVG(range), and basic arithmetic (+,-,*,/). Evaluate all formulas resolving dependencies (handle circular reference detection). Write the computed values to `computed.csv`.",
+    "input": {
+      "sheet.csv": ",A,B,C\n1,10,20,=A1+B1\n2,=C1*2,5,=SUM(A1:B2)\n3,=AVG(A1:A2),=B2+10,=A3+B3\n"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "spreadsheet.py"},
+      {"type": "run", "cmd": "python spreadsheet.py", "exit": 0},
+      {"type": "file_exists", "path": "computed.csv"},
+      {"type": "file_match", "path": "computed.csv", "text": "30"}
+    ],
+    "tags": ["spreadsheet", "formula", "graph"]
+  },
+  {
+    "id": "mb-064",
+    "cat": "code",
+    "diff": "hard",
+    "title": "Graph Coloring Solver",
+    "src": "m/coding",
+    "prompt": "Write a Python script `coloring.py` that reads a graph from `graph.txt` (edge list format: 'node1 node2' per line) and finds a valid vertex coloring using the minimum number of colors via backtracking. Take the maximum number of colors to try as a command-line argument. Print each node's color as 'node: color_number' lines, and the total colors used. If no valid coloring exists with that many colors, print 'NO SOLUTION' and exit with code 1.",
+    "input": {
+      "graph.txt": "A B\nA C\nA D\nB C\nB E\nC D\nC E\nD E\n"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "coloring.py"},
+      {"type": "run", "cmd": "python coloring.py 4", "exit": 0, "stdout_pattern": "A: \\d"},
+      {"type": "run", "cmd": "python coloring.py 2", "exit": 1, "stdout": "NO SOLUTION"}
+    ],
+    "tags": ["graph", "backtracking", "algorithm"]
+  },
+  {
+    "id": "mb-065",
+    "cat": "code",
+    "diff": "hard",
+    "title": "Markdown to HTML Converter",
+    "src": "m/coding",
+    "prompt": "Write a Python script `md2html.py` that reads `input.md` and writes `output.html`. Support: headings (# to ###), bold (**text**), italic (*text*), inline code (`code`), links ([text](url)), unordered lists (- item), ordered lists (1. item), code blocks (``` delimited), blockquotes (> text), horizontal rules (---), and paragraphs. Do NOT use any third-party libraries.",
+    "input": {
+      "input.md": "# Main Title\n\nThis is a **bold** and *italic* paragraph with `inline code`.\n\n## Section One\n\nA list:\n- Item one\n- Item two\n- Item three\n\n### Subsection\n\n1. First\n2. Second\n3. Third\n\n> This is a blockquote\n\n---\n\nVisit [Example](https://example.com) for more.\n\n```\ndef hello():\n    print('world')\n```\n"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "md2html.py"},
+      {"type": "run", "cmd": "python md2html.py", "exit": 0},
+      {"type": "file_match", "path": "output.html", "text": "<h1>Main Title</h1>"},
+      {"type": "file_match", "path": "output.html", "text": "<strong>bold</strong>"},
+      {"type": "file_match", "path": "output.html", "pattern": "<a href=\"https://example.com\">"}
+    ],
+    "tags": ["markdown", "html", "converter", "parser"]
+  },
+  {
+    "id": "mb-066",
+    "cat": "code",
+    "diff": "hard",
+    "title": "Constraint Satisfaction: Sudoku Solver",
+    "src": "m/coding",
+    "prompt": "Write a Python script `sudoku.py` that reads a 9x9 Sudoku puzzle from `puzzle.txt` (space-separated digits, 0 for empty) and solves it using backtracking with constraint propagation. Write the solution to `solution.txt` in the same format. Print 'SOLVED' if solvable, 'UNSOLVABLE' otherwise (exit code 1).",
+    "input": {
+      "puzzle.txt": "5 3 0 0 7 0 0 0 0\n6 0 0 1 9 5 0 0 0\n0 9 8 0 0 0 0 6 0\n8 0 0 0 6 0 0 0 3\n4 0 0 8 0 3 0 0 1\n7 0 0 0 2 0 0 0 6\n0 6 0 0 0 0 2 8 0\n0 0 0 4 1 9 0 0 5\n0 0 0 0 8 0 0 7 9\n"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "sudoku.py"},
+      {"type": "run", "cmd": "python sudoku.py", "exit": 0, "stdout": "SOLVED"},
+      {"type": "file_match", "path": "solution.txt", "text": "5 3 4 6 7 8 9 1 2"},
+      {"type": "line_count", "path": "solution.txt", "min": 9, "max": 9}
+    ],
+    "tags": ["constraint-satisfaction", "backtracking", "puzzle"]
+  },
+  {
+    "id": "mb-067",
+    "cat": "code",
+    "diff": "hard",
+    "title": "Type Checker for a Toy Language",
+    "src": "m/coding",
+    "prompt": "Write a Python script `typecheck.py` that reads `program.toy` and performs type checking. The language has: let declarations with type annotations (let x: int = 5), functions (fn add(a: int, b: int) -> int), basic types (int, float, string, bool), and type errors for mismatches. Print all type errors found, or 'TYPE CHECK PASSED' if none. Exit with code 1 if errors found.",
+    "input": {
+      "program.toy": "let x: int = 10\nlet y: float = 3.14\nlet name: string = \"hello\"\nlet flag: bool = true\nlet bad: int = \"oops\"\nfn add(a: int, b: int) -> int\n  return a + b\nend\nfn greet(name: string) -> string\n  return name\nend\nlet result: int = add(x, y)\nlet msg: string = greet(42)\n"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "typecheck.py"},
+      {"type": "run", "cmd": "python typecheck.py", "exit": 1, "stdout_pattern": "error|Error|ERROR"},
+      {"type": "run", "cmd": "python typecheck.py", "exit": 1, "stdout_pattern": "bad|oops|string.*int|type"}
+    ],
+    "tags": ["type-system", "compiler", "language"]
+  },
+  {
+    "id": "mb-068",
+    "cat": "code",
+    "diff": "hard",
+    "title": "Build Dependency Resolver with Version Constraints",
+    "src": "m/builds",
+    "prompt": "Write a Python script `resolver.py` that reads `packages.json` (package registry with versions and dependencies) and a `requirements.txt` (requested packages with version constraints like >=1.0, <2.0, ==1.5). Resolve all dependencies finding compatible versions. Write the resolved list to `lockfile.json`. If resolution fails due to conflicts, print 'CONFLICT' with details and exit with code 1.",
+    "input": {
+      "packages.json": "{\"web\":{\"2.0\":{\"deps\":{\"utils\":\">=1.5\"}},\"1.5\":{\"deps\":{\"utils\":\">=1.0\"}},\"1.0\":{\"deps\":{}}},\"utils\":{\"2.0\":{\"deps\":{}},\"1.5\":{\"deps\":{}},\"1.0\":{\"deps\":{}}},\"db\":{\"3.0\":{\"deps\":{\"utils\":\">=2.0\"}},\"2.0\":{\"deps\":{\"utils\":\">=1.0\"}}},\"auth\":{\"1.0\":{\"deps\":{\"web\":\">=1.0\",\"db\":\">=2.0\"}}}}",
+      "requirements.txt": "web>=1.5\nauth==1.0\n"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "resolver.py"},
+      {"type": "run", "cmd": "python resolver.py", "exit": 0},
+      {"type": "json_valid", "path": "lockfile.json"},
+      {"type": "file_match", "path": "lockfile.json", "text": "web"}
+    ],
+    "tags": ["dependency-resolution", "package-manager", "algorithm"]
+  },
+  {
+    "id": "mb-069",
+    "cat": "code",
+    "diff": "hard",
+    "title": "Bytecode VM for Stack Machine",
+    "src": "m/coding",
+    "prompt": "Write a Python script `vm.py` that implements a stack-based virtual machine. Read bytecode from `program.bc` (one instruction per line). Instructions: PUSH <value>, POP, ADD, SUB, MUL, DIV, DUP, SWAP, PRINT (prints top of stack), CMP (pushes -1/0/1), JMP <label>, JZ <label> (jump if top is zero), LABEL <name>, HALT. Print all PRINT output to stdout. Exit with code 1 on stack underflow or invalid instruction.",
+    "input": {
+      "program.bc": "PUSH 10\nPUSH 0\nLABEL loop\nSWAP\nPUSH 1\nSUB\nDUP\nPUSH 0\nCMP\nJZ done\nSWAP\nPUSH 3\nADD\nSWAP\nJMP loop\nLABEL done\nPOP\nPOP\nPRINT\nHALT\n"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "vm.py"},
+      {"type": "run", "cmd": "python vm.py", "exit": 0, "stdout": "30"},
+      {"type": "run", "cmd": "python -c \"open('test_underflow.bc','w').write('POP\\nHALT\\n')\" && python vm.py test_underflow.bc 2>&1; exit 1", "exit": 1}
+    ],
+    "tags": ["vm", "interpreter", "stack-machine"]
+  },
+  {
+    "id": "mb-070",
+    "cat": "code",
+    "diff": "hard",
+    "title": "Implement a Diff Algorithm (Myers)",
+    "src": "m/coding",
+    "prompt": "Write a Python script `differ.py` that reads two files given as command-line arguments and computes the minimal edit diff using the Myers diff algorithm (or equivalent shortest edit script). Output unified diff format to stdout: lines prefixed with ' ' (context), '+' (added), '-' (removed). Also write the diff to `diff_output.txt`. Print a summary line: 'N insertions, M deletions'.",
+    "input": {
+      "old.txt": "alpha\nbravo\ncharlie\ndelta\necho\nfoxtrot\ngolf\n",
+      "new.txt": "alpha\nbravo\nCHARLIE\ndelta\necho\nfoxtrot\nhotel\nindia\n"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "differ.py"},
+      {"type": "run", "cmd": "python differ.py old.txt new.txt", "exit": 0, "stdout_pattern": "insertions|deletions"},
+      {"type": "file_exists", "path": "diff_output.txt"},
+      {"type": "file_match", "path": "diff_output.txt", "pattern": "^[-+]"}
+    ],
+    "tags": ["diff", "algorithm", "text-processing"]
+  }
+]

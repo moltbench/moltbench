@@ -1,0 +1,763 @@
+[
+  {
+    "id": "mb-281",
+    "cat": "automation",
+    "diff": "easy",
+    "title": "Concatenate Source Files",
+    "src": "m/builds",
+    "prompt": "Write a Python script `bundle.py` that reads all `.txt` files listed in `manifest.json` (a JSON array of filenames), concatenates their contents in order (each separated by a newline), and writes the result to `dist/bundle.txt`. Create the `dist/` directory if it doesn't exist.",
+    "input": {
+      "manifest.json": "[\"header.txt\", \"body.txt\", \"footer.txt\"]",
+      "header.txt": "=== HEADER ===",
+      "body.txt": "Main content goes here.\nSecond line of content.",
+      "footer.txt": "=== FOOTER ==="
+    },
+    "checks": [
+      {"type": "file_exists", "path": "bundle.py"},
+      {"type": "run", "cmd": "python bundle.py", "exit": 0},
+      {"type": "file_exists", "path": "dist/bundle.txt"},
+      {"type": "file_match", "path": "dist/bundle.txt", "pattern": "=== HEADER ==="}
+    ],
+    "tags": ["python", "automation", "build"]
+  },
+  {
+    "id": "mb-282",
+    "cat": "automation",
+    "diff": "easy",
+    "title": "Directory Scaffolder",
+    "src": "m/automation",
+    "prompt": "Write a Python script `scaffold.py` that reads `structure.json` and creates the directory tree it describes. The JSON has the format {\"dirs\": [\"src\", \"src/utils\", \"tests\", \"docs\"], \"files\": {\"src/main.py\": \"# entry point\", \"tests/test_main.py\": \"# tests\", \"README.md\": \"# Project\"}}. Create every directory and file as specified. Output a summary to `scaffold_log.txt` listing each created path, one per line.",
+    "input": {
+      "structure.json": "{\"dirs\": [\"src\", \"src/utils\", \"tests\", \"docs\"], \"files\": {\"src/main.py\": \"# entry point\", \"src/utils/helpers.py\": \"# helpers\", \"tests/test_main.py\": \"# tests\", \"README.md\": \"# Project\"}}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python scaffold.py", "exit": 0},
+      {"type": "file_exists", "path": "src/main.py"},
+      {"type": "file_exists", "path": "tests/test_main.py"},
+      {"type": "file_exists", "path": "scaffold_log.txt"}
+    ],
+    "tags": ["python", "automation", "scaffolding"]
+  },
+  {
+    "id": "mb-283",
+    "cat": "automation",
+    "diff": "easy",
+    "title": "Version Bumper",
+    "src": "m/automation",
+    "prompt": "Write a Python script `bump.py` that reads `version.json` containing {\"version\": \"1.2.3\"}, increments the patch number (1.2.3 -> 1.2.4), writes the updated JSON back to `version.json`, and also writes just the new version string to `NEW_VERSION.txt`.",
+    "input": {
+      "version.json": "{\"version\": \"1.2.3\"}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python bump.py", "exit": 0},
+      {"type": "json_valid", "path": "version.json"},
+      {"type": "file_match", "path": "version.json", "pattern": "1\\.2\\.4"},
+      {"type": "file_match", "path": "NEW_VERSION.txt", "pattern": "1\\.2\\.4"}
+    ],
+    "tags": ["python", "automation", "versioning"]
+  },
+  {
+    "id": "mb-284",
+    "cat": "automation",
+    "diff": "easy",
+    "title": "Batch File Renamer",
+    "src": "m/automation",
+    "prompt": "Write a Python script `rename.py` that reads `rename_rules.json` (a JSON object mapping old filenames to new filenames) and renames each file accordingly. Write a log of all renames to `rename_log.txt` with format \"old_name -> new_name\" one per line.",
+    "input": {
+      "rename_rules.json": "{\"report_draft.txt\": \"report_final.txt\", \"data_raw.csv\": \"data_clean.csv\", \"notes_old.md\": \"notes_v2.md\"}",
+      "report_draft.txt": "This is the report.",
+      "data_raw.csv": "a,b,c\n1,2,3",
+      "notes_old.md": "# Notes"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python rename.py", "exit": 0},
+      {"type": "file_exists", "path": "report_final.txt"},
+      {"type": "file_exists", "path": "data_clean.csv"},
+      {"type": "file_exists", "path": "rename_log.txt"}
+    ],
+    "tags": ["python", "automation", "batch"]
+  },
+  {
+    "id": "mb-285",
+    "cat": "automation",
+    "diff": "easy",
+    "title": "Simple Config Merger",
+    "src": "m/automation",
+    "prompt": "Write a Python script `merge_config.py` that reads `defaults.json` and `overrides.json`, merges them (overrides take priority for top-level keys), and writes the result to `merged.json`. The output must be valid JSON with 2-space indentation.",
+    "input": {
+      "defaults.json": "{\"host\": \"localhost\", \"port\": 8080, \"debug\": false, \"log_level\": \"info\"}",
+      "overrides.json": "{\"port\": 3000, \"debug\": true}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python merge_config.py", "exit": 0},
+      {"type": "json_valid", "path": "merged.json"},
+      {"type": "file_match", "path": "merged.json", "pattern": "3000"},
+      {"type": "file_match", "path": "merged.json", "pattern": "localhost"}
+    ],
+    "tags": ["python", "automation", "config"]
+  },
+  {
+    "id": "mb-286",
+    "cat": "automation",
+    "diff": "easy",
+    "title": "Changelog Generator",
+    "src": "m/automation",
+    "prompt": "Write a Python script `changelog.py` that reads `commits.json` (an array of objects with \"hash\", \"message\", and \"date\" fields) and generates a Markdown changelog file `CHANGELOG.md`. Group commits by date (as headers ## YYYY-MM-DD) and list each commit as a bullet point with its short hash (first 7 chars) and message.",
+    "input": {
+      "commits.json": "[{\"hash\": \"abc1234def\", \"message\": \"Fix login bug\", \"date\": \"2025-03-15\"}, {\"hash\": \"def5678abc\", \"message\": \"Add user profile page\", \"date\": \"2025-03-15\"}, {\"hash\": \"ghi9012xyz\", \"message\": \"Update dependencies\", \"date\": \"2025-03-14\"}, {\"hash\": \"jkl3456mno\", \"message\": \"Initial commit\", \"date\": \"2025-03-13\"}]"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python changelog.py", "exit": 0},
+      {"type": "file_exists", "path": "CHANGELOG.md"},
+      {"type": "file_match", "path": "CHANGELOG.md", "pattern": "## 2025-03-15"},
+      {"type": "file_match", "path": "CHANGELOG.md", "pattern": "abc1234"}
+    ],
+    "tags": ["python", "automation", "release"]
+  },
+  {
+    "id": "mb-287",
+    "cat": "automation",
+    "diff": "easy",
+    "title": "Crontab Next-Run Calculator",
+    "src": "m/automation",
+    "prompt": "Write a Python script `cron_next.py` that reads `crontab.txt` (one cron expression per line in format \"minute hour day_of_month month day_of_week command\") and, assuming the current time is 2025-06-15 10:30:00, calculates the next run time for each entry. Write results to `next_runs.json` as a JSON array of objects with \"command\" and \"next_run\" (ISO format datetime string) fields.",
+    "input": {
+      "crontab.txt": "0 12 * * * /usr/bin/backup\n30 * * * * /usr/bin/check_health\n0 0 1 * * /usr/bin/monthly_report"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python cron_next.py", "exit": 0},
+      {"type": "json_valid", "path": "next_runs.json"},
+      {"type": "file_match", "path": "next_runs.json", "pattern": "backup"},
+      {"type": "file_match", "path": "next_runs.json", "pattern": "2025-06"}
+    ],
+    "tags": ["python", "automation", "cron"]
+  },
+  {
+    "id": "mb-288",
+    "cat": "automation",
+    "diff": "easy",
+    "title": "Environment File Generator",
+    "src": "m/automation",
+    "prompt": "Write a Python script `gen_env.py` that reads `env_spec.json` (containing \"base\" and \"overrides\" objects, where \"overrides\" maps environment names to key-value override dicts) and generates one `.env.{name}` file per environment. Each file should have KEY=VALUE lines, with base values plus the environment-specific overrides. Also write a summary file `env_report.txt` listing how many variables each environment has.",
+    "input": {
+      "env_spec.json": "{\"base\": {\"APP_NAME\": \"myapp\", \"LOG_LEVEL\": \"info\", \"PORT\": \"8080\"}, \"overrides\": {\"development\": {\"DEBUG\": \"true\", \"LOG_LEVEL\": \"debug\"}, \"production\": {\"DEBUG\": \"false\", \"PORT\": \"80\", \"CACHE\": \"redis\"}}}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python gen_env.py", "exit": 0},
+      {"type": "file_exists", "path": ".env.development"},
+      {"type": "file_exists", "path": ".env.production"},
+      {"type": "file_match", "path": ".env.development", "pattern": "DEBUG=true"}
+    ],
+    "tags": ["python", "automation", "config"]
+  },
+  {
+    "id": "mb-289",
+    "cat": "automation",
+    "diff": "easy",
+    "title": "File Snapshot Differ",
+    "src": "m/automation",
+    "prompt": "Write a Python script `diff_snapshots.py` that reads `snapshot_before.json` and `snapshot_after.json` (both are JSON objects mapping file paths to their MD5 hashes) and produces `changes.json` containing three arrays: \"added\" (paths in after but not before), \"removed\" (paths in before but not after), and \"modified\" (paths in both but with different hashes).",
+    "input": {
+      "snapshot_before.json": "{\"src/app.py\": \"abc123\", \"src/utils.py\": \"def456\", \"README.md\": \"ghi789\", \"old_file.txt\": \"jkl012\"}",
+      "snapshot_after.json": "{\"src/app.py\": \"abc123\", \"src/utils.py\": \"xyz999\", \"README.md\": \"ghi789\", \"src/new_module.py\": \"mno345\"}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python diff_snapshots.py", "exit": 0},
+      {"type": "json_valid", "path": "changes.json"},
+      {"type": "file_match", "path": "changes.json", "pattern": "new_module"},
+      {"type": "file_match", "path": "changes.json", "pattern": "old_file"}
+    ],
+    "tags": ["python", "automation", "filewatcher"]
+  },
+  {
+    "id": "mb-290",
+    "cat": "automation",
+    "diff": "easy",
+    "title": "Notification Formatter",
+    "src": "m/automation",
+    "prompt": "Write a Python script `notify.py` that reads `events.json` (array of event objects with \"type\", \"message\", \"severity\" fields) and `rules.json` (mapping severity levels to output formats). For each event, apply the format template from its severity level (templates use {type} and {message} placeholders) and write all formatted notifications to `notifications.txt`, one per line.",
+    "input": {
+      "events.json": "[{\"type\": \"deploy\", \"message\": \"v2.1 deployed to prod\", \"severity\": \"info\"}, {\"type\": \"error\", \"message\": \"DB connection timeout\", \"severity\": \"critical\"}, {\"type\": \"build\", \"message\": \"Build #142 passed\", \"severity\": \"info\"}, {\"type\": \"security\", \"message\": \"Failed login attempt from 10.0.0.5\", \"severity\": \"warning\"}]",
+      "rules.json": "{\"info\": \"[INFO] {type}: {message}\", \"warning\": \"[WARN] {type}: {message}\", \"critical\": \"[CRITICAL] {type}: {message}\"}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python notify.py", "exit": 0},
+      {"type": "file_exists", "path": "notifications.txt"},
+      {"type": "line_count", "path": "notifications.txt", "op": "eq", "value": 4},
+      {"type": "file_match", "path": "notifications.txt", "pattern": "\\[CRITICAL\\].*DB connection"}
+    ],
+    "tags": ["python", "automation", "notification"]
+  },
+  {
+    "id": "mb-291",
+    "cat": "automation",
+    "diff": "easy",
+    "title": "Git Command Generator",
+    "src": "m/automation",
+    "prompt": "Write a Python script `git_cmds.py` that reads `changes.json` (an object with \"add\": [...files], \"remove\": [...files], \"message\": \"commit msg\", \"tag\": \"v1.0\") and generates a shell script `deploy.sh` containing the appropriate git commands: `git add` for each added file, `git rm` for each removed file, a `git commit -m \"...\"` with the message, and `git tag` with the tag. The script should start with `#!/bin/bash` and use one command per line.",
+    "input": {
+      "changes.json": "{\"add\": [\"src/feature.py\", \"tests/test_feature.py\", \"docs/feature.md\"], \"remove\": [\"src/old_module.py\"], \"message\": \"Add feature module and remove deprecated old_module\", \"tag\": \"v2.0.0\"}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python git_cmds.py", "exit": 0},
+      {"type": "file_exists", "path": "deploy.sh"},
+      {"type": "file_match", "path": "deploy.sh", "pattern": "git add src/feature.py"},
+      {"type": "file_match", "path": "deploy.sh", "pattern": "git tag v2.0.0"}
+    ],
+    "tags": ["python", "automation", "git"]
+  },
+  {
+    "id": "mb-292",
+    "cat": "automation",
+    "diff": "easy",
+    "title": "CSV Batch Splitter",
+    "src": "m/automation",
+    "prompt": "Write a Python script `split_csv.py` that reads `data.csv` and splits it into multiple files in a `chunks/` directory, each containing at most 3 data rows (plus the header row in every chunk). Name the output files `chunk_001.csv`, `chunk_002.csv`, etc. Write the total number of chunks created to `split_report.txt`.",
+    "input": {
+      "data.csv": "name,age,city\nAlice,30,NYC\nBob,25,LA\nCarol,35,Chicago\nDave,28,Houston\nEve,32,Boston\nFrank,29,Denver\nGrace,31,Seattle"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python split_csv.py", "exit": 0},
+      {"type": "file_exists", "path": "chunks/chunk_001.csv"},
+      {"type": "file_exists", "path": "chunks/chunk_003.csv"},
+      {"type": "file_match", "path": "chunks/chunk_001.csv", "pattern": "name,age,city"}
+    ],
+    "tags": ["python", "automation", "batch"]
+  },
+  {
+    "id": "mb-293",
+    "cat": "automation",
+    "diff": "easy",
+    "title": "Template Variable Replacer",
+    "src": "m/automation",
+    "prompt": "Write a Python script `render.py` that reads `template.txt` (containing {{variable}} placeholders) and `vars.json` (a flat key-value mapping), replaces all placeholders with their values, and writes the result to `output.txt`. If a placeholder has no matching variable, leave it unchanged.",
+    "input": {
+      "template.txt": "Hello {{name}},\n\nYour order #{{order_id}} has been {{status}}.\nTotal: ${{amount}}\n\nThank you for shopping with {{company}}!",
+      "vars.json": "{\"name\": \"Alice\", \"order_id\": \"12345\", \"status\": \"shipped\", \"amount\": \"49.99\", \"company\": \"TechStore\"}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python render.py", "exit": 0},
+      {"type": "file_exists", "path": "output.txt"},
+      {"type": "file_match", "path": "output.txt", "pattern": "Hello Alice"},
+      {"type": "file_not_match", "path": "output.txt", "pattern": "\\{\\{name\\}\\}"}
+    ],
+    "tags": ["python", "automation", "template"]
+  },
+  {
+    "id": "mb-294",
+    "cat": "automation",
+    "diff": "easy",
+    "title": "Makefile Generator",
+    "src": "m/builds",
+    "prompt": "Write a Python script `gen_makefile.py` that reads `targets.json` (an array of objects with \"name\", \"deps\" (array of dependency target names), and \"cmd\" fields) and generates a valid `Makefile`. The first target in the array should be the default target. Each target should have its dependencies listed and its command on the next line (tab-indented). Also add a `clean` target that runs `rm -rf build/`.",
+    "input": {
+      "targets.json": "[{\"name\": \"all\", \"deps\": [\"compile\", \"test\"], \"cmd\": \"echo Build complete\"}, {\"name\": \"compile\", \"deps\": [], \"cmd\": \"echo Compiling...\"}, {\"name\": \"test\", \"deps\": [\"compile\"], \"cmd\": \"echo Running tests...\"}]"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python gen_makefile.py", "exit": 0},
+      {"type": "file_exists", "path": "Makefile"},
+      {"type": "file_match", "path": "Makefile", "pattern": "all:.*compile.*test"},
+      {"type": "file_match", "path": "Makefile", "pattern": "clean:"}
+    ],
+    "tags": ["python", "automation", "build"]
+  },
+  {
+    "id": "mb-295",
+    "cat": "automation",
+    "diff": "easy",
+    "title": "JSON to INI Converter",
+    "src": "m/automation",
+    "prompt": "Write a Python script `json2ini.py` that reads `config.json` (a nested JSON object where top-level keys are section names and their values are key-value dicts) and converts it to INI format, writing the result to `config.ini`. Each section should have a `[section_name]` header, followed by `key = value` lines.",
+    "input": {
+      "config.json": "{\"database\": {\"host\": \"localhost\", \"port\": \"5432\", \"name\": \"mydb\"}, \"server\": {\"host\": \"0.0.0.0\", \"port\": \"8080\", \"workers\": \"4\"}, \"logging\": {\"level\": \"info\", \"file\": \"/var/log/app.log\"}}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python json2ini.py", "exit": 0},
+      {"type": "file_exists", "path": "config.ini"},
+      {"type": "file_match", "path": "config.ini", "pattern": "\\[database\\]"},
+      {"type": "file_match", "path": "config.ini", "pattern": "workers = 4"}
+    ],
+    "tags": ["python", "automation", "config"]
+  },
+  {
+    "id": "mb-296",
+    "cat": "automation",
+    "diff": "easy",
+    "title": "Batch Header Injector",
+    "src": "m/automation",
+    "prompt": "Write a Python script `inject_header.py` that reads `header.txt` and prepends its content (followed by a blank line) to every `.py` file found in the `src/` directory. Write a count of modified files to `inject_report.txt`.",
+    "input": {
+      "header.txt": "# Copyright 2025 Acme Corp\n# Licensed under MIT",
+      "src/main.py": "def main():\n    print('hello')",
+      "src/utils.py": "def add(a, b):\n    return a + b",
+      "src/config.py": "DEBUG = True"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python inject_header.py", "exit": 0},
+      {"type": "file_match", "path": "src/main.py", "pattern": "Copyright 2025 Acme"},
+      {"type": "file_match", "path": "src/main.py", "pattern": "def main"},
+      {"type": "file_exists", "path": "inject_report.txt"}
+    ],
+    "tags": ["python", "automation", "batch"]
+  },
+  {
+    "id": "mb-297",
+    "cat": "automation",
+    "diff": "medium",
+    "title": "Dependency Resolver",
+    "src": "m/automation",
+    "prompt": "Write a Python script `resolve.py` that reads `packages.json` (an object mapping package names to arrays of their dependencies) and performs a topological sort to determine a valid installation order. Write the ordered list to `install_order.txt` (one package per line). If a circular dependency is detected, write \"ERROR: circular dependency detected\" to `install_order.txt` and exit with code 0.",
+    "input": {
+      "packages.json": "{\"app\": [\"framework\", \"database\"], \"framework\": [\"utils\", \"logging\"], \"database\": [\"utils\"], \"utils\": [], \"logging\": [\"utils\"], \"cache\": [\"utils\", \"logging\"]}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python resolve.py", "exit": 0},
+      {"type": "file_exists", "path": "install_order.txt"},
+      {"type": "file_match", "path": "install_order.txt", "pattern": "utils"},
+      {"type": "line_count", "path": "install_order.txt", "op": "eq", "value": 6}
+    ],
+    "tags": ["python", "automation", "dependency"]
+  },
+  {
+    "id": "mb-298",
+    "cat": "automation",
+    "diff": "medium",
+    "title": "CI Pipeline Generator",
+    "src": "m/builds",
+    "prompt": "Write a Python script `gen_ci.py` that reads `project.json` (containing \"language\", \"test_cmd\", \"build_cmd\", \"deploy_targets\" array, and \"node_version\" or \"python_version\") and generates a GitHub Actions workflow file at `.github/workflows/ci.yml`. The workflow should have: a trigger on push to main, a job for each of build/test/deploy, proper `needs` dependencies (test needs build, deploy needs test), and use the correct language version setup step. Write valid YAML.",
+    "input": {
+      "project.json": "{\"language\": \"python\", \"python_version\": \"3.11\", \"test_cmd\": \"python -m pytest tests/\", \"build_cmd\": \"python setup.py build\", \"deploy_targets\": [\"staging\", \"production\"]}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python gen_ci.py", "exit": 0},
+      {"type": "file_exists", "path": ".github/workflows/ci.yml"},
+      {"type": "file_match", "path": ".github/workflows/ci.yml", "pattern": "needs:.*build"},
+      {"type": "file_match", "path": ".github/workflows/ci.yml", "pattern": "3\\.11"}
+    ],
+    "tags": ["python", "automation", "ci"]
+  },
+  {
+    "id": "mb-299",
+    "cat": "automation",
+    "diff": "medium",
+    "title": "Task Runner with Dependencies",
+    "src": "m/automation",
+    "prompt": "Write a Python script `taskrunner.py` that reads `tasks.json` (an object mapping task names to objects with \"deps\" and \"cmd\" fields). It should execute tasks in dependency order. For each task, write the task name and command to `run_log.txt` (format: \"[TASK] name: cmd\"). If the command starts with \"FAIL:\", treat it as a failed task — log it as \"[FAIL] name\" and skip any tasks that depend on it. Write a summary of passed/failed counts to the last line.",
+    "input": {
+      "tasks.json": "{\"lint\": {\"deps\": [], \"cmd\": \"echo Linting...\"}, \"compile\": {\"deps\": [\"lint\"], \"cmd\": \"echo Compiling...\"}, \"test\": {\"deps\": [\"compile\"], \"cmd\": \"FAIL: test suite error\"}, \"package\": {\"deps\": [\"test\"], \"cmd\": \"echo Packaging...\"}, \"docs\": {\"deps\": [\"lint\"], \"cmd\": \"echo Building docs...\"}}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python taskrunner.py", "exit": 0},
+      {"type": "file_exists", "path": "run_log.txt"},
+      {"type": "file_match", "path": "run_log.txt", "pattern": "\\[FAIL\\] test"},
+      {"type": "file_not_match", "path": "run_log.txt", "pattern": "\\[TASK\\] package"}
+    ],
+    "tags": ["python", "automation", "taskrunner"]
+  },
+  {
+    "id": "mb-300",
+    "cat": "automation",
+    "diff": "medium",
+    "title": "Config Migration Script",
+    "src": "m/automation",
+    "prompt": "Write a Python script `migrate.py` that reads `old_config.json` (v1 format) and transforms it to v2 format, writing the result to `new_config.json`. Migration rules: (1) rename key \"db_host\" to \"database.host\", \"db_port\" to \"database.port\", \"db_name\" to \"database.name\" (nested under a \"database\" object), (2) rename \"app_port\" to \"server.port\", (3) convert \"features\" from a comma-separated string to a JSON array, (4) add a \"config_version\": 2 field. Write a migration log to `migration_log.txt` listing each transformation applied.",
+    "input": {
+      "old_config.json": "{\"config_version\": 1, \"db_host\": \"localhost\", \"db_port\": 5432, \"db_name\": \"myapp\", \"app_port\": 8080, \"features\": \"auth,logging,cache,metrics\", \"app_name\": \"MyApp\"}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python migrate.py", "exit": 0},
+      {"type": "json_valid", "path": "new_config.json"},
+      {"type": "file_match", "path": "new_config.json", "pattern": "\"database\""},
+      {"type": "file_match", "path": "new_config.json", "pattern": "\"config_version\": 2"}
+    ],
+    "tags": ["python", "automation", "migration"]
+  },
+  {
+    "id": "mb-301",
+    "cat": "automation",
+    "diff": "medium",
+    "title": "Hook System Pipeline",
+    "src": "m/automation",
+    "prompt": "Write a Python script `hooks.py` that implements a hook system. Read `pipeline.json` which defines operations and their pre/post hooks. Each hook is a dict with \"name\" and \"action\" (a string to log). For each operation, execute pre-hooks in order, log the operation itself, then execute post-hooks. Write all execution traces to `hook_log.txt` with format \"[PRE] hook_name\", \"[RUN] operation_name\", \"[POST] hook_name\". Also write `summary.json` with the count of hooks executed per operation.",
+    "input": {
+      "pipeline.json": "{\"operations\": [{\"name\": \"build\", \"pre_hooks\": [{\"name\": \"validate_config\", \"action\": \"Validating...\"}, {\"name\": \"clean_cache\", \"action\": \"Cleaning...\"}], \"post_hooks\": [{\"name\": \"notify_slack\", \"action\": \"Notifying...\"}]}, {\"name\": \"deploy\", \"pre_hooks\": [{\"name\": \"backup_db\", \"action\": \"Backing up...\"}], \"post_hooks\": [{\"name\": \"health_check\", \"action\": \"Checking...\"}, {\"name\": \"update_status\", \"action\": \"Updating...\"}]}]}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python hooks.py", "exit": 0},
+      {"type": "file_match", "path": "hook_log.txt", "pattern": "\\[PRE\\] validate_config"},
+      {"type": "file_match", "path": "hook_log.txt", "pattern": "\\[RUN\\] deploy"},
+      {"type": "json_valid", "path": "summary.json"}
+    ],
+    "tags": ["python", "automation", "hooks"]
+  },
+  {
+    "id": "mb-302",
+    "cat": "automation",
+    "diff": "medium",
+    "title": "Parallel Task Scheduler",
+    "src": "m/automation",
+    "prompt": "Write a Python script `scheduler.py` that reads `jobs.json` (array of objects with \"name\", \"duration\" (int seconds), \"deps\" (array of job names)). Simulate parallel execution: jobs without unmet dependencies can run simultaneously. For each time step, determine which jobs can start. Produce `schedule.json` with each job's \"start_time\" and \"end_time\", and `timeline.txt` showing a text-based Gantt chart where each row is a time unit and columns show which jobs are running using their first 3 letters.",
+    "input": {
+      "jobs.json": "[{\"name\": \"fetch\", \"duration\": 2, \"deps\": []}, {\"name\": \"parse\", \"duration\": 3, \"deps\": [\"fetch\"]}, {\"name\": \"validate\", \"duration\": 1, \"deps\": [\"fetch\"]}, {\"name\": \"transform\", \"duration\": 2, \"deps\": [\"parse\", \"validate\"]}, {\"name\": \"index\", \"duration\": 1, \"deps\": []}, {\"name\": \"load\", \"duration\": 2, \"deps\": [\"transform\", \"index\"]}]"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python scheduler.py", "exit": 0},
+      {"type": "json_valid", "path": "schedule.json"},
+      {"type": "file_exists", "path": "timeline.txt"},
+      {"type": "file_match", "path": "schedule.json", "pattern": "start_time"}
+    ],
+    "tags": ["python", "automation", "scheduling"]
+  },
+  {
+    "id": "mb-303",
+    "cat": "automation",
+    "diff": "medium",
+    "title": "Retry Logic Simulator",
+    "src": "m/coding",
+    "prompt": "Write a Python script `retry.py` that reads `operations.json` (array of objects with \"name\", \"fail_count\" (how many times it fails before succeeding), \"max_retries\", and \"backoff\" (\"linear\" or \"exponential\", base 1 second)). Simulate executing each operation with retry logic. Write a detailed log to `retry_log.txt` showing each attempt, the wait time, and whether it succeeded. Write `results.json` mapping each operation name to {\"success\": bool, \"attempts\": int, \"total_wait_seconds\": int}.",
+    "input": {
+      "operations.json": "[{\"name\": \"connect_db\", \"fail_count\": 2, \"max_retries\": 5, \"backoff\": \"exponential\"}, {\"name\": \"fetch_api\", \"fail_count\": 4, \"max_retries\": 3, \"backoff\": \"linear\"}, {\"name\": \"send_email\", \"fail_count\": 0, \"max_retries\": 3, \"backoff\": \"linear\"}]"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python retry.py", "exit": 0},
+      {"type": "json_valid", "path": "results.json"},
+      {"type": "file_match", "path": "results.json", "pattern": "\"success\": true"},
+      {"type": "file_match", "path": "results.json", "pattern": "\"success\": false"}
+    ],
+    "tags": ["python", "automation", "retry"]
+  },
+  {
+    "id": "mb-304",
+    "cat": "automation",
+    "diff": "medium",
+    "title": "Release Notes Compiler",
+    "src": "m/automation",
+    "prompt": "Write a Python script `release_notes.py` that reads `pull_requests.json` (array of PR objects with \"number\", \"title\", \"labels\" array, and \"author\") and generates `RELEASE_NOTES.md`. Group PRs by label categories: \"feature\" -> \"New Features\", \"bugfix\" -> \"Bug Fixes\", \"docs\" -> \"Documentation\", \"chore\" -> \"Maintenance\". PRs with no recognized label go under \"Other Changes\". Each entry should show \"- TITLE (#NUMBER) by @AUTHOR\". Include a stats section at the bottom showing contributor count and PR count per category.",
+    "input": {
+      "pull_requests.json": "[{\"number\": 101, \"title\": \"Add dark mode\", \"labels\": [\"feature\"], \"author\": \"alice\"}, {\"number\": 102, \"title\": \"Fix memory leak in parser\", \"labels\": [\"bugfix\"], \"author\": \"bob\"}, {\"number\": 103, \"title\": \"Update API docs\", \"labels\": [\"docs\"], \"author\": \"alice\"}, {\"number\": 104, \"title\": \"Add search feature\", \"labels\": [\"feature\"], \"author\": \"carol\"}, {\"number\": 105, \"title\": \"Upgrade CI runner\", \"labels\": [\"chore\"], \"author\": \"bob\"}, {\"number\": 106, \"title\": \"Refactor auth module\", \"labels\": [], \"author\": \"dave\"}]"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python release_notes.py", "exit": 0},
+      {"type": "file_exists", "path": "RELEASE_NOTES.md"},
+      {"type": "file_match", "path": "RELEASE_NOTES.md", "pattern": "New Features"},
+      {"type": "file_match", "path": "RELEASE_NOTES.md", "pattern": "#101.*alice"}
+    ],
+    "tags": ["python", "automation", "release"]
+  },
+  {
+    "id": "mb-305",
+    "cat": "automation",
+    "diff": "medium",
+    "title": "Workflow State Machine",
+    "src": "m/automation",
+    "prompt": "Write a Python script `workflow.py` that reads `workflow_def.json` (defining states, transitions with conditions, and actions) and `events.json` (array of event objects with \"name\" and \"data\"). Starting from the \"initial\" state, process each event through the state machine. Write the transition log to `transitions.txt` (format: \"STATE -- event_name --> NEW_STATE [action]\") and the final state to `final_state.txt`.",
+    "input": {
+      "workflow_def.json": "{\"initial\": \"pending\", \"states\": {\"pending\": {\"transitions\": {\"submit\": {\"to\": \"review\", \"action\": \"notify_reviewers\"}, \"cancel\": {\"to\": \"cancelled\", \"action\": \"log_cancellation\"}}}, \"review\": {\"transitions\": {\"approve\": {\"to\": \"approved\", \"action\": \"send_approval\"}, \"reject\": {\"to\": \"pending\", \"action\": \"send_feedback\"}}}, \"approved\": {\"transitions\": {\"deploy\": {\"to\": \"deployed\", \"action\": \"run_deploy\"}}}, \"deployed\": {\"transitions\": {}}, \"cancelled\": {\"transitions\": {}}}}",
+      "events.json": "[{\"name\": \"submit\", \"data\": {}}, {\"name\": \"reject\", \"data\": {\"reason\": \"needs tests\"}}, {\"name\": \"submit\", \"data\": {}}, {\"name\": \"approve\", \"data\": {}}, {\"name\": \"deploy\", \"data\": {}}]"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python workflow.py", "exit": 0},
+      {"type": "file_exists", "path": "transitions.txt"},
+      {"type": "file_match", "path": "final_state.txt", "pattern": "deployed"},
+      {"type": "line_count", "path": "transitions.txt", "op": "eq", "value": 5}
+    ],
+    "tags": ["python", "automation", "workflow"]
+  },
+  {
+    "id": "mb-306",
+    "cat": "automation",
+    "diff": "medium",
+    "title": "Multi-Stage Build Pipeline",
+    "src": "m/builds",
+    "prompt": "Write a Python script `build.py` that reads `pipeline.json` defining build stages (each with a name, input directory, output directory, and a transformation type: \"copy\", \"concat\", or \"wrap\"). Execute stages in order. \"copy\" copies all files from input to output dir. \"concat\" concatenates all input files into a single output file. \"wrap\" wraps each file's content with a prefix/suffix. Create all necessary directories. Write a build manifest to `build/manifest.json` listing all output files with their sizes.",
+    "input": {
+      "pipeline.json": "{\"stages\": [{\"name\": \"collect\", \"type\": \"copy\", \"input\": \"src\", \"output\": \"build/stage1\"}, {\"name\": \"bundle\", \"type\": \"concat\", \"input\": \"build/stage1\", \"output\": \"build/stage2/bundle.txt\"}, {\"name\": \"wrap\", \"type\": \"wrap\", \"input\": \"build/stage2\", \"output\": \"build/dist\", \"prefix\": \"--- START ---\\n\", \"suffix\": \"\\n--- END ---\"}]}",
+      "src/a.txt": "Module A content",
+      "src/b.txt": "Module B content",
+      "src/c.txt": "Module C content"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python build.py", "exit": 0},
+      {"type": "file_exists", "path": "build/dist/bundle.txt"},
+      {"type": "file_match", "path": "build/dist/bundle.txt", "pattern": "--- START ---"},
+      {"type": "json_valid", "path": "build/manifest.json"}
+    ],
+    "tags": ["python", "automation", "build"]
+  },
+  {
+    "id": "mb-307",
+    "cat": "automation",
+    "diff": "medium",
+    "title": "Deep Config Merger",
+    "src": "m/automation",
+    "prompt": "Write a Python script `deep_merge.py` that reads multiple JSON config files specified in `merge_order.json` (an array of filenames in priority order, lowest to highest) and performs a deep merge: nested dicts are merged recursively, arrays are replaced (not concatenated), and scalar values from higher-priority files override lower. Write the result to `final_config.json` with 2-space indentation. Also write `merge_report.txt` listing every key path that was overridden and which file provided the final value.",
+    "input": {
+      "merge_order.json": "[\"base.json\", \"env.json\", \"local.json\"]",
+      "base.json": "{\"app\": {\"name\": \"myapp\", \"port\": 8080, \"features\": [\"core\"]}, \"db\": {\"host\": \"localhost\", \"port\": 5432}, \"logging\": {\"level\": \"warn\"}}",
+      "env.json": "{\"app\": {\"port\": 3000, \"features\": [\"core\", \"premium\"]}, \"db\": {\"host\": \"db.prod.internal\"}, \"cache\": {\"enabled\": true}}",
+      "local.json": "{\"app\": {\"port\": 9090}, \"logging\": {\"level\": \"debug\", \"file\": \"app.log\"}}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python deep_merge.py", "exit": 0},
+      {"type": "json_valid", "path": "final_config.json"},
+      {"type": "file_match", "path": "final_config.json", "pattern": "9090"},
+      {"type": "file_match", "path": "final_config.json", "pattern": "db.prod.internal"}
+    ],
+    "tags": ["python", "automation", "config"]
+  },
+  {
+    "id": "mb-308",
+    "cat": "automation",
+    "diff": "medium",
+    "title": "File Processing Pipeline",
+    "src": "m/automation",
+    "prompt": "Write a Python script `pipeline.py` that reads `pipeline_def.json` defining a sequence of transformations to apply to all `.txt` files in `input/`. Transformations include: \"uppercase\" (convert to uppercase), \"strip\" (strip whitespace from each line), \"number_lines\" (prefix each line with its line number), \"filter\" (keep only lines matching a regex pattern). Apply transformations in order and write results to `output/` preserving filenames. Write `pipeline_log.json` recording file count and transformations applied.",
+    "input": {
+      "pipeline_def.json": "{\"transforms\": [{\"type\": \"strip\"}, {\"type\": \"filter\", \"pattern\": \"^[^#]\"}, {\"type\": \"uppercase\"}, {\"type\": \"number_lines\"}]}",
+      "input/data1.txt": "  hello world  \n# comment line\n  important data  \n# another comment\n  final line  ",
+      "input/data2.txt": "  first entry  \n  second entry  \n# skip this\n  third entry  "
+    },
+    "checks": [
+      {"type": "run", "cmd": "python pipeline.py", "exit": 0},
+      {"type": "file_exists", "path": "output/data1.txt"},
+      {"type": "file_not_match", "path": "output/data1.txt", "pattern": "# comment"},
+      {"type": "file_match", "path": "output/data1.txt", "pattern": "HELLO WORLD"}
+    ],
+    "tags": ["python", "automation", "pipeline"]
+  },
+  {
+    "id": "mb-309",
+    "cat": "automation",
+    "diff": "medium",
+    "title": "Docker Compose Generator",
+    "src": "m/automation",
+    "prompt": "Write a Python script `gen_compose.py` that reads `services.json` (array of service definitions with \"name\", \"image\", \"ports\" array, \"env\" dict, \"depends_on\" array, and optional \"volumes\" array) and generates a valid `docker-compose.yml` file. Include version \"3.8\" and a default network. Write proper YAML with correct indentation. Also generate a `.env.docker` file with all environment variables from all services consolidated.",
+    "input": {
+      "services.json": "[{\"name\": \"web\", \"image\": \"nginx:latest\", \"ports\": [\"80:80\", \"443:443\"], \"env\": {\"NGINX_HOST\": \"localhost\"}, \"depends_on\": [\"api\"], \"volumes\": [\"./html:/usr/share/nginx/html\"]}, {\"name\": \"api\", \"image\": \"python:3.11\", \"ports\": [\"8000:8000\"], \"env\": {\"DB_HOST\": \"db\", \"SECRET_KEY\": \"dev-secret\"}, \"depends_on\": [\"db\"]}, {\"name\": \"db\", \"image\": \"postgres:15\", \"ports\": [\"5432:5432\"], \"env\": {\"POSTGRES_DB\": \"app\", \"POSTGRES_PASSWORD\": \"secret\"}, \"depends_on\": [], \"volumes\": [\"pgdata:/var/lib/postgresql/data\"]}]"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python gen_compose.py", "exit": 0},
+      {"type": "file_exists", "path": "docker-compose.yml"},
+      {"type": "file_match", "path": "docker-compose.yml", "pattern": "depends_on"},
+      {"type": "file_exists", "path": ".env.docker"}
+    ],
+    "tags": ["python", "automation", "docker"]
+  },
+  {
+    "id": "mb-310",
+    "cat": "automation",
+    "diff": "medium",
+    "title": "Event Filter Router",
+    "src": "m/automation",
+    "prompt": "Write a Python script `router.py` that reads `events.json` (array of event objects with \"type\", \"source\", \"severity\", \"payload\") and `routes.json` (array of routing rules with \"match\" conditions and \"destination\" file path). For each event, check all routes — if the event matches a route's conditions (conditions are key-value pairs that must all match), append the event's payload to that route's destination file. Events can match multiple routes. Write `routing_stats.json` with the count of events routed to each destination.",
+    "input": {
+      "events.json": "[{\"type\": \"error\", \"source\": \"api\", \"severity\": \"high\", \"payload\": \"API timeout on /users\"}, {\"type\": \"error\", \"source\": \"db\", \"severity\": \"critical\", \"payload\": \"Connection pool exhausted\"}, {\"type\": \"info\", \"source\": \"api\", \"severity\": \"low\", \"payload\": \"Health check OK\"}, {\"type\": \"error\", \"source\": \"api\", \"severity\": \"critical\", \"payload\": \"Unhandled exception in auth\"}]",
+      "routes.json": "[{\"match\": {\"type\": \"error\"}, \"destination\": \"logs/errors.txt\"}, {\"match\": {\"severity\": \"critical\"}, \"destination\": \"logs/critical.txt\"}, {\"match\": {\"source\": \"api\"}, \"destination\": \"logs/api.txt\"}]"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python router.py", "exit": 0},
+      {"type": "file_exists", "path": "logs/errors.txt"},
+      {"type": "file_match", "path": "logs/critical.txt", "pattern": "Connection pool"},
+      {"type": "json_valid", "path": "routing_stats.json"}
+    ],
+    "tags": ["python", "automation", "routing"]
+  },
+  {
+    "id": "mb-311",
+    "cat": "automation",
+    "diff": "medium",
+    "title": "Project Initializer from Template",
+    "src": "m/automation",
+    "prompt": "Write a Python script `init_project.py` that reads `template.json` (defining a project template with directory structure, file templates with `{{variable}}` placeholders, and a \"variables\" object). Generate the full project in a directory named after the \"project_name\" variable. Replace all placeholders in file contents AND filenames. Write a summary to `init_log.txt` listing all created files and directories.",
+    "input": {
+      "template.json": "{\"variables\": {\"project_name\": \"awesome-tool\", \"author\": \"Jane Doe\", \"year\": \"2025\", \"license\": \"MIT\"}, \"structure\": {\"dirs\": [\"{{project_name}}\", \"{{project_name}}/src\", \"{{project_name}}/tests\", \"{{project_name}}/docs\"], \"files\": {\"{{project_name}}/README.md\": \"# {{project_name}}\\n\\nBy {{author}}, {{year}}.\\nLicense: {{license}}\", \"{{project_name}}/setup.py\": \"from setuptools import setup\\nsetup(name='{{project_name}}', author='{{author}}')\", \"{{project_name}}/src/__init__.py\": \"# {{project_name}} v0.1.0\", \"{{project_name}}/tests/__init__.py\": \"\"}}}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python init_project.py", "exit": 0},
+      {"type": "file_exists", "path": "awesome-tool/src/__init__.py"},
+      {"type": "file_match", "path": "awesome-tool/README.md", "pattern": "Jane Doe"},
+      {"type": "file_match", "path": "awesome-tool/setup.py", "pattern": "awesome-tool"}
+    ],
+    "tags": ["python", "automation", "scaffolding"]
+  },
+  {
+    "id": "mb-312",
+    "cat": "automation",
+    "diff": "medium",
+    "title": "Batch JSON Validator",
+    "src": "m/automation",
+    "prompt": "Write a Python script `validate_batch.py` that reads all `.json` files in the `data/` directory, validates each against a schema defined in `schema.json` (specifying required fields and their types: \"string\", \"number\", \"boolean\", \"array\"). Write a report to `validation_report.json` listing each file and its validation result: either {\"valid\": true} or {\"valid\": false, \"errors\": [...]}. Also write `valid_files.txt` listing only the filenames that passed validation.",
+    "input": {
+      "schema.json": "{\"required\": {\"name\": \"string\", \"age\": \"number\", \"active\": \"boolean\", \"tags\": \"array\"}}",
+      "data/user1.json": "{\"name\": \"Alice\", \"age\": 30, \"active\": true, \"tags\": [\"admin\"]}",
+      "data/user2.json": "{\"name\": \"Bob\", \"age\": \"twenty\", \"active\": true, \"tags\": []}",
+      "data/user3.json": "{\"name\": \"Carol\", \"active\": false}",
+      "data/user4.json": "{\"name\": \"Dave\", \"age\": 25, \"active\": true, \"tags\": [\"user\", \"premium\"]}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python validate_batch.py", "exit": 0},
+      {"type": "json_valid", "path": "validation_report.json"},
+      {"type": "file_match", "path": "validation_report.json", "pattern": "\"valid\": false"},
+      {"type": "file_match", "path": "valid_files.txt", "pattern": "user1.json"}
+    ],
+    "tags": ["python", "automation", "validation"]
+  },
+  {
+    "id": "mb-313",
+    "cat": "automation",
+    "diff": "hard",
+    "title": "Full Release Automation",
+    "src": "m/automation",
+    "prompt": "Write a Python script `release.py` that automates a full release process. Read `release_config.json` for the project state. The script must: (1) Bump the version in `package.json` according to the \"bump_type\" (major/minor/patch), (2) Generate `CHANGELOG.md` from the commits array grouped by type (feat/fix/chore), (3) Generate git commands in `release_commands.sh` (tag creation, commit), (4) Create `release_notes.md` with a summary suitable for GitHub Releases, (5) Update an `AUTHORS.txt` file listing unique commit authors alphabetically. All 5 output files must be created.",
+    "input": {
+      "release_config.json": "{\"bump_type\": \"minor\", \"repo\": \"acme/widget\", \"date\": \"2025-07-01\"}",
+      "package.json": "{\"name\": \"widget\", \"version\": \"2.3.1\", \"description\": \"A widget library\"}",
+      "commits.json": "[{\"hash\": \"a1b2c3d\", \"type\": \"feat\", \"message\": \"Add dark mode support\", \"author\": \"alice\"}, {\"hash\": \"e4f5g6h\", \"type\": \"fix\", \"message\": \"Fix memory leak in renderer\", \"author\": \"bob\"}, {\"hash\": \"i7j8k9l\", \"type\": \"feat\", \"message\": \"Add keyboard shortcuts\", \"author\": \"carol\"}, {\"hash\": \"m0n1o2p\", \"type\": \"chore\", \"message\": \"Update linter config\", \"author\": \"alice\"}, {\"hash\": \"q3r4s5t\", \"type\": \"fix\", \"message\": \"Fix race condition in cache\", \"author\": \"dave\"}, {\"hash\": \"u6v7w8x\", \"type\": \"feat\", \"message\": \"Add export to PDF\", \"author\": \"bob\"}]"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python release.py", "exit": 0},
+      {"type": "file_match", "path": "package.json", "pattern": "2\\.4\\.0"},
+      {"type": "file_match", "path": "CHANGELOG.md", "pattern": "dark mode"},
+      {"type": "file_exists", "path": "release_commands.sh"}
+    ],
+    "tags": ["python", "automation", "release"]
+  },
+  {
+    "id": "mb-314",
+    "cat": "automation",
+    "diff": "hard",
+    "title": "Workflow Engine with Conditions",
+    "src": "m/automation",
+    "prompt": "Write a Python script `engine.py` that implements a workflow engine. Read `workflow.json` defining steps, each with: \"name\", \"type\" (\"action\", \"condition\", \"parallel\"), \"action\" (string to log), optional \"condition\" (a Python-like expression referencing context variables), optional \"on_true\"/\"on_false\" (step names for condition type), optional \"steps\" (array for parallel type), and \"next\" (next step name or null). Read `context.json` for initial variable values. Execute the workflow from the \"start\" step. For conditions, evaluate against context. For parallel, execute all sub-steps. Write execution trace to `trace.json` (array of {\"step\", \"type\", \"result\"}) and `execution_log.txt` with human-readable output.",
+    "input": {
+      "workflow.json": "{\"start\": \"check_env\", \"steps\": {\"check_env\": {\"name\": \"check_env\", \"type\": \"condition\", \"condition\": \"env == 'production'\", \"on_true\": \"prod_deploy\", \"on_false\": \"dev_deploy\"}, \"prod_deploy\": {\"name\": \"prod_deploy\", \"type\": \"parallel\", \"steps\": [\"backup_db\", \"notify_team\"], \"next\": \"run_migrations\"}, \"dev_deploy\": {\"name\": \"dev_deploy\", \"type\": \"action\", \"action\": \"Deploy to dev server\", \"next\": \"run_tests\"}, \"backup_db\": {\"name\": \"backup_db\", \"type\": \"action\", \"action\": \"Backing up database\"}, \"notify_team\": {\"name\": \"notify_team\", \"type\": \"action\", \"action\": \"Sending deployment notification\"}, \"run_migrations\": {\"name\": \"run_migrations\", \"type\": \"action\", \"action\": \"Running DB migrations\", \"next\": \"health_check\"}, \"run_tests\": {\"name\": \"run_tests\", \"type\": \"condition\", \"condition\": \"tests_enabled == true\", \"on_true\": \"execute_tests\", \"on_false\": \"done\"}, \"execute_tests\": {\"name\": \"execute_tests\", \"type\": \"action\", \"action\": \"Running test suite\", \"next\": \"done\"}, \"health_check\": {\"name\": \"health_check\", \"type\": \"action\", \"action\": \"Running health checks\", \"next\": \"done\"}, \"done\": {\"name\": \"done\", \"type\": \"action\", \"action\": \"Workflow complete\"}}}",
+      "context.json": "{\"env\": \"production\", \"tests_enabled\": true, \"version\": \"2.0.0\"}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python engine.py", "exit": 0},
+      {"type": "json_valid", "path": "trace.json"},
+      {"type": "file_match", "path": "execution_log.txt", "pattern": "Backing up database"},
+      {"type": "file_not_match", "path": "execution_log.txt", "pattern": "Deploy to dev"}
+    ],
+    "tags": ["python", "automation", "workflow"]
+  },
+  {
+    "id": "mb-315",
+    "cat": "automation",
+    "diff": "hard",
+    "title": "Build System with Caching",
+    "src": "m/builds",
+    "prompt": "Write a Python script `build_system.py` that implements a build system with caching. Read `build.json` defining build targets with source files, output files, dependencies on other targets, and build commands (simulated as string transformations). Compute hashes of all source files. Read `cache.json` (previous build hashes, may not exist). Only rebuild targets whose source hashes changed or whose dependencies were rebuilt. Write outputs to `build/` directory. Update `cache.json` with new hashes. Write `build_log.txt` showing which targets were built vs skipped (cached). On first run everything builds; create a `build_stats.json` with {\"built\": N, \"cached\": N, \"total\": N}.",
+    "input": {
+      "build.json": "{\"targets\": {\"lib\": {\"sources\": [\"src/lib.txt\"], \"output\": \"build/lib.out\", \"deps\": [], \"transform\": \"uppercase\"}, \"utils\": {\"sources\": [\"src/utils.txt\"], \"output\": \"build/utils.out\", \"deps\": [], \"transform\": \"uppercase\"}, \"app\": {\"sources\": [\"src/app.txt\"], \"output\": \"build/app.out\", \"deps\": [\"lib\", \"utils\"], \"transform\": \"concat_deps\"}, \"bundle\": {\"sources\": [], \"output\": \"build/bundle.out\", \"deps\": [\"app\"], \"transform\": \"wrap\"}}}",
+      "src/lib.txt": "library functions here",
+      "src/utils.txt": "utility helpers here",
+      "src/app.txt": "main application code"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python build_system.py", "exit": 0},
+      {"type": "file_exists", "path": "build/bundle.out"},
+      {"type": "json_valid", "path": "cache.json"},
+      {"type": "json_valid", "path": "build_stats.json"}
+    ],
+    "tags": ["python", "automation", "build", "caching"]
+  },
+  {
+    "id": "mb-316",
+    "cat": "automation",
+    "diff": "hard",
+    "title": "Multi-Environment Deployer",
+    "src": "m/automation",
+    "prompt": "Write a Python script `deployer.py` that simulates a multi-environment deployment system. Read `deploy_config.json` defining environments (dev/staging/prod) each with their own config overrides, health check endpoints, and rollback triggers. Read `deploy_plan.json` specifying which services to deploy and their versions. For each environment in order: (1) generate merged config in `deploy/{env}/config.json`, (2) simulate deployment of each service writing to `deploy/{env}/services.json`, (3) simulate health checks — if any fail (marked in the plan), trigger rollback and log it, (4) write deployment receipts. Generate `deploy/summary.json` with overall status per environment and `deploy/timeline.txt` showing the chronological execution trace.",
+    "input": {
+      "deploy_config.json": "{\"environments\": {\"dev\": {\"base_url\": \"http://dev.local\", \"replicas\": 1, \"config\": {\"debug\": true, \"log_level\": \"debug\"}}, \"staging\": {\"base_url\": \"http://staging.internal\", \"replicas\": 2, \"config\": {\"debug\": false, \"log_level\": \"info\"}}, \"prod\": {\"base_url\": \"https://api.example.com\", \"replicas\": 5, \"config\": {\"debug\": false, \"log_level\": \"warn\"}}}}",
+      "deploy_plan.json": "{\"services\": [{\"name\": \"auth-service\", \"version\": \"3.2.1\", \"health_check\": true, \"fails_in\": []}, {\"name\": \"user-service\", \"version\": \"2.0.0\", \"health_check\": true, \"fails_in\": [\"staging\"]}, {\"name\": \"api-gateway\", \"version\": \"5.1.0\", \"health_check\": true, \"fails_in\": []}]}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python deployer.py", "exit": 0},
+      {"type": "file_exists", "path": "deploy/dev/config.json"},
+      {"type": "json_valid", "path": "deploy/summary.json"},
+      {"type": "file_match", "path": "deploy/timeline.txt", "pattern": "rollback"}
+    ],
+    "tags": ["python", "automation", "deployment"]
+  },
+  {
+    "id": "mb-317",
+    "cat": "automation",
+    "diff": "hard",
+    "title": "Plugin System Loader",
+    "src": "m/coding",
+    "prompt": "Write a Python script `plugin_loader.py` that implements a plugin system. Read `plugins/` directory containing plugin definition JSON files (each with \"name\", \"version\", \"hooks\" mapping hook names to action strings, \"dependencies\" array of other plugin names, and \"priority\" integer). The loader must: (1) resolve plugin load order via dependency topological sort, (2) detect version conflicts (two plugins requiring the same dependency at different versions), (3) merge hooks from all plugins respecting priority (higher priority overrides), (4) generate `plugin_registry.json` with the resolved plugin state, (5) simulate running all hooks in order writing to `hook_execution.txt`, (6) write `conflicts.txt` listing any detected issues (empty if none).",
+    "input": {
+      "plugins/auth.json": "{\"name\": \"auth\", \"version\": \"2.0\", \"hooks\": {\"on_request\": \"Authenticate request\", \"on_error\": \"Log auth error\"}, \"dependencies\": [\"core\"], \"priority\": 10}",
+      "plugins/core.json": "{\"name\": \"core\", \"version\": \"1.0\", \"hooks\": {\"on_start\": \"Initialize core\", \"on_request\": \"Parse request\", \"on_error\": \"Default error handler\"}, \"dependencies\": [], \"priority\": 1}",
+      "plugins/logging.json": "{\"name\": \"logging\", \"version\": \"1.5\", \"hooks\": {\"on_start\": \"Setup logging\", \"on_request\": \"Log request\", \"on_shutdown\": \"Flush logs\"}, \"dependencies\": [\"core\"], \"priority\": 5}",
+      "plugins/cache.json": "{\"name\": \"cache\", \"version\": \"3.0\", \"hooks\": {\"on_start\": \"Warm cache\", \"on_request\": \"Check cache\"}, \"dependencies\": [\"core\", \"logging\"], \"priority\": 8}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python plugin_loader.py", "exit": 0},
+      {"type": "json_valid", "path": "plugin_registry.json"},
+      {"type": "file_exists", "path": "hook_execution.txt"},
+      {"type": "file_match", "path": "hook_execution.txt", "pattern": "Initialize core"}
+    ],
+    "tags": ["python", "automation", "plugins"]
+  },
+  {
+    "id": "mb-318",
+    "cat": "automation",
+    "diff": "hard",
+    "title": "Database Migration Planner",
+    "src": "m/automation",
+    "prompt": "Write a Python script `migrate_db.py` that reads `migrations/` directory containing numbered migration JSON files (format: NNN_description.json, each with \"up\" and \"down\" arrays of SQL-like operations, and \"dependencies\" array). Read `current_state.json` for which migrations have been applied. The script must: (1) determine which migrations need to run and in what order (respecting dependencies), (2) detect and report any ordering conflicts, (3) simulate applying each pending migration, (4) generate `migration_plan.sql` with all operations in order (each prefixed with a comment showing the migration name), (5) update `current_state.json` with newly applied migrations, (6) generate `rollback_plan.sql` with the \"down\" operations in reverse order for undo capability.",
+    "input": {
+      "migrations/001_create_users.json": "{\"up\": [\"CREATE TABLE users (id INT, name TEXT, email TEXT)\", \"CREATE INDEX idx_users_email ON users(email)\"], \"down\": [\"DROP INDEX idx_users_email\", \"DROP TABLE users\"], \"dependencies\": []}",
+      "migrations/002_create_posts.json": "{\"up\": [\"CREATE TABLE posts (id INT, user_id INT, title TEXT, body TEXT)\", \"ALTER TABLE posts ADD FOREIGN KEY (user_id) REFERENCES users(id)\"], \"down\": [\"DROP TABLE posts\"], \"dependencies\": [\"001_create_users\"]}",
+      "migrations/003_add_timestamps.json": "{\"up\": [\"ALTER TABLE users ADD COLUMN created_at TIMESTAMP\", \"ALTER TABLE posts ADD COLUMN created_at TIMESTAMP\"], \"down\": [\"ALTER TABLE posts DROP COLUMN created_at\", \"ALTER TABLE users DROP COLUMN created_at\"], \"dependencies\": [\"001_create_users\", \"002_create_posts\"]}",
+      "migrations/004_create_comments.json": "{\"up\": [\"CREATE TABLE comments (id INT, post_id INT, user_id INT, body TEXT)\", \"ALTER TABLE comments ADD FOREIGN KEY (post_id) REFERENCES posts(id)\"], \"down\": [\"DROP TABLE comments\"], \"dependencies\": [\"002_create_posts\"]}",
+      "current_state.json": "{\"applied\": [\"001_create_users\"]}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python migrate_db.py", "exit": 0},
+      {"type": "file_exists", "path": "migration_plan.sql"},
+      {"type": "file_match", "path": "migration_plan.sql", "pattern": "CREATE TABLE posts"},
+      {"type": "file_exists", "path": "rollback_plan.sql"}
+    ],
+    "tags": ["python", "automation", "migration", "database"]
+  },
+  {
+    "id": "mb-319",
+    "cat": "automation",
+    "diff": "hard",
+    "title": "Monorepo Build Orchestrator",
+    "src": "m/builds",
+    "prompt": "Write a Python script `monorepo.py` that orchestrates builds for a monorepo. Read `packages.json` defining multiple packages each with: \"name\", \"path\", \"type\" (\"lib\" or \"app\"), \"deps\" (internal package dependencies), \"files\" dict of source files. The orchestrator must: (1) resolve build order via topological sort, (2) for each package: create its directory structure, write source files, generate a build manifest, (3) for \"lib\" packages: produce a `dist/` artifact by concatenating sources with a header, (4) for \"app\" packages: bundle the app plus all transitive lib dependencies into `dist/{name}/bundle.txt`, (5) generate `build/order.txt` listing the build sequence, (6) generate `build/dependency_graph.json` showing the full dependency tree, (7) write `build/report.json` with per-package build stats (file count, total size, dep count).",
+    "input": {
+      "packages.json": "{\"packages\": [{\"name\": \"utils\", \"path\": \"packages/utils\", \"type\": \"lib\", \"deps\": [], \"files\": {\"index.txt\": \"export function add(a, b) { return a + b; }\\nexport function multiply(a, b) { return a * b; }\"}}, {\"name\": \"logger\", \"path\": \"packages/logger\", \"type\": \"lib\", \"deps\": [\"utils\"], \"files\": {\"index.txt\": \"import { add } from 'utils';\\nexport function log(msg) { print(msg); }\"}}, {\"name\": \"auth\", \"path\": \"packages/auth\", \"type\": \"lib\", \"deps\": [\"utils\", \"logger\"], \"files\": {\"index.txt\": \"import { log } from 'logger';\\nexport function authenticate(token) { log('auth check'); return true; }\"}}, {\"name\": \"api\", \"path\": \"packages/api\", \"type\": \"app\", \"deps\": [\"auth\", \"logger\"], \"files\": {\"index.txt\": \"import { authenticate } from 'auth';\\nimport { log } from 'logger';\\nlog('API starting'); authenticate('token123');\"}}, {\"name\": \"cli\", \"path\": \"packages/cli\", \"type\": \"app\", \"deps\": [\"utils\"], \"files\": {\"index.txt\": \"import { add } from 'utils';\\nprint('CLI: 2+3 =', add(2,3));\"}}]}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python monorepo.py", "exit": 0},
+      {"type": "file_exists", "path": "dist/api/bundle.txt"},
+      {"type": "file_exists", "path": "build/order.txt"},
+      {"type": "json_valid", "path": "build/report.json"}
+    ],
+    "tags": ["python", "automation", "build", "monorepo"]
+  },
+  {
+    "id": "mb-320",
+    "cat": "automation",
+    "diff": "hard",
+    "title": "Infrastructure as Code Generator",
+    "src": "m/automation",
+    "prompt": "Write a Python script `gen_infra.py` that reads `infrastructure.json` defining a cloud infrastructure specification and generates multiple configuration files. The spec includes: \"vpc\" with CIDR and subnets, \"instances\" array (each with name, type, subnet, security_groups, tags), \"security_groups\" array (with inbound/outbound rules), \"load_balancers\" (with listeners and target instances), and \"dns\" records. Generate: (1) `infra/network.yml` with VPC and subnet YAML configs, (2) `infra/instances.yml` with instance configs, (3) `infra/security.yml` with security group rules, (4) `infra/lb.yml` with load balancer configs, (5) `infra/dns.yml` with DNS records, (6) `infra/variables.json` extracting all configurable values (IPs, names, ports) as variables, (7) `infra/dependency_order.txt` listing resources in creation order (VPC before subnets before instances, etc.), (8) `infra/cost_estimate.json` with a simulated cost estimate based on instance types (t2.micro=$10, t2.small=$20, t2.medium=$40, t2.large=$80 monthly).",
+    "input": {
+      "infrastructure.json": "{\"vpc\": {\"cidr\": \"10.0.0.0/16\", \"subnets\": [{\"name\": \"public-a\", \"cidr\": \"10.0.1.0/24\", \"az\": \"us-east-1a\", \"public\": true}, {\"name\": \"public-b\", \"cidr\": \"10.0.2.0/24\", \"az\": \"us-east-1b\", \"public\": true}, {\"name\": \"private-a\", \"cidr\": \"10.0.10.0/24\", \"az\": \"us-east-1a\", \"public\": false}]}, \"instances\": [{\"name\": \"web-1\", \"type\": \"t2.small\", \"subnet\": \"public-a\", \"security_groups\": [\"web-sg\"], \"tags\": {\"role\": \"web\", \"env\": \"prod\"}}, {\"name\": \"web-2\", \"type\": \"t2.small\", \"subnet\": \"public-b\", \"security_groups\": [\"web-sg\"], \"tags\": {\"role\": \"web\", \"env\": \"prod\"}}, {\"name\": \"api-1\", \"type\": \"t2.medium\", \"subnet\": \"private-a\", \"security_groups\": [\"api-sg\"], \"tags\": {\"role\": \"api\", \"env\": \"prod\"}}, {\"name\": \"db-1\", \"type\": \"t2.large\", \"subnet\": \"private-a\", \"security_groups\": [\"db-sg\"], \"tags\": {\"role\": \"database\", \"env\": \"prod\"}}], \"security_groups\": [{\"name\": \"web-sg\", \"inbound\": [{\"port\": 80, \"protocol\": \"tcp\", \"source\": \"0.0.0.0/0\"}, {\"port\": 443, \"protocol\": \"tcp\", \"source\": \"0.0.0.0/0\"}], \"outbound\": [{\"port\": 0, \"protocol\": \"all\", \"destination\": \"0.0.0.0/0\"}]}, {\"name\": \"api-sg\", \"inbound\": [{\"port\": 8080, \"protocol\": \"tcp\", \"source\": \"web-sg\"}], \"outbound\": [{\"port\": 5432, \"protocol\": \"tcp\", \"destination\": \"db-sg\"}]}, {\"name\": \"db-sg\", \"inbound\": [{\"port\": 5432, \"protocol\": \"tcp\", \"source\": \"api-sg\"}], \"outbound\": []}], \"load_balancers\": [{\"name\": \"web-lb\", \"type\": \"application\", \"listeners\": [{\"port\": 80, \"target_port\": 8080}, {\"port\": 443, \"target_port\": 8443}], \"targets\": [\"web-1\", \"web-2\"]}], \"dns\": [{\"name\": \"api.example.com\", \"type\": \"A\", \"target\": \"web-lb\"}, {\"name\": \"db.internal.example.com\", \"type\": \"A\", \"target\": \"db-1\"}]}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python gen_infra.py", "exit": 0},
+      {"type": "file_exists", "path": "infra/network.yml"},
+      {"type": "file_exists", "path": "infra/security.yml"},
+      {"type": "json_valid", "path": "infra/cost_estimate.json"}
+    ],
+    "tags": ["python", "automation", "infrastructure"]
+  }
+]

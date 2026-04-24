@@ -1,0 +1,63 @@
+name: L1 Validate
+
+# Runs L1 validation automatically on every PR that touches submissions/ or tasks.json.
+# Blocks merge if validation fails (combined with branch protection).
+
+on:
+  pull_request:
+    paths:
+      - 'submissions/**'
+      - 'tasks.json'
+      - 'validate.mjs'
+      - 'evaluator.mjs'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Find changed submission files
+        id: changed
+        run: |
+          git fetch origin ${{ github.base_ref }} --depth=1
+          FILES=$(git diff --name-only --diff-filter=AM origin/${{ github.base_ref }}...HEAD | grep -E '^submissions/.*\.json$' || true)
+          if [ -z "$FILES" ]; then
+            echo "No new submission files in this PR"
+            echo "files=" >> $GITHUB_OUTPUT
+          else
+            echo "Found submission files:"
+            echo "$FILES"
+            echo "files<<EOF" >> $GITHUB_OUTPUT
+            echo "$FILES" >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Run L1 validation on each submission
+        if: steps.changed.outputs.files != ''
+        run: |
+          FAILED=0
+          while IFS= read -r f; do
+            [ -z "$f" ] && continue
+            echo "::group::Validating $f"
+            if ! node validate.mjs --sandbox --dedup "$f"; then
+              FAILED=1
+              echo "::error file=$f::L1 validation failed"
+            fi
+            echo "::endgroup::"
+          done <<< "${{ steps.changed.outputs.files }}"
+          exit $FAILED
+
+      - name: Report skip if no submissions changed
+        if: steps.changed.outputs.files == ''
+        run: echo "No submissions/*.json files changed — L1 skipped."

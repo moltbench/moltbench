@@ -1,0 +1,2620 @@
+[
+  {
+    "id": "mb-071",
+    "cat": "data",
+    "diff": "easy",
+    "title": "CSV Row Count",
+    "src": "m/agents",
+    "prompt": "Read the file data.csv and count the number of data rows (excluding the header). Write a Python script solution.py that outputs the count to result.txt.",
+    "input": {
+      "data.csv": "name,age,city\nAlice,30,Portland\nBob,25,Seattle\nCarla,28,Denver\nDave,35,Austin\nEve,22,Boston\n"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "file_match",
+        "path": "result.txt",
+        "text": "5"
+      }
+    ],
+    "tags": [
+      "python",
+      "csv"
+    ]
+  },
+  {
+    "id": "mb-072",
+    "cat": "data",
+    "diff": "easy",
+    "title": "CSV Column Sum",
+    "src": "m/agents",
+    "prompt": "Read data.csv and compute the sum of the 'amount' column. Write solution.py that saves the sum (as a plain number) to total.txt.",
+    "input": {
+      "data.csv": "item,amount\nApples,12\nBananas,7\nCherries,23\nDates,5\nElderberries,8\n"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "file_match",
+        "path": "total.txt",
+        "text": "55"
+      }
+    ],
+    "tags": [
+      "python",
+      "csv",
+      "aggregation"
+    ]
+  },
+  {
+    "id": "mb-073",
+    "cat": "data",
+    "diff": "easy",
+    "title": "Filter CSV by Value",
+    "src": "m/todayilearned",
+    "prompt": "Read data.csv and filter rows where the 'status' column equals 'active'. Write solution.py that outputs the filtered data (with header) to filtered.csv.",
+    "input": {
+      "data.csv": "id,name,status\n1,Alice,active\n2,Bob,inactive\n3,Carla,active\n4,Dave,inactive\n5,Eve,active\n6,Frank,active\n"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "file_match",
+        "path": "filtered.csv",
+        "text": "Alice"
+      },
+      {
+        "type": "file_not_match",
+        "path": "filtered.csv",
+        "text": "Bob"
+      }
+    ],
+    "tags": [
+      "python",
+      "csv",
+      "filter"
+    ]
+  },
+  {
+    "id": "mb-074",
+    "cat": "data",
+    "diff": "easy",
+    "title": "JSON to CSV Conversion",
+    "src": "m/agents",
+    "prompt": "Read data.json which contains an array of objects with keys 'name', 'score', and 'grade'. Write solution.py that converts it to output.csv with a header row and the same columns.",
+    "input": {
+      "data.json": "[{\"name\":\"Alice\",\"score\":92,\"grade\":\"A\"},{\"name\":\"Bob\",\"score\":78,\"grade\":\"C\"},{\"name\":\"Carla\",\"score\":85,\"grade\":\"B\"},{\"name\":\"Dave\",\"score\":64,\"grade\":\"D\"}]"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "file_match",
+        "path": "output.csv",
+        "text": "name,score,grade"
+      },
+      {
+        "type": "file_match",
+        "path": "output.csv",
+        "text": "Alice,92,A"
+      }
+    ],
+    "tags": [
+      "python",
+      "json",
+      "csv",
+      "conversion"
+    ]
+  },
+  {
+    "id": "mb-075",
+    "cat": "data",
+    "diff": "easy",
+    "title": "CSV to JSON Conversion",
+    "src": "m/todayilearned",
+    "prompt": "Read data.csv and convert it to a JSON array of objects. Write solution.py that outputs the result to output.json. The JSON must be valid and contain one object per row.",
+    "input": {
+      "data.csv": "city,population,country\nTokyo,13960000,Japan\nDelhi,11030000,India\nShanghai,24280000,China\n"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "json_valid",
+        "path": "output.json",
+        "is_array": true,
+        "min_length": 3
+      },
+      {
+        "type": "file_match",
+        "path": "output.json",
+        "text": "Tokyo"
+      }
+    ],
+    "tags": [
+      "python",
+      "csv",
+      "json",
+      "conversion"
+    ]
+  },
+  {
+    "id": "mb-076",
+    "cat": "data",
+    "diff": "easy",
+    "title": "Sort CSV by Column",
+    "src": "m/agents",
+    "prompt": "Read data.csv and sort the rows by the 'price' column in ascending numeric order. Write solution.py that outputs the sorted CSV (with header) to sorted.csv.",
+    "input": {
+      "data.csv": "product,price\nWidget,15.99\nGadget,9.49\nDoohickey,22.00\nThingamajig,3.75\nWhatsit,11.20\n"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "file_match",
+        "path": "sorted.csv",
+        "text": "product,price"
+      },
+      {
+        "type": "file_match",
+        "path": "sorted.csv",
+        "pattern": "Thingamajig.*Gadget.*Whatsit.*Widget.*Doohickey"
+      }
+    ],
+    "tags": [
+      "python",
+      "csv",
+      "sort"
+    ]
+  },
+  {
+    "id": "mb-077",
+    "cat": "data",
+    "diff": "easy",
+    "title": "Remove Duplicate Rows",
+    "src": "m/coding",
+    "prompt": "Read data.csv which contains duplicate rows. Write solution.py that removes exact duplicate rows (keeping the first occurrence) and writes the deduplicated data with header to clean.csv.",
+    "input": {
+      "data.csv": "email,name\nalice@test.com,Alice\nbob@test.com,Bob\nalice@test.com,Alice\ncarla@test.com,Carla\nbob@test.com,Bob\neve@test.com,Eve\n"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "line_count",
+        "path": "clean.csv",
+        "min": 5,
+        "max": 5
+      },
+      {
+        "type": "file_match",
+        "path": "clean.csv",
+        "text": "alice@test.com,Alice"
+      }
+    ],
+    "tags": [
+      "python",
+      "csv",
+      "deduplication"
+    ]
+  },
+  {
+    "id": "mb-078",
+    "cat": "data",
+    "diff": "easy",
+    "title": "Compute Column Average",
+    "src": "m/agents",
+    "prompt": "Read data.csv and compute the average of the 'temperature' column. Write solution.py that writes the average rounded to 1 decimal place to avg.txt.",
+    "input": {
+      "data.csv": "day,temperature\nMon,22.5\nTue,24.1\nWed,19.8\nThu,21.3\nFri,26.0\nSat,23.7\nSun,20.6\n"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "file_match",
+        "path": "avg.txt",
+        "text": "22.6"
+      }
+    ],
+    "tags": [
+      "python",
+      "csv",
+      "statistics"
+    ]
+  },
+  {
+    "id": "mb-079",
+    "cat": "data",
+    "diff": "easy",
+    "title": "Extract Unique Values",
+    "src": "m/todayilearned",
+    "prompt": "Read data.csv and extract all unique values from the 'category' column. Write solution.py that outputs them sorted alphabetically, one per line, to categories.txt.",
+    "input": {
+      "data.csv": "id,product,category\n1,Widget,Electronics\n2,Hammer,Tools\n3,Phone,Electronics\n4,Drill,Tools\n5,Shirt,Clothing\n6,Laptop,Electronics\n7,Pants,Clothing\n"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "file_match",
+        "path": "categories.txt",
+        "pattern": "Clothing\\nElectronics\\nTools"
+      },
+      {
+        "type": "line_count",
+        "path": "categories.txt",
+        "min": 3,
+        "max": 3
+      }
+    ],
+    "tags": [
+      "python",
+      "csv",
+      "unique"
+    ]
+  },
+  {
+    "id": "mb-080",
+    "cat": "data",
+    "diff": "easy",
+    "title": "JSON Key Extraction",
+    "src": "m/agents",
+    "prompt": "Read data.json and extract only the 'name' and 'email' fields from each object. Write solution.py that outputs a new JSON array containing objects with only those two keys to output.json.",
+    "input": {
+      "data.json": "[{\"name\":\"Alice\",\"email\":\"alice@ex.com\",\"age\":30,\"role\":\"admin\"},{\"name\":\"Bob\",\"email\":\"bob@ex.com\",\"age\":25,\"role\":\"user\"},{\"name\":\"Carla\",\"email\":\"carla@ex.com\",\"age\":28,\"role\":\"user\"}]"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "json_valid",
+        "path": "output.json",
+        "is_array": true,
+        "min_length": 3
+      },
+      {
+        "type": "file_not_match",
+        "path": "output.json",
+        "text": "role"
+      }
+    ],
+    "tags": [
+      "python",
+      "json",
+      "transform"
+    ]
+  },
+  {
+    "id": "mb-081",
+    "cat": "data",
+    "diff": "easy",
+    "title": "Count Values by Group",
+    "src": "m/coding",
+    "prompt": "Read data.csv and count how many rows exist for each unique value in the 'department' column. Write solution.py that outputs a CSV with columns 'department' and 'count', sorted by department name, to summary.csv.",
+    "input": {
+      "data.csv": "emp_id,name,department\n1,Alice,Engineering\n2,Bob,Sales\n3,Carla,Engineering\n4,Dave,Marketing\n5,Eve,Sales\n6,Frank,Engineering\n7,Grace,Marketing\n"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "file_match",
+        "path": "summary.csv",
+        "text": "Engineering,3"
+      },
+      {
+        "type": "file_match",
+        "path": "summary.csv",
+        "text": "Sales,2"
+      }
+    ],
+    "tags": [
+      "python",
+      "csv",
+      "groupby"
+    ]
+  },
+  {
+    "id": "mb-082",
+    "cat": "data",
+    "diff": "easy",
+    "title": "Add Computed Column",
+    "src": "m/agents",
+    "prompt": "Read data.csv with columns 'item', 'quantity', and 'unit_price'. Write solution.py that adds a 'total' column (quantity * unit_price) and writes the result to output.csv.",
+    "input": {
+      "data.csv": "item,quantity,unit_price\nPen,10,1.50\nNotebook,5,3.00\nEraser,20,0.75\nMarker,8,2.25\n"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "file_match",
+        "path": "output.csv",
+        "text": "total"
+      },
+      {
+        "type": "file_match",
+        "path": "output.csv",
+        "text": "Pen,10,1.50,15.0"
+      }
+    ],
+    "tags": [
+      "python",
+      "csv",
+      "computed"
+    ]
+  },
+  {
+    "id": "mb-083",
+    "cat": "data",
+    "diff": "easy",
+    "title": "Find Maximum Value Row",
+    "src": "m/todayilearned",
+    "prompt": "Read data.csv and find the row with the highest 'score' value. Write solution.py that outputs a single line in the format 'name: score' to winner.txt.",
+    "input": {
+      "data.csv": "name,score\nAlpha,87\nBeta,92\nGamma,78\nDelta,95\nEpsilon,88\n"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "file_match",
+        "path": "winner.txt",
+        "text": "Delta: 95"
+      }
+    ],
+    "tags": [
+      "python",
+      "csv",
+      "max"
+    ]
+  },
+  {
+    "id": "mb-084",
+    "cat": "data",
+    "diff": "easy",
+    "title": "Trim Whitespace in CSV",
+    "src": "m/coding",
+    "prompt": "Read data.csv where some fields have leading/trailing whitespace. Write solution.py that trims all whitespace from every field and writes the cleaned data to clean.csv.",
+    "input": {
+      "data.csv": "name, city , score\n Alice , Portland ,90\n  Bob,Seattle ,85\nCarla,  Denver, 78\n Dave , Austin ,92\n"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "file_match",
+        "path": "clean.csv",
+        "text": "name,city,score"
+      },
+      {
+        "type": "file_not_match",
+        "path": "clean.csv",
+        "text": " Alice"
+      }
+    ],
+    "tags": [
+      "python",
+      "csv",
+      "cleaning"
+    ]
+  },
+  {
+    "id": "mb-085",
+    "cat": "data",
+    "diff": "easy",
+    "title": "Word Frequency Count",
+    "src": "m/agents",
+    "prompt": "Read text.txt and count the frequency of each word (case-insensitive). Write solution.py that outputs a JSON object mapping each lowercase word to its count in freq.json. Ignore punctuation.",
+    "input": {
+      "text.txt": "The cat sat on the mat. The cat was happy. A happy cat is a good cat."
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "json_valid",
+        "path": "freq.json",
+        "has_key": "cat"
+      },
+      {
+        "type": "file_match",
+        "path": "freq.json",
+        "pattern": "\"the\":\\s*3"
+      }
+    ],
+    "tags": [
+      "python",
+      "text",
+      "frequency"
+    ]
+  },
+  {
+    "id": "mb-086",
+    "cat": "data",
+    "diff": "easy",
+    "title": "Min and Max from Column",
+    "src": "m/todayilearned",
+    "prompt": "Read data.csv and find the minimum and maximum values in the 'value' column. Write solution.py that writes two lines to stats.txt: 'min: X' and 'max: Y'.",
+    "input": {
+      "data.csv": "label,value\nA,45\nB,12\nC,67\nD,34\nE,89\nF,23\n"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "file_match",
+        "path": "stats.txt",
+        "text": "min: 12"
+      },
+      {
+        "type": "file_match",
+        "path": "stats.txt",
+        "text": "max: 89"
+      }
+    ],
+    "tags": [
+      "python",
+      "csv",
+      "statistics"
+    ]
+  },
+  {
+    "id": "mb-087",
+    "cat": "data",
+    "diff": "easy",
+    "title": "Select CSV Columns",
+    "src": "m/agents",
+    "prompt": "Read data.csv which has columns id, first_name, last_name, email, phone. Write solution.py that outputs only the columns first_name, last_name, and email (in that order) to subset.csv with a header row.",
+    "input": {
+      "data.csv": "id,first_name,last_name,email,phone\n1,Alice,Smith,alice@test.com,555-0101\n2,Bob,Jones,bob@test.com,555-0102\n3,Carla,Lee,carla@test.com,555-0103\n"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "file_match",
+        "path": "subset.csv",
+        "text": "first_name,last_name,email"
+      },
+      {
+        "type": "file_not_match",
+        "path": "subset.csv",
+        "text": "phone"
+      }
+    ],
+    "tags": [
+      "python",
+      "csv",
+      "projection"
+    ]
+  },
+  {
+    "id": "mb-088",
+    "cat": "data",
+    "diff": "easy",
+    "title": "Reverse CSV Row Order",
+    "src": "m/coding",
+    "prompt": "Read data.csv and reverse the order of the data rows (keep the header at the top). Write solution.py that outputs the reversed CSV to reversed.csv.",
+    "input": {
+      "data.csv": "id,val\n1,alpha\n2,beta\n3,gamma\n4,delta\n5,epsilon\n"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "file_match",
+        "path": "reversed.csv",
+        "pattern": "id,val\\n5,epsilon"
+      },
+      {
+        "type": "file_match",
+        "path": "reversed.csv",
+        "pattern": "1,alpha"
+      }
+    ],
+    "tags": [
+      "python",
+      "csv",
+      "transform"
+    ]
+  },
+  {
+    "id": "mb-089",
+    "cat": "data",
+    "diff": "easy",
+    "title": "Count Non-Empty Fields",
+    "src": "m/agents",
+    "prompt": "Read data.csv which has some empty fields. Write solution.py that counts how many non-empty values exist in the 'notes' column and writes the count to count.txt.",
+    "input": {
+      "data.csv": "id,name,notes\n1,Alice,Good performance\n2,Bob,\n3,Carla,Needs review\n4,Dave,\n5,Eve,Outstanding\n6,Frank,\n"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "file_match",
+        "path": "count.txt",
+        "text": "3"
+      }
+    ],
+    "tags": [
+      "python",
+      "csv",
+      "validation"
+    ]
+  },
+  {
+    "id": "mb-090",
+    "cat": "data",
+    "diff": "easy",
+    "title": "Validate JSON Structure",
+    "src": "m/todayilearned",
+    "prompt": "Read data.json and check that every object in the array has the required keys: 'id', 'name', and 'email'. Write solution.py that writes 'VALID' to result.txt if all objects pass, or 'INVALID: missing <key> in record <index>' for the first failing record (0-indexed).",
+    "input": {
+      "data.json": "[{\"id\":1,\"name\":\"Alice\",\"email\":\"a@b.com\"},{\"id\":2,\"name\":\"Bob\",\"email\":\"b@b.com\"},{\"id\":3,\"name\":\"Carla\",\"email\":\"c@b.com\"}]"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "file_match",
+        "path": "result.txt",
+        "text": "VALID"
+      }
+    ],
+    "tags": [
+      "python",
+      "json",
+      "validation"
+    ]
+  },
+  {
+    "id": "mb-091",
+    "cat": "data",
+    "diff": "easy",
+    "title": "Concatenate CSV Files",
+    "src": "m/agents",
+    "prompt": "Read part1.csv and part2.csv which have the same columns. Write solution.py that concatenates them into a single combined.csv with one header row.",
+    "input": {
+      "part1.csv": "name,score\nAlice,90\nBob,85\n",
+      "part2.csv": "name,score\nCarla,78\nDave,92\nEve,88\n"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "line_count",
+        "path": "combined.csv",
+        "min": 6,
+        "max": 6
+      },
+      {
+        "type": "file_match",
+        "path": "combined.csv",
+        "text": "Alice,90"
+      }
+    ],
+    "tags": [
+      "python",
+      "csv",
+      "merge"
+    ]
+  },
+  {
+    "id": "mb-092",
+    "cat": "data",
+    "diff": "easy",
+    "title": "Key-Value File to JSON",
+    "src": "m/coding",
+    "prompt": "Read config.txt which contains key=value pairs, one per line. Write solution.py that converts it to a JSON object in config.json.",
+    "input": {
+      "config.txt": "host=localhost\nport=8080\ndebug=true\nname=myapp\nversion=1.2.3\n"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "json_valid",
+        "path": "config.json",
+        "has_key": "host"
+      },
+      {
+        "type": "file_match",
+        "path": "config.json",
+        "text": "localhost"
+      }
+    ],
+    "tags": [
+      "python",
+      "conversion",
+      "json"
+    ]
+  },
+  {
+    "id": "mb-093",
+    "cat": "data",
+    "diff": "easy",
+    "title": "CSV String Case Normalization",
+    "src": "m/agents",
+    "prompt": "Read data.csv and normalize the 'name' column to title case (first letter of each word capitalized). Write solution.py that outputs the result to normalized.csv.",
+    "input": {
+      "data.csv": "id,name,city\n1,alice smith,portland\n2,BOB JONES,seattle\n3,carla LEE,denver\n4,DAVE brown,austin\n"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "file_match",
+        "path": "normalized.csv",
+        "text": "Alice Smith"
+      },
+      {
+        "type": "file_match",
+        "path": "normalized.csv",
+        "text": "Bob Jones"
+      }
+    ],
+    "tags": [
+      "python",
+      "csv",
+      "cleaning"
+    ]
+  },
+  {
+    "id": "mb-094",
+    "cat": "data",
+    "diff": "easy",
+    "title": "Flatten JSON One Level",
+    "src": "m/todayilearned",
+    "prompt": "Read data.json containing an object with nested objects one level deep. Write solution.py that flattens it so nested keys become 'parent_child' (underscore-separated). Output to flat.json.",
+    "input": {
+      "data.json": "{\"name\":\"Alice\",\"address\":{\"street\":\"123 Main St\",\"city\":\"Portland\",\"zip\":\"97201\"},\"age\":30}"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "json_valid",
+        "path": "flat.json",
+        "has_key": "address_city"
+      },
+      {
+        "type": "file_match",
+        "path": "flat.json",
+        "text": "address_street"
+      }
+    ],
+    "tags": [
+      "python",
+      "json",
+      "flatten"
+    ]
+  },
+  {
+    "id": "mb-095",
+    "cat": "data",
+    "diff": "easy",
+    "title": "Top N Rows from CSV",
+    "src": "m/agents",
+    "prompt": "Read data.csv and extract the top 3 rows by 'revenue' (descending). Write solution.py that outputs these rows with header to top3.csv.",
+    "input": {
+      "data.csv": "company,revenue\nAcme,50000\nGlobex,120000\nInitech,35000\nUmbrella,95000\nWayne,200000\nStark,150000\n"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "file_match",
+        "path": "top3.csv",
+        "text": "Wayne"
+      },
+      {
+        "type": "file_not_match",
+        "path": "top3.csv",
+        "text": "Initech"
+      }
+    ],
+    "tags": [
+      "python",
+      "csv",
+      "sort",
+      "filter"
+    ]
+  },
+  {
+    "id": "mb-096",
+    "cat": "data",
+    "diff": "easy",
+    "title": "CSV Numeric Range Filter",
+    "src": "m/coding",
+    "prompt": "Read data.csv and filter rows where 'age' is between 25 and 35 (inclusive). Write solution.py that outputs matching rows with header to filtered.csv.",
+    "input": {
+      "data.csv": "name,age,dept\nAlice,30,HR\nBob,22,Eng\nCarla,35,Sales\nDave,40,HR\nEve,25,Eng\nFrank,19,Sales\n"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "file_match",
+        "path": "filtered.csv",
+        "text": "Alice"
+      },
+      {
+        "type": "file_not_match",
+        "path": "filtered.csv",
+        "text": "Frank"
+      }
+    ],
+    "tags": [
+      "python",
+      "csv",
+      "filter"
+    ]
+  },
+  {
+    "id": "mb-097",
+    "cat": "data",
+    "diff": "easy",
+    "title": "Rename CSV Columns",
+    "src": "m/agents",
+    "prompt": "Read data.csv and rename columns: 'fname' -> 'first_name', 'lname' -> 'last_name', 'dob' -> 'date_of_birth'. Write solution.py that outputs the renamed CSV to output.csv.",
+    "input": {
+      "data.csv": "fname,lname,dob\nAlice,Smith,1990-01-15\nBob,Jones,1985-06-20\nCarla,Lee,1992-11-03\n"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "file_match",
+        "path": "output.csv",
+        "text": "first_name,last_name,date_of_birth"
+      },
+      {
+        "type": "file_not_match",
+        "path": "output.csv",
+        "text": "fname"
+      }
+    ],
+    "tags": [
+      "python",
+      "csv",
+      "rename"
+    ]
+  },
+  {
+    "id": "mb-098",
+    "cat": "data",
+    "diff": "easy",
+    "title": "Split CSV into Files by Category",
+    "src": "m/todayilearned",
+    "prompt": "Read data.csv and split it into separate CSV files based on the 'type' column. Each output file should be named '<type>.csv' (lowercase) and contain only rows of that type plus a header. Write solution.py.",
+    "input": {
+      "data.csv": "id,name,type\n1,Widget,hardware\n2,App,software\n3,Cable,hardware\n4,Plugin,software\n5,Board,hardware\n"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "file_exists",
+        "path": "hardware.csv"
+      },
+      {
+        "type": "line_count",
+        "path": "hardware.csv",
+        "min": 4,
+        "max": 4
+      }
+    ],
+    "tags": [
+      "python",
+      "csv",
+      "split"
+    ]
+  },
+  {
+    "id": "mb-099",
+    "cat": "data",
+    "diff": "medium",
+    "title": "CSV Inner Join",
+    "src": "m/agents",
+    "prompt": "Read users.csv and orders.csv. Perform an inner join on 'user_id'. Write solution.py that outputs joined.csv with columns: user_id, name, order_id, amount.",
+    "input": {
+      "users.csv": "user_id,name\n1,Alice\n2,Bob\n3,Carla\n4,Dave\n",
+      "orders.csv": "order_id,user_id,amount\n101,1,25.50\n102,3,42.00\n103,1,18.75\n104,5,30.00\n105,2,15.25\n"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "file_match",
+        "path": "joined.csv",
+        "text": "user_id,name,order_id,amount"
+      },
+      {
+        "type": "file_not_match",
+        "path": "joined.csv",
+        "text": "Dave"
+      }
+    ],
+    "tags": [
+      "python",
+      "csv",
+      "join"
+    ]
+  },
+  {
+    "id": "mb-100",
+    "cat": "data",
+    "diff": "medium",
+    "title": "Parse Apache Log Status Codes",
+    "src": "m/agents",
+    "prompt": "Read access.log (Apache Combined Log Format). Write solution.py that counts occurrences of each HTTP status code and outputs a JSON object mapping status code strings to counts in status_counts.json, sorted by count descending.",
+    "input": {
+      "access.log": "192.168.1.1 - - [10/Oct/2025:13:55:36 -0700] \"GET /index.html HTTP/1.1\" 200 2326 \"-\" \"Mozilla/5.0\"\n192.168.1.2 - - [10/Oct/2025:13:56:01 -0700] \"GET /about.html HTTP/1.1\" 200 1534 \"-\" \"Mozilla/5.0\"\n192.168.1.3 - - [10/Oct/2025:13:56:15 -0700] \"POST /login HTTP/1.1\" 302 0 \"-\" \"Mozilla/5.0\"\n10.0.0.1 - - [10/Oct/2025:13:57:00 -0700] \"GET /secret HTTP/1.1\" 403 287 \"-\" \"curl/7.68\"\n192.168.1.1 - - [10/Oct/2025:13:57:30 -0700] \"GET /missing HTTP/1.1\" 404 209 \"-\" \"Mozilla/5.0\"\n192.168.1.4 - - [10/Oct/2025:13:58:00 -0700] \"GET /index.html HTTP/1.1\" 200 2326 \"-\" \"Mozilla/5.0\"\n10.0.0.2 - - [10/Oct/2025:13:58:30 -0700] \"GET /api/data HTTP/1.1\" 500 0 \"-\" \"python-requests/2.28\"\n192.168.1.5 - - [10/Oct/2025:13:59:00 -0700] \"GET /style.css HTTP/1.1\" 200 842 \"-\" \"Mozilla/5.0\"\n"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "json_valid",
+        "path": "status_counts.json",
+        "has_key": "200"
+      },
+      {
+        "type": "file_match",
+        "path": "status_counts.json",
+        "pattern": "\"200\":\\s*4"
+      }
+    ],
+    "tags": [
+      "python",
+      "log",
+      "parsing"
+    ]
+  },
+  {
+    "id": "mb-101",
+    "cat": "data",
+    "diff": "medium",
+    "title": "CSV Group-By Aggregation",
+    "src": "m/coding",
+    "prompt": "Read sales.csv with columns 'region', 'product', and 'revenue'. Write solution.py that groups by 'region', computes total revenue per region, and outputs region_totals.csv with columns 'region' and 'total_revenue', sorted by total_revenue descending.",
+    "input": {
+      "sales.csv": "region,product,revenue\nNorth,Widget,1500\nSouth,Gadget,2300\nNorth,Gadget,1800\nEast,Widget,900\nSouth,Widget,2100\nNorth,Doohickey,750\nEast,Gadget,1200\nSouth,Doohickey,1600\n"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "file_match",
+        "path": "region_totals.csv",
+        "text": "region,total_revenue"
+      },
+      {
+        "type": "file_match",
+        "path": "region_totals.csv",
+        "text": "South,6000"
+      }
+    ],
+    "tags": [
+      "python",
+      "csv",
+      "groupby",
+      "aggregation"
+    ]
+  },
+  {
+    "id": "mb-102",
+    "cat": "data",
+    "diff": "medium",
+    "title": "Nested JSON Flattening to CSV",
+    "src": "m/agents",
+    "prompt": "Read data.json which contains an array of objects with nested 'address' sub-objects. Write solution.py that flattens each record so address fields become 'address_street', 'address_city', 'address_zip' and writes the flat data to output.csv.",
+    "input": {
+      "data.json": "[{\"name\":\"Alice\",\"age\":30,\"address\":{\"street\":\"123 Oak\",\"city\":\"Portland\",\"zip\":\"97201\"}},{\"name\":\"Bob\",\"age\":25,\"address\":{\"street\":\"456 Pine\",\"city\":\"Seattle\",\"zip\":\"98101\"}},{\"name\":\"Carla\",\"age\":28,\"address\":{\"street\":\"789 Elm\",\"city\":\"Denver\",\"zip\":\"80201\"}}]"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "file_match",
+        "path": "output.csv",
+        "text": "address_city"
+      },
+      {
+        "type": "file_match",
+        "path": "output.csv",
+        "text": "Portland"
+      }
+    ],
+    "tags": [
+      "python",
+      "json",
+      "csv",
+      "flatten"
+    ]
+  },
+  {
+    "id": "mb-103",
+    "cat": "data",
+    "diff": "medium",
+    "title": "Date Format Standardization",
+    "src": "m/todayilearned",
+    "prompt": "Read data.csv where the 'date' column has mixed formats: MM/DD/YYYY, DD-MM-YYYY, and YYYY.MM.DD. Write solution.py that standardizes all dates to ISO format YYYY-MM-DD and outputs the cleaned data to clean.csv.",
+    "input": {
+      "data.csv": "id,date,value\n1,01/15/2025,100\n2,20-03-2025,200\n3,2025.06.10,300\n4,12/25/2024,400\n5,05-11-2025,500\n6,2025.01.30,600\n"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "file_match",
+        "path": "clean.csv",
+        "text": "2025-01-15"
+      },
+      {
+        "type": "file_match",
+        "path": "clean.csv",
+        "text": "2025-03-20"
+      }
+    ],
+    "tags": [
+      "python",
+      "csv",
+      "date",
+      "cleaning"
+    ]
+  },
+  {
+    "id": "mb-104",
+    "cat": "data",
+    "diff": "medium",
+    "title": "Median and Standard Deviation",
+    "src": "m/agents",
+    "prompt": "Read data.csv and compute the median and standard deviation (population) of the 'value' column. Write solution.py that outputs a JSON object with keys 'median' and 'std_dev' (both rounded to 2 decimal places) to stats.json.",
+    "input": {
+      "data.csv": "id,value\n1,23\n2,45\n3,12\n4,67\n5,34\n6,89\n7,56\n"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "json_valid",
+        "path": "stats.json",
+        "has_key": "median"
+      },
+      {
+        "type": "file_match",
+        "path": "stats.json",
+        "text": "45"
+      }
+    ],
+    "tags": [
+      "python",
+      "csv",
+      "statistics"
+    ]
+  },
+  {
+    "id": "mb-105",
+    "cat": "data",
+    "diff": "medium",
+    "title": "Extract IPs from Log File",
+    "src": "m/agents",
+    "prompt": "Read access.log and extract all unique IP addresses. Write solution.py that outputs them sorted alphabetically, one per line, to ips.txt. Also write the total count as the first line (e.g., 'Total: 5').",
+    "input": {
+      "access.log": "192.168.1.10 - - [10/Oct/2025:10:00:00] \"GET / HTTP/1.1\" 200 512\n10.0.0.5 - - [10/Oct/2025:10:01:00] \"GET /api HTTP/1.1\" 200 128\n192.168.1.10 - - [10/Oct/2025:10:02:00] \"POST /login HTTP/1.1\" 302 0\n172.16.0.1 - - [10/Oct/2025:10:03:00] \"GET / HTTP/1.1\" 200 512\n10.0.0.5 - - [10/Oct/2025:10:04:00] \"GET /data HTTP/1.1\" 403 0\n192.168.1.20 - - [10/Oct/2025:10:05:00] \"GET / HTTP/1.1\" 200 512\n"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "file_match",
+        "path": "ips.txt",
+        "text": "Total: 4"
+      },
+      {
+        "type": "file_match",
+        "path": "ips.txt",
+        "text": "172.16.0.1"
+      }
+    ],
+    "tags": [
+      "python",
+      "log",
+      "regex",
+      "parsing"
+    ]
+  },
+  {
+    "id": "mb-106",
+    "cat": "data",
+    "diff": "medium",
+    "title": "Running Total Column",
+    "src": "m/coding",
+    "prompt": "Read data.csv with columns 'date' and 'amount'. Write solution.py that adds a 'running_total' column showing the cumulative sum of 'amount' and outputs to output.csv.",
+    "input": {
+      "data.csv": "date,amount\n2025-01-01,100\n2025-01-02,50\n2025-01-03,-25\n2025-01-04,75\n2025-01-05,200\n2025-01-06,-50\n"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "file_match",
+        "path": "output.csv",
+        "text": "running_total"
+      },
+      {
+        "type": "file_match",
+        "path": "output.csv",
+        "text": "2025-01-01,100,100"
+      }
+    ],
+    "tags": [
+      "python",
+      "csv",
+      "cumulative"
+    ]
+  },
+  {
+    "id": "mb-107",
+    "cat": "data",
+    "diff": "medium",
+    "title": "JSON Array Filtering and Sorting",
+    "src": "m/agents",
+    "prompt": "Read data.json containing an array of product objects with 'name', 'price', and 'in_stock' (boolean). Write solution.py that filters to only in-stock items, sorts by price ascending, and writes the result to filtered.json.",
+    "input": {
+      "data.json": "[{\"name\":\"Laptop\",\"price\":999,\"in_stock\":true},{\"name\":\"Phone\",\"price\":699,\"in_stock\":false},{\"name\":\"Tablet\",\"price\":449,\"in_stock\":true},{\"name\":\"Watch\",\"price\":299,\"in_stock\":true},{\"name\":\"Speaker\",\"price\":149,\"in_stock\":false},{\"name\":\"Mouse\",\"price\":29,\"in_stock\":true}]"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "json_valid",
+        "path": "filtered.json",
+        "is_array": true,
+        "min_length": 4
+      },
+      {
+        "type": "file_not_match",
+        "path": "filtered.json",
+        "text": "Phone"
+      }
+    ],
+    "tags": [
+      "python",
+      "json",
+      "filter",
+      "sort"
+    ]
+  },
+  {
+    "id": "mb-108",
+    "cat": "data",
+    "diff": "medium",
+    "title": "Handle Missing CSV Values",
+    "src": "m/todayilearned",
+    "prompt": "Read data.csv which has missing values (empty fields). Write solution.py that replaces missing 'score' values with the column's mean (rounded to nearest integer) and missing 'grade' values with 'N/A'. Output to filled.csv.",
+    "input": {
+      "data.csv": "name,score,grade\nAlice,85,B\nBob,,A\nCarla,90,\nDave,70,C\nEve,,\nFrank,95,A\n"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "file_match",
+        "path": "filled.csv",
+        "text": "Bob,85,A"
+      },
+      {
+        "type": "file_not_match",
+        "path": "filled.csv",
+        "pattern": ",,"
+      }
+    ],
+    "tags": [
+      "python",
+      "csv",
+      "missing",
+      "cleaning"
+    ]
+  },
+  {
+    "id": "mb-109",
+    "cat": "data",
+    "diff": "medium",
+    "title": "Frequency Distribution Histogram",
+    "src": "m/agents",
+    "prompt": "Read data.csv with a 'score' column (integer values 0-100). Write solution.py that creates a frequency distribution with bins [0-20), [20-40), [40-60), [60-80), [80-100]. Output a CSV with columns 'bin' and 'count' to histogram.csv.",
+    "input": {
+      "data.csv": "student,score\nA,15\nB,42\nC,78\nD,55\nE,91\nF,33\nG,67\nH,88\nI,25\nJ,50\nK,72\nL,85\nM,10\nN,60\nO,95\n"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "file_match",
+        "path": "histogram.csv",
+        "text": "bin,count"
+      },
+      {
+        "type": "file_match",
+        "path": "histogram.csv",
+        "text": "80-100,4"
+      }
+    ],
+    "tags": [
+      "python",
+      "csv",
+      "statistics",
+      "histogram"
+    ]
+  },
+  {
+    "id": "mb-110",
+    "cat": "data",
+    "diff": "medium",
+    "title": "INI File to JSON Conversion",
+    "src": "m/coding",
+    "prompt": "Read config.ini and convert it to a JSON object where sections become top-level keys and their key-value pairs become nested objects. Write solution.py that outputs to config.json.",
+    "input": {
+      "config.ini": "[database]\nhost=localhost\nport=5432\nname=mydb\n\n[server]\nhost=0.0.0.0\nport=8080\nworkers=4\n\n[logging]\nlevel=info\nfile=app.log\n"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "json_valid",
+        "path": "config.json",
+        "has_key": "database"
+      },
+      {
+        "type": "file_match",
+        "path": "config.json",
+        "text": "5432"
+      }
+    ],
+    "tags": [
+      "python",
+      "ini",
+      "json",
+      "conversion"
+    ]
+  },
+  {
+    "id": "mb-111",
+    "cat": "data",
+    "diff": "medium",
+    "title": "CSV Left Join",
+    "src": "m/agents",
+    "prompt": "Read employees.csv and departments.csv. Perform a left join on 'dept_id', keeping all employees. If an employee's department is not found, set dept_name to 'Unknown'. Write solution.py that outputs to joined.csv with columns: emp_id, name, dept_id, dept_name.",
+    "input": {
+      "employees.csv": "emp_id,name,dept_id\n1,Alice,10\n2,Bob,20\n3,Carla,30\n4,Dave,10\n5,Eve,99\n",
+      "departments.csv": "dept_id,dept_name\n10,Engineering\n20,Marketing\n30,Sales\n40,HR\n"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "file_match",
+        "path": "joined.csv",
+        "text": "Alice"
+      },
+      {
+        "type": "file_match",
+        "path": "joined.csv",
+        "text": "Engineering"
+      }
+    ],
+    "tags": [
+      "python",
+      "csv",
+      "join"
+    ]
+  },
+  {
+    "id": "mb-112",
+    "cat": "data",
+    "diff": "medium",
+    "title": "Time Interval Calculation",
+    "src": "m/todayilearned",
+    "prompt": "Read events.csv with columns 'event' and 'timestamp' (ISO format). Write solution.py that computes the time interval in seconds between consecutive events and outputs a CSV with columns 'from_event', 'to_event', 'seconds' to intervals.csv.",
+    "input": {
+      "events.csv": "event,timestamp\nstart,2025-01-15T10:00:00\ncheckpoint_1,2025-01-15T10:05:30\ncheckpoint_2,2025-01-15T10:12:00\ncheckpoint_3,2025-01-15T10:30:45\nfinish,2025-01-15T10:45:00\n"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "file_match",
+        "path": "intervals.csv",
+        "text": "start,checkpoint_1,330"
+      },
+      {
+        "type": "line_count",
+        "path": "intervals.csv",
+        "min": 5,
+        "max": 5
+      }
+    ],
+    "tags": [
+      "python",
+      "csv",
+      "datetime",
+      "timeseries"
+    ]
+  },
+  {
+    "id": "mb-113",
+    "cat": "data",
+    "diff": "medium",
+    "title": "Log Error Pattern Extraction",
+    "src": "m/agents",
+    "prompt": "Read app.log and extract all lines containing 'ERROR'. For each error, capture the timestamp and message. Write solution.py that outputs a JSON array of objects with 'timestamp' and 'message' keys to errors.json.",
+    "input": {
+      "app.log": "2025-03-01 10:00:01 INFO  Server started on port 8080\n2025-03-01 10:05:23 ERROR Database connection timeout\n2025-03-01 10:05:30 INFO  Retrying connection...\n2025-03-01 10:05:45 ERROR Retry failed: max attempts exceeded\n2025-03-01 10:06:00 WARN  Falling back to cache\n2025-03-01 10:10:00 INFO  Cache hit rate: 85%\n2025-03-01 10:15:00 ERROR Disk space below threshold: 2GB remaining\n2025-03-01 10:20:00 INFO  Cleanup completed\n"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "json_valid",
+        "path": "errors.json",
+        "is_array": true,
+        "min_length": 3
+      },
+      {
+        "type": "file_not_match",
+        "path": "errors.json",
+        "text": "INFO"
+      }
+    ],
+    "tags": [
+      "python",
+      "log",
+      "parsing",
+      "json"
+    ]
+  },
+  {
+    "id": "mb-114",
+    "cat": "data",
+    "diff": "medium",
+    "title": "CSV Pivot Table",
+    "src": "m/coding",
+    "prompt": "Read sales.csv with columns 'quarter', 'product', and 'units'. Write solution.py that creates a pivot table where rows are products, columns are quarters, and values are units. Output to pivot.csv. Use 0 for missing combinations.",
+    "input": {
+      "sales.csv": "quarter,product,units\nQ1,Widget,100\nQ1,Gadget,150\nQ2,Widget,120\nQ2,Gadget,130\nQ2,Doohickey,80\nQ3,Widget,90\nQ3,Doohickey,110\nQ4,Widget,140\nQ4,Gadget,160\nQ4,Doohickey,95\n"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "file_match",
+        "path": "pivot.csv",
+        "text": "product"
+      },
+      {
+        "type": "file_match",
+        "path": "pivot.csv",
+        "text": "Widget"
+      }
+    ],
+    "tags": [
+      "python",
+      "csv",
+      "pivot"
+    ]
+  },
+  {
+    "id": "mb-115",
+    "cat": "data",
+    "diff": "medium",
+    "title": "Detect Outliers with IQR",
+    "src": "m/agents",
+    "prompt": "Read data.csv and detect outliers in the 'value' column using the IQR method (values below Q1-1.5*IQR or above Q3+1.5*IQR). Write solution.py that outputs outlier rows (with header) to outliers.csv and the count to stdout.",
+    "input": {
+      "data.csv": "id,value\n1,12\n2,15\n3,14\n4,13\n5,100\n6,16\n7,11\n8,14\n9,15\n10,-20\n11,13\n12,15\n"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0,
+        "stdout": "2"
+      },
+      {
+        "type": "file_match",
+        "path": "outliers.csv",
+        "text": "100"
+      },
+      {
+        "type": "file_match",
+        "path": "outliers.csv",
+        "text": "-20"
+      }
+    ],
+    "tags": [
+      "python",
+      "csv",
+      "statistics",
+      "outlier"
+    ]
+  },
+  {
+    "id": "mb-116",
+    "cat": "data",
+    "diff": "medium",
+    "title": "Merge JSON Objects",
+    "src": "m/todayilearned",
+    "prompt": "Read base.json and override.json. Write solution.py that deep-merges them (override takes precedence for conflicting keys, nested objects are merged recursively). Output to merged.json.",
+    "input": {
+      "base.json": "{\"app\":{\"name\":\"MyApp\",\"version\":\"1.0\",\"debug\":false},\"db\":{\"host\":\"localhost\",\"port\":5432},\"cache\":{\"enabled\":true,\"ttl\":300}}",
+      "override.json": "{\"app\":{\"version\":\"2.0\",\"debug\":true},\"db\":{\"port\":5433,\"ssl\":true},\"logging\":{\"level\":\"info\"}}"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "json_valid",
+        "path": "merged.json",
+        "has_key": "app"
+      },
+      {
+        "type": "file_match",
+        "path": "merged.json",
+        "text": "MyApp"
+      }
+    ],
+    "tags": [
+      "python",
+      "json",
+      "merge"
+    ]
+  },
+  {
+    "id": "mb-117",
+    "cat": "data",
+    "diff": "medium",
+    "title": "Cross-Field Validation",
+    "src": "m/agents",
+    "prompt": "Read data.csv with columns 'start_date', 'end_date', and 'status'. Write solution.py that validates: (1) end_date >= start_date, (2) if status is 'completed', end_date must not be empty. Write rows failing validation to errors.csv with an extra 'error' column describing the issue.",
+    "input": {
+      "data.csv": "id,start_date,end_date,status\n1,2025-01-01,2025-01-15,completed\n2,2025-02-01,2025-01-20,active\n3,2025-03-01,,completed\n4,2025-04-01,2025-04-30,completed\n5,2025-05-01,2025-05-10,active\n"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "line_count",
+        "path": "errors.csv",
+        "min": 3,
+        "max": 3
+      },
+      {
+        "type": "file_not_match",
+        "path": "errors.csv",
+        "text": "2025-04-01"
+      }
+    ],
+    "tags": [
+      "python",
+      "csv",
+      "validation"
+    ]
+  },
+  {
+    "id": "mb-118",
+    "cat": "data",
+    "diff": "medium",
+    "title": "Moving Average Calculation",
+    "src": "m/coding",
+    "prompt": "Read data.csv with columns 'date' and 'price'. Write solution.py that computes a 3-day simple moving average of 'price'. Output a CSV with columns 'date', 'price', 'sma_3' to output.csv. For the first 2 rows where SMA cannot be computed, use empty string for sma_3.",
+    "input": {
+      "data.csv": "date,price\n2025-01-01,100\n2025-01-02,105\n2025-01-03,102\n2025-01-04,108\n2025-01-05,110\n2025-01-06,107\n2025-01-07,112\n"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "file_match",
+        "path": "output.csv",
+        "text": "sma_3"
+      },
+      {
+        "type": "file_match",
+        "path": "output.csv",
+        "pattern": "2025-01-03,102,102\\.33"
+      }
+    ],
+    "tags": [
+      "python",
+      "csv",
+      "timeseries",
+      "statistics"
+    ]
+  },
+  {
+    "id": "mb-119",
+    "cat": "data",
+    "diff": "medium",
+    "title": "JSON Schema Validator",
+    "src": "m/agents",
+    "prompt": "Write solution.py that reads data.json (array of user objects) and validates each against this schema: 'name' (string, required), 'age' (integer, 0-150, required), 'email' (string containing '@', required). Output valid records to valid.json and invalid records (with 'errors' key added) to invalid.json.",
+    "input": {
+      "data.json": "[{\"name\":\"Alice\",\"age\":30,\"email\":\"alice@test.com\"},{\"name\":\"\",\"age\":25,\"email\":\"bob@test.com\"},{\"name\":\"Carla\",\"age\":-5,\"email\":\"carla@test.com\"},{\"name\":\"Dave\",\"age\":40,\"email\":\"dave-no-at\"},{\"name\":\"Eve\",\"age\":28,\"email\":\"eve@test.com\"}]"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "json_valid",
+        "path": "valid.json",
+        "is_array": true,
+        "min_length": 2
+      },
+      {
+        "type": "json_valid",
+        "path": "invalid.json",
+        "is_array": true,
+        "min_length": 3
+      }
+    ],
+    "tags": [
+      "python",
+      "json",
+      "validation"
+    ]
+  },
+  {
+    "id": "mb-120",
+    "cat": "data",
+    "diff": "medium",
+    "title": "N-gram Text Analysis",
+    "src": "m/todayilearned",
+    "prompt": "Read text.txt and compute all bigrams (2-word sequences) with their frequencies. Write solution.py that outputs a JSON object mapping bigrams (words joined by space) to counts in bigrams.json, including only bigrams appearing 2+ times.",
+    "input": {
+      "text.txt": "the quick brown fox jumps over the lazy dog the quick brown dog jumps over the lazy fox the quick red fox runs over the hill"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "json_valid",
+        "path": "bigrams.json",
+        "has_key": "the quick"
+      },
+      {
+        "type": "file_match",
+        "path": "bigrams.json",
+        "pattern": "\"the quick\":\\s*3"
+      }
+    ],
+    "tags": [
+      "python",
+      "text",
+      "ngram",
+      "nlp"
+    ]
+  },
+  {
+    "id": "mb-121",
+    "cat": "data",
+    "diff": "medium",
+    "title": "CSV Column Type Detection",
+    "src": "m/agents",
+    "prompt": "Read data.csv and detect the data type of each column (integer, float, date, or string). Write solution.py that outputs a JSON object mapping column names to detected types in types.json.",
+    "input": {
+      "data.csv": "name,age,salary,start_date,active\nAlice,30,55000.50,2020-01-15,true\nBob,25,48000.75,2021-06-01,false\nCarla,28,62000.00,2019-11-20,true\nDave,35,71000.25,2018-03-10,true\n"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "json_valid",
+        "path": "types.json",
+        "has_key": "name"
+      },
+      {
+        "type": "file_match",
+        "path": "types.json",
+        "text": "integer"
+      }
+    ],
+    "tags": [
+      "python",
+      "csv",
+      "type-detection"
+    ]
+  },
+  {
+    "id": "mb-122",
+    "cat": "data",
+    "diff": "medium",
+    "title": "Log Response Time Percentiles",
+    "src": "m/coding",
+    "prompt": "Read access.log where each line ends with a response time in ms. Write solution.py that computes the 50th, 90th, 95th, and 99th percentile response times and outputs them as a JSON object with keys 'p50', 'p90', 'p95', 'p99' to percentiles.json.",
+    "input": {
+      "access.log": "GET /api/users 200 45ms\nGET /api/posts 200 120ms\nPOST /api/login 200 89ms\nGET /api/users 200 52ms\nGET /api/posts 200 230ms\nGET /api/data 200 67ms\nPOST /api/submit 200 340ms\nGET /api/health 200 12ms\nGET /api/users 200 48ms\nGET /api/posts 500 890ms\nGET /api/data 200 55ms\nPOST /api/login 200 95ms\nGET /api/health 200 15ms\nGET /api/users 200 42ms\nGET /api/posts 200 110ms\nGET /api/data 200 78ms\nPOST /api/submit 200 280ms\nGET /api/health 200 10ms\nGET /api/users 200 51ms\nGET /api/posts 200 145ms\n"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "json_valid",
+        "path": "percentiles.json",
+        "has_key": "p50"
+      },
+      {
+        "type": "json_valid",
+        "path": "percentiles.json",
+        "has_key": "p99"
+      }
+    ],
+    "tags": [
+      "python",
+      "log",
+      "statistics",
+      "percentile"
+    ]
+  },
+  {
+    "id": "mb-123",
+    "cat": "data",
+    "diff": "medium",
+    "title": "Transpose CSV",
+    "src": "m/agents",
+    "prompt": "Read data.csv and transpose it so that rows become columns and columns become rows. The first column of the input becomes the header of the output. Write solution.py that saves the transposed data to transposed.csv.",
+    "input": {
+      "data.csv": "metric,Jan,Feb,Mar,Apr\nrevenue,1000,1200,1100,1350\ncosts,800,850,900,870\nprofit,200,350,200,480\n"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "file_match",
+        "path": "transposed.csv",
+        "text": "revenue,costs,profit"
+      },
+      {
+        "type": "file_match",
+        "path": "transposed.csv",
+        "text": "Jan,1000,800,200"
+      }
+    ],
+    "tags": [
+      "python",
+      "csv",
+      "transpose"
+    ]
+  },
+  {
+    "id": "mb-124",
+    "cat": "data",
+    "diff": "medium",
+    "title": "Correlate Two Columns",
+    "src": "m/todayilearned",
+    "prompt": "Read data.csv with columns 'hours_studied' and 'exam_score'. Write solution.py that computes the Pearson correlation coefficient between them (rounded to 4 decimal places) and writes it to correlation.txt.",
+    "input": {
+      "data.csv": "student,hours_studied,exam_score\nA,2,55\nB,4,65\nC,6,72\nD,8,85\nE,3,60\nF,7,80\nG,5,68\nH,9,90\nI,1,45\nJ,10,95\n"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "file_match",
+        "path": "correlation.txt",
+        "pattern": "0\\.99"
+      }
+    ],
+    "tags": [
+      "python",
+      "csv",
+      "statistics",
+      "correlation"
+    ]
+  },
+  {
+    "id": "mb-125",
+    "cat": "data",
+    "diff": "medium",
+    "title": "Multi-File JSON Merge",
+    "src": "m/agents",
+    "prompt": "Read users_1.json and users_2.json, each containing arrays of user objects with 'id' and 'name'. Some users appear in both files with different data. Write solution.py that merges them, deduplicating by 'id' (users_2 values take priority). Output the merged, sorted-by-id array to merged.json.",
+    "input": {
+      "users_1.json": "[{\"id\":1,\"name\":\"Alice v1\"},{\"id\":2,\"name\":\"Bob\"},{\"id\":3,\"name\":\"Carla\"},{\"id\":5,\"name\":\"Eve\"}]",
+      "users_2.json": "[{\"id\":2,\"name\":\"Bob Updated\"},{\"id\":4,\"name\":\"Dave\"},{\"id\":5,\"name\":\"Eve Updated\"},{\"id\":6,\"name\":\"Frank\"}]"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "json_valid",
+        "path": "merged.json",
+        "is_array": true,
+        "min_length": 6
+      },
+      {
+        "type": "file_not_match",
+        "path": "merged.json",
+        "text": "Bob\""
+      }
+    ],
+    "tags": [
+      "python",
+      "json",
+      "merge",
+      "dedup"
+    ]
+  },
+  {
+    "id": "mb-126",
+    "cat": "data",
+    "diff": "medium",
+    "title": "CSV Percentage Calculation",
+    "src": "m/coding",
+    "prompt": "Read data.csv with columns 'category' and 'count'. Write solution.py that adds a 'percentage' column showing each category's share of the total (rounded to 1 decimal place, e.g. '34.5'). Output to output.csv. The percentages should sum to approximately 100.",
+    "input": {
+      "data.csv": "category,count\nElectronics,450\nClothing,320\nFood,180\nBooks,150\nToys,100\n"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "file_match",
+        "path": "output.csv",
+        "text": "percentage"
+      },
+      {
+        "type": "file_match",
+        "path": "output.csv",
+        "text": "Electronics,450,37.5"
+      }
+    ],
+    "tags": [
+      "python",
+      "csv",
+      "percentage"
+    ]
+  },
+  {
+    "id": "mb-127",
+    "cat": "data",
+    "diff": "hard",
+    "title": "Multi-Key CSV Pivot with Aggregation",
+    "src": "m/agents",
+    "prompt": "Read sales.csv with columns 'year', 'quarter', 'region', 'product', and 'revenue'. Write solution.py that creates a pivot table: rows are (region, product) pairs, columns are 'year_quarter' combinations (e.g., '2024_Q1'), values are summed revenue. Fill missing cells with 0. Sort rows by region then product. Output to pivot.csv.",
+    "input": {
+      "sales.csv": "year,quarter,region,product,revenue\n2024,Q1,North,Widget,500\n2024,Q1,North,Gadget,300\n2024,Q1,South,Widget,450\n2024,Q2,North,Widget,600\n2024,Q2,South,Gadget,350\n2024,Q2,South,Widget,400\n2025,Q1,North,Widget,700\n2025,Q1,North,Gadget,400\n2025,Q1,South,Widget,550\n2025,Q1,South,Gadget,250\n2024,Q1,North,Widget,100\n2024,Q2,North,Gadget,200\n"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "file_match",
+        "path": "pivot.csv",
+        "text": "region,product"
+      },
+      {
+        "type": "file_match",
+        "path": "pivot.csv",
+        "text": "North,Widget,600,600,700"
+      }
+    ],
+    "tags": [
+      "python",
+      "csv",
+      "pivot",
+      "aggregation"
+    ]
+  },
+  {
+    "id": "mb-128",
+    "cat": "data",
+    "diff": "hard",
+    "title": "Log Session Reconstruction",
+    "src": "m/agents",
+    "prompt": "Read access.log with timestamped requests including session IDs. Write solution.py that reconstructs user sessions: group requests by session_id, compute session duration (first to last request), count pages visited, and identify the most visited page per session. Output a JSON array of session objects with keys 'session_id', 'duration_seconds', 'page_count', 'top_page' to sessions.json, sorted by duration descending.",
+    "input": {
+      "access.log": "2025-01-15T10:00:00 sess_A GET /home\n2025-01-15T10:00:30 sess_B GET /home\n2025-01-15T10:01:00 sess_A GET /products\n2025-01-15T10:01:30 sess_B GET /about\n2025-01-15T10:02:00 sess_A GET /products\n2025-01-15T10:02:30 sess_C GET /home\n2025-01-15T10:03:00 sess_A GET /cart\n2025-01-15T10:03:30 sess_B GET /home\n2025-01-15T10:04:00 sess_C GET /products\n2025-01-15T10:05:00 sess_A GET /checkout\n2025-01-15T10:05:30 sess_C GET /home\n2025-01-15T10:06:00 sess_B GET /contact\n"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "json_valid",
+        "path": "sessions.json",
+        "is_array": true,
+        "min_length": 3
+      },
+      {
+        "type": "file_match",
+        "path": "sessions.json",
+        "text": "sess_B"
+      }
+    ],
+    "tags": [
+      "python",
+      "log",
+      "session",
+      "parsing"
+    ]
+  },
+  {
+    "id": "mb-129",
+    "cat": "data",
+    "diff": "hard",
+    "title": "Data Pipeline: Clean, Transform, Aggregate",
+    "src": "m/coding",
+    "prompt": "Read raw_sales.csv which has messy data: inconsistent date formats, missing values, duplicate rows, and whitespace issues. Write solution.py that: (1) standardizes dates to YYYY-MM-DD, (2) removes exact duplicate rows, (3) fills missing 'quantity' with 1 and missing 'unit_price' with the product's average unit_price, (4) adds a 'total' column (quantity * unit_price), (5) groups by product and outputs summary.csv with columns 'product', 'total_quantity', 'total_revenue', 'avg_price' (rounded to 2 decimals), sorted by total_revenue descending.",
+    "input": {
+      "raw_sales.csv": "date,product,quantity,unit_price\n01/15/2025, Widget , 5, 10.00\n2025-02-01,Gadget,3,15.50\n15-03-2025, Widget,2,10.00\n01/15/2025, Widget , 5, 10.00\n2025-02-15, Gadget,,15.50\n2025-03-01,Doohickey,4,\n15-03-2025,Doohickey,2,8.00\n2025-04-01, Widget,,\n2025-04-10,Gadget,6,15.50\n"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "file_match",
+        "path": "summary.csv",
+        "text": "product,total_quantity,total_revenue,avg_price"
+      },
+      {
+        "type": "file_match",
+        "path": "summary.csv",
+        "text": "Gadget"
+      }
+    ],
+    "tags": [
+      "python",
+      "csv",
+      "pipeline",
+      "cleaning",
+      "aggregation"
+    ]
+  },
+  {
+    "id": "mb-130",
+    "cat": "data",
+    "diff": "hard",
+    "title": "JSON Tree to Flat Table",
+    "src": "m/agents",
+    "prompt": "Read org.json which contains a recursive tree structure representing an org chart (each node has 'name', 'title', and optional 'reports' array of child nodes). Write solution.py that flattens this into a CSV with columns 'name', 'title', 'manager', 'depth' (root is depth 0, manager is empty for root). Output to org_flat.csv, sorted by depth then name.",
+    "input": {
+      "org.json": "{\"name\":\"Alice\",\"title\":\"CEO\",\"reports\":[{\"name\":\"Bob\",\"title\":\"CTO\",\"reports\":[{\"name\":\"Dave\",\"title\":\"Senior Engineer\"},{\"name\":\"Eve\",\"title\":\"Engineer\"}]},{\"name\":\"Carla\",\"title\":\"CFO\",\"reports\":[{\"name\":\"Frank\",\"title\":\"Accountant\"}]}]}"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "file_match",
+        "path": "org_flat.csv",
+        "text": "name,title,manager,depth"
+      },
+      {
+        "type": "file_match",
+        "path": "org_flat.csv",
+        "text": "Alice,CEO,,0"
+      }
+    ],
+    "tags": [
+      "python",
+      "json",
+      "tree",
+      "flatten",
+      "csv"
+    ]
+  },
+  {
+    "id": "mb-131",
+    "cat": "data",
+    "diff": "hard",
+    "title": "Time Series Peak Detection",
+    "src": "m/todayilearned",
+    "prompt": "Read data.csv with columns 'timestamp' and 'value'. Write solution.py that detects local peaks (a value strictly greater than both its neighbors). Output a JSON array of objects with 'timestamp', 'value', and 'peak_index' (0-based row index) to peaks.json. Also compute and print the average time between consecutive peaks in seconds to stdout.",
+    "input": {
+      "data.csv": "timestamp,value\n2025-01-01T00:00:00,10\n2025-01-01T01:00:00,25\n2025-01-01T02:00:00,18\n2025-01-01T03:00:00,30\n2025-01-01T04:00:00,35\n2025-01-01T05:00:00,20\n2025-01-01T06:00:00,15\n2025-01-01T07:00:00,40\n2025-01-01T08:00:00,38\n2025-01-01T09:00:00,12\n2025-01-01T10:00:00,28\n2025-01-01T11:00:00,22\n"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "json_valid",
+        "path": "peaks.json",
+        "is_array": true,
+        "min_length": 3
+      },
+      {
+        "type": "file_match",
+        "path": "peaks.json",
+        "text": "peak_index"
+      }
+    ],
+    "tags": [
+      "python",
+      "csv",
+      "timeseries",
+      "peak"
+    ]
+  },
+  {
+    "id": "mb-132",
+    "cat": "data",
+    "diff": "hard",
+    "title": "TF-IDF Word Scoring",
+    "src": "m/agents",
+    "prompt": "Read documents.json containing an array of document strings. Write solution.py that computes TF-IDF scores for each word in each document. Output a JSON object where keys are document indices (as strings '0','1',...) and values are objects mapping words to their TF-IDF scores (rounded to 4 decimal places). Write to tfidf.json. Use log base-e for IDF. Ignore punctuation and convert to lowercase.",
+    "input": {
+      "documents.json": "[\"the cat sat on the mat\",\"the dog sat on the log\",\"the cat chased the dog\",\"a mat and a log\"]"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "json_valid",
+        "path": "tfidf.json",
+        "has_key": "0"
+      },
+      {
+        "type": "file_match",
+        "path": "tfidf.json",
+        "text": "cat"
+      }
+    ],
+    "tags": [
+      "python",
+      "text",
+      "tfidf",
+      "nlp"
+    ]
+  },
+  {
+    "id": "mb-133",
+    "cat": "data",
+    "diff": "hard",
+    "title": "Multi-Format Log Analyzer",
+    "src": "m/coding",
+    "prompt": "Read mixed.log which contains lines in three formats: (1) Apache-style: 'IP - - [timestamp] \"METHOD /path HTTP/1.1\" STATUS SIZE', (2) JSON-style: '{\"level\":\"...\",\"msg\":\"...\",\"ts\":\"...\"}', (3) Syslog-style: 'MMM DD HH:MM:SS hostname process: message'. Write solution.py that parses all three formats and outputs a unified JSON array sorted by timestamp, each entry having keys 'timestamp', 'type' (apache/json/syslog), 'message'. Output to unified.json.",
+    "input": {
+      "mixed.log": "192.168.1.1 - - [15/Jan/2025:10:00:00 +0000] \"GET /index HTTP/1.1\" 200 1234\n{\"level\":\"error\",\"msg\":\"Database timeout\",\"ts\":\"2025-01-15T10:01:00Z\"}\nJan 15 10:02:00 webserver nginx: upstream timed out\n192.168.1.2 - - [15/Jan/2025:10:03:00 +0000] \"POST /api HTTP/1.1\" 500 0\n{\"level\":\"info\",\"msg\":\"Retry succeeded\",\"ts\":\"2025-01-15T10:04:00Z\"}\nJan 15 10:05:00 webserver app: request processed\n"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "json_valid",
+        "path": "unified.json",
+        "is_array": true,
+        "min_length": 6
+      },
+      {
+        "type": "file_match",
+        "path": "unified.json",
+        "text": "apache"
+      }
+    ],
+    "tags": [
+      "python",
+      "log",
+      "parsing",
+      "multiformat"
+    ]
+  },
+  {
+    "id": "mb-134",
+    "cat": "data",
+    "diff": "hard",
+    "title": "Data Normalization Pipeline",
+    "src": "m/agents",
+    "prompt": "Read data.csv with numeric columns 'feature_a', 'feature_b', 'feature_c'. Write solution.py that: (1) computes min-max normalization for each column to [0,1] range, (2) computes z-score normalization for each column, (3) outputs minmax_normalized.csv and zscore_normalized.csv with the same column structure. Round all values to 4 decimal places.",
+    "input": {
+      "data.csv": "id,feature_a,feature_b,feature_c\n1,10,100,1.5\n2,20,200,2.0\n3,15,150,1.8\n4,30,50,3.0\n5,25,300,2.5\n6,5,250,1.0\n"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "file_match",
+        "path": "minmax_normalized.csv",
+        "text": "feature_a"
+      },
+      {
+        "type": "file_match",
+        "path": "minmax_normalized.csv",
+        "text": "1.0"
+      }
+    ],
+    "tags": [
+      "python",
+      "csv",
+      "normalization",
+      "statistics"
+    ]
+  },
+  {
+    "id": "mb-135",
+    "cat": "data",
+    "diff": "hard",
+    "title": "Relational Data Integrity Check",
+    "src": "m/todayilearned",
+    "prompt": "Read three files: users.csv (id, name), orders.csv (order_id, user_id, product_id, amount), products.csv (product_id, name, price). Write solution.py that checks referential integrity: (1) every user_id in orders exists in users, (2) every product_id in orders exists in products, (3) no duplicate primary keys. Output a JSON report to integrity.json with keys 'orphan_user_ids', 'orphan_product_ids', 'duplicate_users', 'duplicate_products', 'duplicate_orders' (each an array), and 'is_valid' (boolean).",
+    "input": {
+      "users.csv": "id,name\n1,Alice\n2,Bob\n3,Carla\n3,Carla Dup\n",
+      "orders.csv": "order_id,user_id,product_id,amount\n101,1,10,25.00\n102,2,20,15.00\n103,5,10,30.00\n104,1,30,20.00\n105,3,99,10.00\n",
+      "products.csv": "product_id,name,price\n10,Widget,10.00\n20,Gadget,15.00\n30,Doohickey,20.00\n"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "json_valid",
+        "path": "integrity.json",
+        "has_key": "is_valid"
+      },
+      {
+        "type": "file_match",
+        "path": "integrity.json",
+        "text": "false"
+      }
+    ],
+    "tags": [
+      "python",
+      "csv",
+      "validation",
+      "relational"
+    ]
+  },
+  {
+    "id": "mb-136",
+    "cat": "data",
+    "diff": "hard",
+    "title": "Sentiment Word Scoring",
+    "src": "m/agents",
+    "prompt": "Read reviews.json (array of review strings) and lexicon.json (object mapping words to sentiment scores from -5 to 5). Write solution.py that scores each review by summing the sentiment scores of its words (lowercase, ignoring unknown words and punctuation). Output a JSON array of objects with 'review_index', 'score', 'label' (positive if score>0, negative if score<0, neutral if 0) to sentiment.json, plus a summary object in summary.json with 'avg_score' (rounded to 2 decimals), 'positive_count', 'negative_count', 'neutral_count'.",
+    "input": {
+      "reviews.json": "[\"The food was great and the service was excellent\",\"Terrible experience awful food and rude staff\",\"It was okay nothing special\",\"Amazing place wonderful food highly recommend\",\"Bad service but decent food\"]",
+      "lexicon.json": "{\"great\":3,\"excellent\":4,\"terrible\":-4,\"awful\":-3,\"rude\":-2,\"okay\":0,\"amazing\":4,\"wonderful\":3,\"recommend\":2,\"bad\":-2,\"decent\":1,\"nothing\":0,\"special\":1,\"highly\":1}"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "json_valid",
+        "path": "sentiment.json",
+        "is_array": true,
+        "min_length": 5
+      },
+      {
+        "type": "json_valid",
+        "path": "summary.json",
+        "has_key": "avg_score"
+      }
+    ],
+    "tags": [
+      "python",
+      "json",
+      "text",
+      "sentiment"
+    ]
+  },
+  {
+    "id": "mb-137",
+    "cat": "data",
+    "diff": "hard",
+    "title": "CSV Diff Report",
+    "src": "m/coding",
+    "prompt": "Read old.csv and new.csv which have the same columns with 'id' as primary key. Write solution.py that produces a diff report in diff.json: (1) 'added' - rows in new but not old, (2) 'removed' - rows in old but not new, (3) 'modified' - rows present in both but with changed values (include old and new values for changed fields). Each category is an array of objects.",
+    "input": {
+      "old.csv": "id,name,email,role\n1,Alice,alice@co.com,admin\n2,Bob,bob@co.com,user\n3,Carla,carla@co.com,user\n4,Dave,dave@co.com,moderator\n",
+      "new.csv": "id,name,email,role\n1,Alice,alice@co.com,admin\n2,Bob,bob_new@co.com,admin\n3,Carla,carla@co.com,user\n5,Eve,eve@co.com,user\n"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "json_valid",
+        "path": "diff.json",
+        "has_key": "added"
+      },
+      {
+        "type": "file_match",
+        "path": "diff.json",
+        "text": "Eve"
+      }
+    ],
+    "tags": [
+      "python",
+      "csv",
+      "diff",
+      "comparison"
+    ]
+  },
+  {
+    "id": "mb-138",
+    "cat": "data",
+    "diff": "hard",
+    "title": "Weighted Scoring with Rank Assignment",
+    "src": "m/agents",
+    "prompt": "Read scores.csv with columns 'name', 'test1', 'test2', 'test3', 'homework', 'participation'. Read weights.json mapping each column to its weight (0-1, summing to 1). Write solution.py that computes weighted scores, assigns ranks (1=highest, handle ties with same rank), and determines letter grades (A>=90, B>=80, C>=70, D>=60, F<60). Output results.csv with columns 'rank', 'name', 'weighted_score' (2 decimals), 'grade', sorted by rank ascending.",
+    "input": {
+      "scores.csv": "name,test1,test2,test3,homework,participation\nAlice,92,88,95,90,85\nBob,78,82,75,95,90\nCarla,95,90,92,88,80\nDave,65,70,68,100,95\nEve,88,85,90,82,78\nFrank,90,88,95,90,85\n",
+      "weights.json": "{\"test1\":0.25,\"test2\":0.25,\"test3\":0.25,\"homework\":0.15,\"participation\":0.10}"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "file_match",
+        "path": "results.csv",
+        "text": "rank,name,weighted_score,grade"
+      },
+      {
+        "type": "file_match",
+        "path": "results.csv",
+        "text": "Carla"
+      }
+    ],
+    "tags": [
+      "python",
+      "csv",
+      "json",
+      "ranking",
+      "weighted"
+    ]
+  },
+  {
+    "id": "mb-139",
+    "cat": "data",
+    "diff": "hard",
+    "title": "Event Log State Machine",
+    "src": "m/todayilearned",
+    "prompt": "Read events.csv with columns 'entity_id', 'timestamp', 'event_type'. Valid state transitions are: created->active, active->paused, active->completed, paused->active, paused->cancelled. Write solution.py that: (1) reconstructs final state for each entity, (2) identifies invalid transitions, (3) outputs entity_states.json (mapping entity_id to final state) and violations.json (array of objects with 'entity_id', 'from_state', 'to_state', 'timestamp').",
+    "input": {
+      "events.csv": "entity_id,timestamp,event_type\nA,2025-01-01T10:00:00,created\nA,2025-01-01T11:00:00,active\nB,2025-01-01T10:00:00,created\nA,2025-01-01T12:00:00,paused\nB,2025-01-01T11:00:00,active\nC,2025-01-01T10:00:00,created\nA,2025-01-01T13:00:00,active\nB,2025-01-01T12:00:00,completed\nC,2025-01-01T11:00:00,completed\nA,2025-01-01T14:00:00,completed\nD,2025-01-01T10:00:00,created\nD,2025-01-01T11:00:00,active\nD,2025-01-01T12:00:00,cancelled\n"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "json_valid",
+        "path": "entity_states.json",
+        "has_key": "A"
+      },
+      {
+        "type": "json_valid",
+        "path": "violations.json",
+        "is_array": true
+      }
+    ],
+    "tags": [
+      "python",
+      "csv",
+      "state-machine",
+      "validation"
+    ]
+  },
+  {
+    "id": "mb-140",
+    "cat": "data",
+    "diff": "hard",
+    "title": "Data Quality Report Generator",
+    "src": "m/agents",
+    "prompt": "Read data.csv and generate a comprehensive data quality report. Write solution.py that analyzes every column and outputs report.json containing: (1) 'row_count' and 'column_count', (2) per-column stats in a 'columns' object keyed by column name, each with 'dtype' (integer/float/string/date), 'null_count', 'null_pct' (rounded to 1 decimal), 'unique_count', 'sample_values' (first 3 non-null values). For numeric columns, also include 'min', 'max', 'mean' (2 decimals), 'median'. For string columns, include 'min_length', 'max_length', 'avg_length' (1 decimal). Also include 'duplicate_rows' count and 'completeness_score' (pct of non-null cells, 1 decimal).",
+    "input": {
+      "data.csv": "id,name,age,salary,start_date,department\n1,Alice,30,55000.50,2020-01-15,Engineering\n2,Bob,,48000.75,2021-06-01,Marketing\n3,Carla,28,,2019-11-20,Engineering\n4,Dave,35,71000.25,,Sales\n5,Eve,22,42000.00,2022-03-10,\n6,Frank,28,62000.00,2019-11-20,Engineering\n1,Alice,30,55000.50,2020-01-15,Engineering\n"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "solution.py"
+      },
+      {
+        "type": "run",
+        "cmd": "python solution.py",
+        "exit": 0
+      },
+      {
+        "type": "json_valid",
+        "path": "report.json",
+        "has_key": "row_count"
+      },
+      {
+        "type": "file_match",
+        "path": "report.json",
+        "text": "columns"
+      }
+    ],
+    "tags": [
+      "python",
+      "csv",
+      "quality",
+      "report",
+      "statistics"
+    ]
+  }
+]

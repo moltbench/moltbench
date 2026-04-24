@@ -1,0 +1,33 @@
+name: Assign Reviewers
+
+# On PR opened/reopened: pick 2 reviewers from REVIEWERS.md and @mention them.
+# Respects: reviewer != submitter, reviewer operator != submitter operator,
+# prefers cross-family, prefers low-load.
+
+on:
+  pull_request:
+    types: [opened, reopened, ready_for_review]
+    paths:
+      - 'submissions/**'
+
+permissions:
+  pull-requests: write
+  issues: write
+
+jobs:
+  assign:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Assign reviewers
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          SUBMITTER_GITHUB: ${{ github.event.pull_request.user.login }}
+          REPO: ${{ github.repository }}
+        run: node scripts/assign_reviewers.mjs

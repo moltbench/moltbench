@@ -1,0 +1,643 @@
+[
+  {
+    "id": "mb-356",
+    "cat": "api",
+    "diff": "easy",
+    "title": "OpenAPI Spec from Endpoint List",
+    "src": "m/coding",
+    "prompt": "Read endpoints.json which contains a list of API endpoint descriptions. Generate a valid OpenAPI 3.0 JSON specification and write it to openapi.json. The spec must include all listed endpoints with their methods, paths, and response schemas.",
+    "input": {
+      "endpoints.json": "{\"endpoints\":[{\"method\":\"GET\",\"path\":\"/users\",\"summary\":\"List all users\",\"response\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"},\"name\":{\"type\":\"string\"}}}}},{\"method\":\"GET\",\"path\":\"/users/{id}\",\"summary\":\"Get user by ID\",\"response\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"},\"name\":{\"type\":\"string\"},\"email\":{\"type\":\"string\"}}}},{\"method\":\"POST\",\"path\":\"/users\",\"summary\":\"Create a user\",\"request\":{\"type\":\"object\",\"properties\":{\"name\":{\"type\":\"string\"},\"email\":{\"type\":\"string\"}}},\"response\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"},\"name\":{\"type\":\"string\"}}}}]}"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "openapi.json"},
+      {"type": "json_valid", "path": "openapi.json"},
+      {"type": "file_match", "path": "openapi.json", "text": "3.0"},
+      {"type": "file_match", "path": "openapi.json", "text": "/users/{id}"}
+    ],
+    "tags": ["python", "api", "openapi"]
+  },
+  {
+    "id": "mb-357",
+    "cat": "api",
+    "diff": "easy",
+    "title": "JSON Schema Validator Script",
+    "src": "m/coding",
+    "prompt": "Write a Python script validate_request.py that reads schema.json (a JSON Schema) and request.json (a JSON object), validates the request against the schema, and writes the result to result.json. The result must have keys \"valid\" (boolean) and \"errors\" (list of strings, empty if valid). Use only Python stdlib.",
+    "input": {
+      "schema.json": "{\"type\":\"object\",\"required\":[\"name\",\"age\"],\"properties\":{\"name\":{\"type\":\"string\"},\"age\":{\"type\":\"integer\",\"minimum\":0},\"email\":{\"type\":\"string\"}}}",
+      "request.json": "{\"name\":\"Alice\",\"age\":25,\"email\":\"alice@example.com\"}"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "validate_request.py"},
+      {"type": "run", "cmd": "python validate_request.py", "exit": 0},
+      {"type": "json_valid", "path": "result.json"},
+      {"type": "file_match", "path": "result.json", "text": "true"}
+    ],
+    "tags": ["python", "api", "validation"]
+  },
+  {
+    "id": "mb-358",
+    "cat": "api",
+    "diff": "easy",
+    "title": "API Markdown Documentation Generator",
+    "src": "m/coding",
+    "prompt": "Write a Python script gen_docs.py that reads api_spec.json and generates a Markdown documentation file called api_docs.md. Each endpoint must have a heading with the HTTP method and path, a description, and a table of parameters. Use only Python stdlib.",
+    "input": {
+      "api_spec.json": "{\"endpoints\":[{\"method\":\"GET\",\"path\":\"/items\",\"description\":\"Retrieve all items\",\"params\":[{\"name\":\"limit\",\"in\":\"query\",\"type\":\"integer\",\"required\":false},{\"name\":\"offset\",\"in\":\"query\",\"type\":\"integer\",\"required\":false}]},{\"method\":\"POST\",\"path\":\"/items\",\"description\":\"Create a new item\",\"params\":[{\"name\":\"name\",\"in\":\"body\",\"type\":\"string\",\"required\":true},{\"name\":\"price\",\"in\":\"body\",\"type\":\"number\",\"required\":true}]},{\"method\":\"DELETE\",\"path\":\"/items/{id}\",\"description\":\"Delete an item by ID\",\"params\":[{\"name\":\"id\",\"in\":\"path\",\"type\":\"integer\",\"required\":true}]}]}"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "gen_docs.py"},
+      {"type": "run", "cmd": "python gen_docs.py", "exit": 0},
+      {"type": "file_exists", "path": "api_docs.md"},
+      {"type": "file_match", "path": "api_docs.md", "text": "GET"}
+    ],
+    "tags": ["python", "api", "documentation"]
+  },
+  {
+    "id": "mb-359",
+    "cat": "api",
+    "diff": "easy",
+    "title": "Query String Parser",
+    "src": "m/coding",
+    "prompt": "Write a Python script parse_query.py that reads queries.txt (one query string per line, e.g. 'page=2&limit=10&sort=name') and writes parsed.json — a JSON array where each element is an object mapping parameter names to their values. Handle URL-encoded characters. Use only Python stdlib.",
+    "input": {
+      "queries.txt": "page=2&limit=10&sort=name\nq=hello+world&lang=en&safe=true\nfilter=%7B%22status%22%3A%22active%22%7D&page=1"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "parse_query.py"},
+      {"type": "run", "cmd": "python parse_query.py", "exit": 0},
+      {"type": "json_valid", "path": "parsed.json"},
+      {"type": "file_match", "path": "parsed.json", "text": "hello world"}
+    ],
+    "tags": ["python", "api", "parsing"]
+  },
+  {
+    "id": "mb-360",
+    "cat": "api",
+    "diff": "easy",
+    "title": "Mock Response Generator",
+    "src": "m/builds",
+    "prompt": "Write a Python script mock_responses.py that reads schemas.json (a mapping of endpoint names to JSON Schema definitions) and generates realistic mock JSON responses for each endpoint. Write the output to mocks.json as an object keyed by endpoint name. Use only Python stdlib. Use deterministic values (seed-based).",
+    "input": {
+      "schemas.json": "{\"getUser\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"},\"name\":{\"type\":\"string\"},\"active\":{\"type\":\"boolean\"}}},\"listProducts\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"properties\":{\"sku\":{\"type\":\"string\"},\"price\":{\"type\":\"number\"},\"inStock\":{\"type\":\"boolean\"}}}},\"getOrder\":{\"type\":\"object\",\"properties\":{\"orderId\":{\"type\":\"string\"},\"total\":{\"type\":\"number\"},\"items\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}}}}}"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "mock_responses.py"},
+      {"type": "run", "cmd": "python mock_responses.py", "exit": 0},
+      {"type": "json_valid", "path": "mocks.json"},
+      {"type": "file_match", "path": "mocks.json", "text": "getUser"}
+    ],
+    "tags": ["python", "api", "mocking"]
+  },
+  {
+    "id": "mb-361",
+    "cat": "api",
+    "diff": "easy",
+    "title": "Error Response Formatter (RFC 7807)",
+    "src": "m/coding",
+    "prompt": "Write a Python script format_errors.py that reads raw_errors.json (a list of error objects with code, message, and detail fields) and converts each into RFC 7807 Problem Details format. Write the output to problems.json as a JSON array. Each problem must have type, title, status, and detail fields. Use only Python stdlib.",
+    "input": {
+      "raw_errors.json": "[{\"code\":404,\"message\":\"Not Found\",\"detail\":\"User with ID 42 does not exist\"},{\"code\":400,\"message\":\"Bad Request\",\"detail\":\"Missing required field: email\"},{\"code\":403,\"message\":\"Forbidden\",\"detail\":\"Insufficient permissions to access resource\"},{\"code\":429,\"message\":\"Too Many Requests\",\"detail\":\"Rate limit exceeded, retry after 60 seconds\"},{\"code\":500,\"message\":\"Internal Server Error\",\"detail\":\"Unexpected database connection failure\"}]"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "format_errors.py"},
+      {"type": "run", "cmd": "python format_errors.py", "exit": 0},
+      {"type": "json_valid", "path": "problems.json"},
+      {"type": "file_match", "path": "problems.json", "text": "status"}
+    ],
+    "tags": ["python", "api", "error-handling"]
+  },
+  {
+    "id": "mb-362",
+    "cat": "api",
+    "diff": "easy",
+    "title": "URL Pattern Router",
+    "src": "m/coding",
+    "prompt": "Write a Python script router.py that reads routes.json (a list of route patterns with path templates and handler names) and requests.json (a list of request paths). Match each request to the correct route (supporting path parameters like {id}), and write matches.json — an array of objects with request_path, matched_route, and extracted params. Use only Python stdlib.",
+    "input": {
+      "routes.json": "[{\"pattern\":\"/users\",\"handler\":\"list_users\"},{\"pattern\":\"/users/{id}\",\"handler\":\"get_user\"},{\"pattern\":\"/users/{id}/posts\",\"handler\":\"user_posts\"},{\"pattern\":\"/posts/{id}/comments/{comment_id}\",\"handler\":\"get_comment\"},{\"pattern\":\"/health\",\"handler\":\"healthcheck\"}]",
+      "requests.json": "[\"/users\",\"/users/42\",\"/users/7/posts\",\"/posts/10/comments/3\",\"/health\",\"/unknown\"]"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "router.py"},
+      {"type": "run", "cmd": "python router.py", "exit": 0},
+      {"type": "json_valid", "path": "matches.json"},
+      {"type": "file_match", "path": "matches.json", "text": "get_user"}
+    ],
+    "tags": ["python", "api", "routing"]
+  },
+  {
+    "id": "mb-363",
+    "cat": "api",
+    "diff": "easy",
+    "title": "CORS Configuration Generator",
+    "src": "m/builds",
+    "prompt": "Write a Python script cors_gen.py that reads policy.json (a CORS policy specification with allowed origins, methods, headers, and max age) and generates cors_headers.json — a JSON object mapping HTTP header names to their values as they would appear in a preflight response. Use only Python stdlib.",
+    "input": {
+      "policy.json": "{\"allowed_origins\":[\"https://app.example.com\",\"https://admin.example.com\"],\"allowed_methods\":[\"GET\",\"POST\",\"PUT\",\"DELETE\",\"PATCH\"],\"allowed_headers\":[\"Content-Type\",\"Authorization\",\"X-Request-ID\"],\"allow_credentials\":true,\"max_age\":3600,\"expose_headers\":[\"X-Total-Count\",\"X-Page-Count\"]}"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "cors_gen.py"},
+      {"type": "run", "cmd": "python cors_gen.py", "exit": 0},
+      {"type": "json_valid", "path": "cors_headers.json"},
+      {"type": "file_match", "path": "cors_headers.json", "text": "Access-Control-Allow-Origin"}
+    ],
+    "tags": ["python", "api", "cors"]
+  },
+  {
+    "id": "mb-364",
+    "cat": "api",
+    "diff": "easy",
+    "title": "API Endpoint Inventory from Source",
+    "src": "m/coding",
+    "prompt": "Write a Python script inventory.py that reads source.py (a Python file containing function definitions decorated with comments like '# ROUTE: GET /path') and extracts all endpoint definitions. Write inventory.json — a JSON array of objects with method, path, and function_name fields. Use only Python stdlib.",
+    "input": {
+      "source.py": "# ROUTE: GET /api/users\ndef list_users():\n    return get_all_users()\n\n# ROUTE: POST /api/users\ndef create_user():\n    return save_user(request.body)\n\n# ROUTE: GET /api/users/{id}\ndef get_user(id):\n    return find_user(id)\n\n# ROUTE: PUT /api/users/{id}\ndef update_user(id):\n    return modify_user(id, request.body)\n\n# ROUTE: DELETE /api/users/{id}\ndef delete_user(id):\n    return remove_user(id)\n\n# ROUTE: GET /api/health\ndef health_check():\n    return {'status': 'ok'}\n\ndef helper_function():\n    pass\n"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "inventory.py"},
+      {"type": "run", "cmd": "python inventory.py", "exit": 0},
+      {"type": "json_valid", "path": "inventory.json"},
+      {"type": "file_match", "path": "inventory.json", "text": "delete_user"}
+    ],
+    "tags": ["python", "api", "parsing"]
+  },
+  {
+    "id": "mb-365",
+    "cat": "api",
+    "diff": "easy",
+    "title": "API Key Generator",
+    "src": "m/builds",
+    "prompt": "Write a Python script keygen.py that reads config.json (specifying count, prefix, and length) and generates API keys. Each key must be prefix + '-' + random hex string of the specified length. Write the keys to keys.json as a JSON array. Also write keys_hashed.json containing SHA-256 hashes of each key. Use only Python stdlib.",
+    "input": {
+      "config.json": "{\"count\":10,\"prefix\":\"mk_live\",\"length\":32}"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "keygen.py"},
+      {"type": "run", "cmd": "python keygen.py", "exit": 0},
+      {"type": "json_valid", "path": "keys.json"},
+      {"type": "json_valid", "path": "keys_hashed.json"}
+    ],
+    "tags": ["python", "api", "security"]
+  },
+  {
+    "id": "mb-366",
+    "cat": "api",
+    "diff": "easy",
+    "title": "HTTP Status Code Reference Generator",
+    "src": "m/coding",
+    "prompt": "Write a Python script status_ref.py that generates a comprehensive HTTP status code reference. Write status_codes.json containing an object with status codes (as string keys) mapped to objects with fields: code (integer), phrase (string), category (string: 1xx/2xx/3xx/4xx/5xx), and description (string). Cover at least 30 standard codes. Also write status_codes.md with a formatted Markdown table. Use only Python stdlib.",
+    "input": {},
+    "checks": [
+      {"type": "file_exists", "path": "status_ref.py"},
+      {"type": "run", "cmd": "python status_ref.py", "exit": 0},
+      {"type": "json_valid", "path": "status_codes.json"},
+      {"type": "file_match", "path": "status_codes.md", "text": "200"}
+    ],
+    "tags": ["python", "api", "reference"]
+  },
+  {
+    "id": "mb-367",
+    "cat": "api",
+    "diff": "easy",
+    "title": "Request/Response Log Formatter",
+    "src": "m/coding",
+    "prompt": "Write a Python script format_logs.py that reads raw_log.jsonl (one JSON object per line, each representing an API call with timestamp, method, path, status, duration_ms, request_body, response_body) and produces two files: logs_summary.json (array of objects with timestamp, method, path, status, duration_ms only) and logs_report.txt (a human-readable text report with statistics: total calls, average duration, status code distribution). Use only Python stdlib.",
+    "input": {
+      "raw_log.jsonl": "{\"timestamp\":\"2026-01-15T10:00:00Z\",\"method\":\"GET\",\"path\":\"/users\",\"status\":200,\"duration_ms\":45,\"request_body\":null,\"response_body\":{\"users\":[]}}\n{\"timestamp\":\"2026-01-15T10:00:01Z\",\"method\":\"POST\",\"path\":\"/users\",\"status\":201,\"duration_ms\":120,\"request_body\":{\"name\":\"Alice\"},\"response_body\":{\"id\":1}}\n{\"timestamp\":\"2026-01-15T10:00:02Z\",\"method\":\"GET\",\"path\":\"/users/1\",\"status\":200,\"duration_ms\":30,\"request_body\":null,\"response_body\":{\"id\":1,\"name\":\"Alice\"}}\n{\"timestamp\":\"2026-01-15T10:00:03Z\",\"method\":\"DELETE\",\"path\":\"/users/99\",\"status\":404,\"duration_ms\":15,\"request_body\":null,\"response_body\":{\"error\":\"not found\"}}\n{\"timestamp\":\"2026-01-15T10:00:04Z\",\"method\":\"POST\",\"path\":\"/users\",\"status\":400,\"duration_ms\":10,\"request_body\":{},\"response_body\":{\"error\":\"name required\"}}\n{\"timestamp\":\"2026-01-15T10:00:05Z\",\"method\":\"GET\",\"path\":\"/health\",\"status\":200,\"duration_ms\":5,\"request_body\":null,\"response_body\":{\"status\":\"ok\"}}"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "format_logs.py"},
+      {"type": "run", "cmd": "python format_logs.py", "exit": 0},
+      {"type": "json_valid", "path": "logs_summary.json"},
+      {"type": "file_match", "path": "logs_report.txt", "text": "total"}
+    ],
+    "tags": ["python", "api", "logging"]
+  },
+  {
+    "id": "mb-368",
+    "cat": "api",
+    "diff": "easy",
+    "title": "Pagination Helper",
+    "src": "m/coding",
+    "prompt": "Write a Python script paginate.py that reads items.json (an array of items) and config.json (with page_size and type: 'offset' or 'cursor'). Produce paginated_output.json — a JSON object where each key is a page number/cursor and the value is an object with items (the page data), next (next page token or null), and prev (previous page token or null). Use only Python stdlib.",
+    "input": {
+      "items.json": "[{\"id\":1,\"name\":\"Alpha\"},{\"id\":2,\"name\":\"Beta\"},{\"id\":3,\"name\":\"Gamma\"},{\"id\":4,\"name\":\"Delta\"},{\"id\":5,\"name\":\"Epsilon\"},{\"id\":6,\"name\":\"Zeta\"},{\"id\":7,\"name\":\"Eta\"},{\"id\":8,\"name\":\"Theta\"},{\"id\":9,\"name\":\"Iota\"},{\"id\":10,\"name\":\"Kappa\"},{\"id\":11,\"name\":\"Lambda\"},{\"id\":12,\"name\":\"Mu\"}]",
+      "config.json": "{\"page_size\":5,\"type\":\"offset\"}"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "paginate.py"},
+      {"type": "run", "cmd": "python paginate.py", "exit": 0},
+      {"type": "json_valid", "path": "paginated_output.json"},
+      {"type": "file_match", "path": "paginated_output.json", "text": "next"}
+    ],
+    "tags": ["python", "api", "pagination"]
+  },
+  {
+    "id": "mb-369",
+    "cat": "api",
+    "diff": "easy",
+    "title": "API Client Stub Generator",
+    "src": "m/builds",
+    "prompt": "Write a Python script gen_client.py that reads api_spec.json (a simplified API spec with base_url and endpoints) and generates a Python client class in api_client.py. The generated client must have a method for each endpoint, with proper docstrings and type hints in comments. Each method should construct the URL and return a dict with method, url, headers, and body. Use only Python stdlib.",
+    "input": {
+      "api_spec.json": "{\"base_url\":\"https://api.example.com/v1\",\"endpoints\":[{\"name\":\"list_users\",\"method\":\"GET\",\"path\":\"/users\",\"params\":[\"limit\",\"offset\"]},{\"name\":\"create_user\",\"method\":\"POST\",\"path\":\"/users\",\"body\":{\"name\":\"string\",\"email\":\"string\"}},{\"name\":\"get_user\",\"method\":\"GET\",\"path\":\"/users/{user_id}\"},{\"name\":\"update_user\",\"method\":\"PUT\",\"path\":\"/users/{user_id}\",\"body\":{\"name\":\"string\",\"email\":\"string\"}},{\"name\":\"delete_user\",\"method\":\"DELETE\",\"path\":\"/users/{user_id}\"}]}"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "gen_client.py"},
+      {"type": "run", "cmd": "python gen_client.py", "exit": 0},
+      {"type": "file_exists", "path": "api_client.py"},
+      {"type": "file_match", "path": "api_client.py", "text": "def list_users"}
+    ],
+    "tags": ["python", "api", "codegen"]
+  },
+  {
+    "id": "mb-370",
+    "cat": "api",
+    "diff": "medium",
+    "title": "Token Bucket Rate Limiter Simulation",
+    "src": "m/coding",
+    "prompt": "Write a Python script rate_limiter.py that implements a token bucket rate limiter. Read config.json (bucket_size, refill_rate per second, refill_interval_ms) and requests.json (array of objects with timestamp_ms and client_id). Simulate processing each request and write results.json — an array of objects with client_id, timestamp_ms, allowed (boolean), and tokens_remaining. Use only Python stdlib.",
+    "input": {
+      "config.json": "{\"bucket_size\":5,\"refill_rate\":1,\"refill_interval_ms\":1000}",
+      "requests.json": "[{\"timestamp_ms\":0,\"client_id\":\"client_a\"},{\"timestamp_ms\":100,\"client_id\":\"client_a\"},{\"timestamp_ms\":200,\"client_id\":\"client_a\"},{\"timestamp_ms\":300,\"client_id\":\"client_a\"},{\"timestamp_ms\":400,\"client_id\":\"client_a\"},{\"timestamp_ms\":500,\"client_id\":\"client_a\"},{\"timestamp_ms\":1500,\"client_id\":\"client_a\"},{\"timestamp_ms\":0,\"client_id\":\"client_b\"},{\"timestamp_ms\":100,\"client_id\":\"client_b\"},{\"timestamp_ms\":5000,\"client_id\":\"client_a\"},{\"timestamp_ms\":5100,\"client_id\":\"client_a\"},{\"timestamp_ms\":5200,\"client_id\":\"client_a\"}]"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "rate_limiter.py"},
+      {"type": "run", "cmd": "python rate_limiter.py", "exit": 0},
+      {"type": "json_valid", "path": "results.json"},
+      {"type": "file_match", "path": "results.json", "text": "false"}
+    ],
+    "tags": ["python", "api", "rate-limiting"]
+  },
+  {
+    "id": "mb-371",
+    "cat": "api",
+    "diff": "medium",
+    "title": "Webhook Signature Validator",
+    "src": "m/agents",
+    "prompt": "Write a Python script webhook_validator.py that reads webhooks.json (an array of webhook events, each with payload, signature, and algorithm — 'hmac-sha256' or 'hmac-sha1') and secret.txt (the webhook secret). Validate each webhook signature and write validation_results.json — an array of objects with event_index, valid (boolean), expected_signature, and received_signature. Use only Python stdlib (hmac, hashlib).",
+    "input": {
+      "webhooks.json": "[{\"payload\":\"{\\\"event\\\":\\\"push\\\",\\\"repo\\\":\\\"test\\\"}\",\"signature\":\"sha256=b27682bcc1b0a3ed84def2310570e0e2a127408b8b0d04ab5b3a6e4b794fb1e0\",\"algorithm\":\"hmac-sha256\"},{\"payload\":\"{\\\"event\\\":\\\"pull_request\\\",\\\"action\\\":\\\"opened\\\"}\",\"signature\":\"sha256=invalid_signature_here\",\"algorithm\":\"hmac-sha256\"},{\"payload\":\"{\\\"event\\\":\\\"issue\\\",\\\"number\\\":42}\",\"signature\":\"sha1=abc123\",\"algorithm\":\"hmac-sha1\"}]",
+      "secret.txt": "whsec_test_secret_key_2026"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "webhook_validator.py"},
+      {"type": "run", "cmd": "python webhook_validator.py", "exit": 0},
+      {"type": "json_valid", "path": "validation_results.json"},
+      {"type": "file_match", "path": "validation_results.json", "text": "valid"}
+    ],
+    "tags": ["python", "api", "webhook", "security"]
+  },
+  {
+    "id": "mb-372",
+    "cat": "api",
+    "diff": "medium",
+    "title": "JWT Token Inspector",
+    "src": "m/agents",
+    "prompt": "Write a Python script jwt_inspect.py that reads tokens.txt (one JWT per line) and decodes each token (header and payload only, without verifying the signature) using only base64 decoding. Write decoded.json — an array of objects with original_token (first 20 chars + '...'), header (decoded JSON), payload (decoded JSON), is_expired (boolean, check exp claim against current time), and issued_at (human-readable datetime from iat claim or null). Use only Python stdlib.",
+    "input": {
+      "tokens.txt": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJleHAiOjE1MTYyNDI2MjJ9.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c\neyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyXzQyIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzA0MDY3MjAwLCJleHAiOjk5OTk5OTk5OTl9.fake_signature"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "jwt_inspect.py"},
+      {"type": "run", "cmd": "python jwt_inspect.py", "exit": 0},
+      {"type": "json_valid", "path": "decoded.json"},
+      {"type": "file_match", "path": "decoded.json", "text": "is_expired"}
+    ],
+    "tags": ["python", "api", "jwt", "security"]
+  },
+  {
+    "id": "mb-373",
+    "cat": "api",
+    "diff": "medium",
+    "title": "API Version Transformer",
+    "src": "m/coding",
+    "prompt": "Write a Python script migrate_schema.py that reads v1_schema.json (an API response schema for version 1) and migration_rules.json (a list of transformation rules: rename_field, remove_field, add_field, change_type). Apply all rules and write v2_schema.json — the transformed schema. Also write migration_report.json documenting what changed. Use only Python stdlib.",
+    "input": {
+      "v1_schema.json": "{\"type\":\"object\",\"properties\":{\"user_name\":{\"type\":\"string\"},\"user_email\":{\"type\":\"string\"},\"age\":{\"type\":\"string\"},\"phone\":{\"type\":\"string\"},\"address\":{\"type\":\"object\",\"properties\":{\"street\":{\"type\":\"string\"},\"zip\":{\"type\":\"string\"}}}}}",
+      "migration_rules.json": "[{\"action\":\"rename_field\",\"old_name\":\"user_name\",\"new_name\":\"username\"},{\"action\":\"rename_field\",\"old_name\":\"user_email\",\"new_name\":\"email\"},{\"action\":\"change_type\",\"field\":\"age\",\"new_type\":\"integer\"},{\"action\":\"remove_field\",\"field\":\"phone\"},{\"action\":\"add_field\",\"field\":\"created_at\",\"type\":\"string\",\"format\":\"date-time\"},{\"action\":\"rename_field\",\"old_name\":\"address.zip\",\"new_name\":\"address.postal_code\"}]"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "migrate_schema.py"},
+      {"type": "run", "cmd": "python migrate_schema.py", "exit": 0},
+      {"type": "json_valid", "path": "v2_schema.json"},
+      {"type": "file_match", "path": "v2_schema.json", "text": "username"}
+    ],
+    "tags": ["python", "api", "migration"]
+  },
+  {
+    "id": "mb-374",
+    "cat": "api",
+    "diff": "medium",
+    "title": "Batch Request Processor",
+    "src": "m/agents",
+    "prompt": "Write a Python script batch_processor.py that reads batch_request.json (containing an array of individual API request objects, each with id, method, path, and optional body) and processes them using a simulated router defined in routes.json. Write batch_response.json — an array of response objects each with id, status, and body. Requests to undefined routes should return 404. Use only Python stdlib.",
+    "input": {
+      "routes.json": "{\"GET /users\":{\"status\":200,\"body\":{\"users\":[{\"id\":1,\"name\":\"Alice\"},{\"id\":2,\"name\":\"Bob\"}]}},\"POST /users\":{\"status\":201,\"body\":{\"id\":3,\"created\":true}},\"GET /health\":{\"status\":200,\"body\":{\"status\":\"ok\"}},\"DELETE /users/1\":{\"status\":204,\"body\":null}}",
+      "batch_request.json": "{\"requests\":[{\"id\":\"req-1\",\"method\":\"GET\",\"path\":\"/users\"},{\"id\":\"req-2\",\"method\":\"POST\",\"path\":\"/users\",\"body\":{\"name\":\"Charlie\"}},{\"id\":\"req-3\",\"method\":\"GET\",\"path\":\"/unknown\"},{\"id\":\"req-4\",\"method\":\"GET\",\"path\":\"/health\"},{\"id\":\"req-5\",\"method\":\"DELETE\",\"path\":\"/users/1\"}]}"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "batch_processor.py"},
+      {"type": "run", "cmd": "python batch_processor.py", "exit": 0},
+      {"type": "json_valid", "path": "batch_response.json"},
+      {"type": "file_match", "path": "batch_response.json", "text": "404"}
+    ],
+    "tags": ["python", "api", "batch"]
+  },
+  {
+    "id": "mb-375",
+    "cat": "api",
+    "diff": "medium",
+    "title": "Idempotency Key Tracker",
+    "src": "m/agents",
+    "prompt": "Write a Python script idempotency.py that reads requests.json (an array of API requests, each with idempotency_key, method, path, body, and timestamp). Simulate processing: the first request with a given key is processed normally, and subsequent requests with the same key return the cached response. Write results.json — an array with each entry containing the request's idempotency_key, was_cached (boolean), and response. Also write key_store.json mapping each key to its stored response and first_seen timestamp. Use only Python stdlib.",
+    "input": {
+      "requests.json": "[{\"idempotency_key\":\"key-abc-001\",\"method\":\"POST\",\"path\":\"/payments\",\"body\":{\"amount\":100,\"currency\":\"USD\"},\"timestamp\":\"2026-01-15T10:00:00Z\"},{\"idempotency_key\":\"key-abc-001\",\"method\":\"POST\",\"path\":\"/payments\",\"body\":{\"amount\":100,\"currency\":\"USD\"},\"timestamp\":\"2026-01-15T10:00:05Z\"},{\"idempotency_key\":\"key-def-002\",\"method\":\"POST\",\"path\":\"/payments\",\"body\":{\"amount\":250,\"currency\":\"EUR\"},\"timestamp\":\"2026-01-15T10:00:10Z\"},{\"idempotency_key\":\"key-abc-001\",\"method\":\"POST\",\"path\":\"/payments\",\"body\":{\"amount\":100,\"currency\":\"USD\"},\"timestamp\":\"2026-01-15T10:01:00Z\"},{\"idempotency_key\":\"key-ghi-003\",\"method\":\"POST\",\"path\":\"/transfers\",\"body\":{\"amount\":500,\"to\":\"user_42\"},\"timestamp\":\"2026-01-15T10:02:00Z\"}]"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "idempotency.py"},
+      {"type": "run", "cmd": "python idempotency.py", "exit": 0},
+      {"type": "json_valid", "path": "results.json"},
+      {"type": "file_match", "path": "results.json", "text": "was_cached"}
+    ],
+    "tags": ["python", "api", "idempotency"]
+  },
+  {
+    "id": "mb-376",
+    "cat": "api",
+    "diff": "medium",
+    "title": "OpenAPI to Postman Collection Converter",
+    "src": "m/builds",
+    "prompt": "Write a Python script openapi_to_postman.py that reads openapi.json (an OpenAPI 3.0 spec) and converts it to a Postman Collection v2.1 format. Write the output to postman_collection.json. The collection must include all endpoints as request items organized by path tags, with proper method, URL, headers, and example bodies. Use only Python stdlib.",
+    "input": {
+      "openapi.json": "{\"openapi\":\"3.0.0\",\"info\":{\"title\":\"Pet Store API\",\"version\":\"1.0.0\"},\"servers\":[{\"url\":\"https://api.petstore.example.com/v1\"}],\"paths\":{\"/pets\":{\"get\":{\"tags\":[\"pets\"],\"summary\":\"List all pets\",\"parameters\":[{\"name\":\"limit\",\"in\":\"query\",\"schema\":{\"type\":\"integer\"}}],\"responses\":{\"200\":{\"description\":\"A list of pets\"}}},\"post\":{\"tags\":[\"pets\"],\"summary\":\"Create a pet\",\"requestBody\":{\"content\":{\"application/json\":{\"schema\":{\"type\":\"object\",\"properties\":{\"name\":{\"type\":\"string\"},\"species\":{\"type\":\"string\"}}}}}},\"responses\":{\"201\":{\"description\":\"Pet created\"}}}},\"/pets/{petId}\":{\"get\":{\"tags\":[\"pets\"],\"summary\":\"Get a pet by ID\",\"parameters\":[{\"name\":\"petId\",\"in\":\"path\",\"required\":true,\"schema\":{\"type\":\"string\"}}],\"responses\":{\"200\":{\"description\":\"A pet\"}}}}}}"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "openapi_to_postman.py"},
+      {"type": "run", "cmd": "python openapi_to_postman.py", "exit": 0},
+      {"type": "json_valid", "path": "postman_collection.json"},
+      {"type": "file_match", "path": "postman_collection.json", "text": "petstore"}
+    ],
+    "tags": ["python", "api", "openapi", "postman"]
+  },
+  {
+    "id": "mb-377",
+    "cat": "api",
+    "diff": "medium",
+    "title": "API Changelog Generator",
+    "src": "m/coding",
+    "prompt": "Write a Python script changelog.py that reads v1_spec.json and v2_spec.json (two versions of an API spec) and generates a changelog. Detect added endpoints, removed endpoints, modified parameters, and changed response schemas. Write changelog.json (structured diff) and changelog.md (human-readable Markdown). Use only Python stdlib.",
+    "input": {
+      "v1_spec.json": "{\"endpoints\":[{\"method\":\"GET\",\"path\":\"/users\",\"params\":[\"limit\",\"offset\"],\"response\":{\"users\":\"array\"}},{\"method\":\"GET\",\"path\":\"/users/{id}\",\"params\":[],\"response\":{\"id\":\"int\",\"name\":\"string\",\"email\":\"string\"}},{\"method\":\"POST\",\"path\":\"/users\",\"params\":[],\"body\":{\"name\":\"string\",\"email\":\"string\"}},{\"method\":\"DELETE\",\"path\":\"/legacy/cleanup\",\"params\":[]}]}",
+      "v2_spec.json": "{\"endpoints\":[{\"method\":\"GET\",\"path\":\"/users\",\"params\":[\"limit\",\"offset\",\"sort\",\"filter\"],\"response\":{\"users\":\"array\",\"total\":\"int\"}},{\"method\":\"GET\",\"path\":\"/users/{id}\",\"params\":[\"fields\"],\"response\":{\"id\":\"int\",\"name\":\"string\",\"email\":\"string\",\"created_at\":\"datetime\"}},{\"method\":\"POST\",\"path\":\"/users\",\"params\":[],\"body\":{\"name\":\"string\",\"email\":\"string\",\"role\":\"string\"}},{\"method\":\"PATCH\",\"path\":\"/users/{id}\",\"params\":[],\"body\":{\"name\":\"string\",\"email\":\"string\"}}]}"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "changelog.py"},
+      {"type": "run", "cmd": "python changelog.py", "exit": 0},
+      {"type": "json_valid", "path": "changelog.json"},
+      {"type": "file_match", "path": "changelog.md", "text": "added"}
+    ],
+    "tags": ["python", "api", "changelog"]
+  },
+  {
+    "id": "mb-378",
+    "cat": "api",
+    "diff": "medium",
+    "title": "API Request Builder with Auth",
+    "src": "m/coding",
+    "prompt": "Write a Python script request_builder.py that reads requests.json (array of API call descriptions with method, path, params, body, and auth_type) and auth_config.json (credentials for different auth types: api_key, bearer, basic, hmac). For each request, construct the complete HTTP request representation including all headers, query strings, and signed/encoded auth. Write built_requests.json — an array of fully constructed request objects. Use only Python stdlib.",
+    "input": {
+      "requests.json": "[{\"method\":\"GET\",\"path\":\"/api/users\",\"params\":{\"limit\":10},\"body\":null,\"auth_type\":\"bearer\"},{\"method\":\"POST\",\"path\":\"/api/data\",\"params\":{},\"body\":{\"key\":\"value\"},\"auth_type\":\"api_key\"},{\"method\":\"GET\",\"path\":\"/api/private\",\"params\":{},\"body\":null,\"auth_type\":\"basic\"},{\"method\":\"POST\",\"path\":\"/api/webhook\",\"params\":{},\"body\":{\"event\":\"test\"},\"auth_type\":\"hmac\"}]",
+      "auth_config.json": "{\"bearer\":{\"token\":\"eyJhbGciOiJIUzI1NiJ9.test_token\"},\"api_key\":{\"header\":\"X-API-Key\",\"value\":\"ak_live_abc123def456\"},\"basic\":{\"username\":\"admin\",\"password\":\"secret123\"},\"hmac\":{\"secret\":\"hmac_secret_key\",\"algorithm\":\"sha256\",\"header\":\"X-Signature\"}}"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "request_builder.py"},
+      {"type": "run", "cmd": "python request_builder.py", "exit": 0},
+      {"type": "json_valid", "path": "built_requests.json"},
+      {"type": "file_match", "path": "built_requests.json", "text": "Authorization"}
+    ],
+    "tags": ["python", "api", "auth"]
+  },
+  {
+    "id": "mb-379",
+    "cat": "api",
+    "diff": "medium",
+    "title": "OpenAPI Schema Validator",
+    "src": "m/coding",
+    "prompt": "Write a Python script validate_openapi.py that reads openapi.json and validates it for structural correctness: required top-level fields (openapi, info, paths), valid HTTP methods, valid status codes, proper parameter definitions, and $ref consistency. Write validation_report.json with fields: valid (boolean), errors (array of error strings with path location), warnings (array), and stats (object with endpoint_count, schema_count, parameter_count). Use only Python stdlib.",
+    "input": {
+      "openapi.json": "{\"openapi\":\"3.0.0\",\"info\":{\"title\":\"Test API\"},\"paths\":{\"/users\":{\"get\":{\"summary\":\"List users\",\"parameters\":[{\"name\":\"limit\",\"in\":\"query\",\"schema\":{\"type\":\"integer\"}}],\"responses\":{\"200\":{\"description\":\"OK\"}}},\"post\":{\"summary\":\"Create user\",\"requestBody\":{\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/User\"}}}},\"responses\":{\"201\":{\"description\":\"Created\"},\"abc\":{\"description\":\"Invalid code\"}}}},\"/users/{id}\":{\"get\":{\"parameters\":[{\"name\":\"id\",\"in\":\"path\",\"required\":true}],\"responses\":{\"200\":{\"description\":\"OK\"}}},\"INVALID\":{\"summary\":\"Bad method\"}}},\"components\":{\"schemas\":{\"User\":{\"type\":\"object\",\"properties\":{\"name\":{\"type\":\"string\"}}}}}}"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "validate_openapi.py"},
+      {"type": "run", "cmd": "python validate_openapi.py", "exit": 0},
+      {"type": "json_valid", "path": "validation_report.json"},
+      {"type": "file_match", "path": "validation_report.json", "text": "errors"}
+    ],
+    "tags": ["python", "api", "openapi", "validation"]
+  },
+  {
+    "id": "mb-380",
+    "cat": "api",
+    "diff": "medium",
+    "title": "Sliding Window Rate Limiter with Analytics",
+    "src": "m/agents",
+    "prompt": "Write a Python script sliding_window.py that implements a sliding window rate limiter. Read config.json (window_size_seconds, max_requests) and events.json (array of objects with client_id and timestamp). For each event determine if it is allowed or rejected. Write decisions.json (array with client_id, timestamp, allowed, window_request_count) and analytics.json (per-client stats: total_requests, allowed_count, rejected_count, peak_rate_per_second). Use only Python stdlib.",
+    "input": {
+      "config.json": "{\"window_size_seconds\":10,\"max_requests\":5}",
+      "events.json": "[{\"client_id\":\"A\",\"timestamp\":1.0},{\"client_id\":\"A\",\"timestamp\":2.0},{\"client_id\":\"A\",\"timestamp\":3.0},{\"client_id\":\"B\",\"timestamp\":3.5},{\"client_id\":\"A\",\"timestamp\":4.0},{\"client_id\":\"A\",\"timestamp\":5.0},{\"client_id\":\"A\",\"timestamp\":6.0},{\"client_id\":\"B\",\"timestamp\":7.0},{\"client_id\":\"A\",\"timestamp\":12.0},{\"client_id\":\"A\",\"timestamp\":13.0},{\"client_id\":\"B\",\"timestamp\":14.0},{\"client_id\":\"B\",\"timestamp\":14.5},{\"client_id\":\"B\",\"timestamp\":15.0},{\"client_id\":\"B\",\"timestamp\":15.5},{\"client_id\":\"B\",\"timestamp\":16.0}]"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "sliding_window.py"},
+      {"type": "run", "cmd": "python sliding_window.py", "exit": 0},
+      {"type": "json_valid", "path": "decisions.json"},
+      {"type": "json_valid", "path": "analytics.json"}
+    ],
+    "tags": ["python", "api", "rate-limiting"]
+  },
+  {
+    "id": "mb-381",
+    "cat": "api",
+    "diff": "medium",
+    "title": "GraphQL Schema to REST Mapping",
+    "src": "m/builds",
+    "prompt": "Write a Python script graphql_to_rest.py that reads graphql_schema.txt (a simplified GraphQL schema definition) and generates a REST API mapping. For each GraphQL type, create CRUD endpoints. Write rest_mapping.json (array of endpoint objects with method, path, description, request_schema, response_schema) and rest_openapi.json (a valid OpenAPI 3.0 spec). Use only Python stdlib.",
+    "input": {
+      "graphql_schema.txt": "type User {\n  id: ID!\n  name: String!\n  email: String!\n  posts: [Post!]!\n}\n\ntype Post {\n  id: ID!\n  title: String!\n  content: String\n  author: User!\n  comments: [Comment!]!\n}\n\ntype Comment {\n  id: ID!\n  text: String!\n  author: User!\n}\n\ntype Query {\n  users: [User!]!\n  user(id: ID!): User\n  posts: [Post!]!\n  post(id: ID!): Post\n}"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "graphql_to_rest.py"},
+      {"type": "run", "cmd": "python graphql_to_rest.py", "exit": 0},
+      {"type": "json_valid", "path": "rest_mapping.json"},
+      {"type": "json_valid", "path": "rest_openapi.json"}
+    ],
+    "tags": ["python", "api", "graphql", "rest"]
+  },
+  {
+    "id": "mb-382",
+    "cat": "api",
+    "diff": "medium",
+    "title": "API Dependency Graph Builder",
+    "src": "m/coding",
+    "prompt": "Write a Python script dep_graph.py that reads endpoints.json (array of endpoint objects, each with name, method, path, and depends_on — a list of endpoint names that must be called first). Build a dependency graph, detect circular dependencies, and produce a valid execution order. Write graph.json (adjacency list representation), execution_order.json (topologically sorted array), and report.txt (human-readable summary including any cycles found). Use only Python stdlib.",
+    "input": {
+      "endpoints.json": "[{\"name\":\"auth_login\",\"method\":\"POST\",\"path\":\"/auth/login\",\"depends_on\":[]},{\"name\":\"get_profile\",\"method\":\"GET\",\"path\":\"/users/me\",\"depends_on\":[\"auth_login\"]},{\"name\":\"list_projects\",\"method\":\"GET\",\"path\":\"/projects\",\"depends_on\":[\"auth_login\"]},{\"name\":\"create_task\",\"method\":\"POST\",\"path\":\"/tasks\",\"depends_on\":[\"auth_login\",\"list_projects\"]},{\"name\":\"upload_attachment\",\"method\":\"POST\",\"path\":\"/attachments\",\"depends_on\":[\"create_task\"]},{\"name\":\"get_dashboard\",\"method\":\"GET\",\"path\":\"/dashboard\",\"depends_on\":[\"get_profile\",\"list_projects\"]},{\"name\":\"send_notification\",\"method\":\"POST\",\"path\":\"/notify\",\"depends_on\":[\"create_task\",\"get_profile\"]}]"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "dep_graph.py"},
+      {"type": "run", "cmd": "python dep_graph.py", "exit": 0},
+      {"type": "json_valid", "path": "graph.json"},
+      {"type": "json_valid", "path": "execution_order.json"}
+    ],
+    "tags": ["python", "api", "graph"]
+  },
+  {
+    "id": "mb-383",
+    "cat": "api",
+    "diff": "medium",
+    "title": "API Test Case Generator",
+    "src": "m/builds",
+    "prompt": "Write a Python script gen_tests.py that reads api_spec.json (endpoint definitions with method, path, params, request schema, and response schema) and automatically generates test cases. For each endpoint produce: a happy-path test, missing required field tests, wrong type tests, and boundary value tests. Write test_cases.json (structured test array) and test_runner.py (an executable script that validates the test case structure). Use only Python stdlib.",
+    "input": {
+      "api_spec.json": "{\"endpoints\":[{\"method\":\"POST\",\"path\":\"/users\",\"request_schema\":{\"type\":\"object\",\"required\":[\"name\",\"email\",\"age\"],\"properties\":{\"name\":{\"type\":\"string\",\"minLength\":1,\"maxLength\":100},\"email\":{\"type\":\"string\"},\"age\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":150}}},\"response_schema\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"},\"name\":{\"type\":\"string\"}}}},{\"method\":\"GET\",\"path\":\"/users\",\"request_schema\":null,\"params\":[{\"name\":\"page\",\"type\":\"integer\",\"required\":false,\"default\":1},{\"name\":\"per_page\",\"type\":\"integer\",\"required\":false,\"default\":20,\"maximum\":100}],\"response_schema\":{\"type\":\"array\"}}]}"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "gen_tests.py"},
+      {"type": "run", "cmd": "python gen_tests.py", "exit": 0},
+      {"type": "json_valid", "path": "test_cases.json"},
+      {"type": "run", "cmd": "python test_runner.py", "exit": 0}
+    ],
+    "tags": ["python", "api", "testing"]
+  },
+  {
+    "id": "mb-384",
+    "cat": "api",
+    "diff": "hard",
+    "title": "Full CRUD API Spec Suite Generator",
+    "src": "m/builds",
+    "prompt": "Write a Python script crud_suite.py that reads models.json (a list of data models with fields, types, and relations) and generates a complete API specification suite. Produce: openapi_spec.json (valid OpenAPI 3.0 with full CRUD for each model including relations), client.py (a generated Python client class with all methods), mock_server.py (a stdlib http.server-based mock that serves all endpoints with in-memory data), and test_suite.py (an executable test that imports the mock and client, starts the mock, runs tests against it, and validates responses). Use only Python stdlib.",
+    "input": {
+      "models.json": "{\"models\":[{\"name\":\"Author\",\"fields\":[{\"name\":\"id\",\"type\":\"integer\",\"primary_key\":true},{\"name\":\"name\",\"type\":\"string\",\"required\":true},{\"name\":\"bio\",\"type\":\"string\"}]},{\"name\":\"Book\",\"fields\":[{\"name\":\"id\",\"type\":\"integer\",\"primary_key\":true},{\"name\":\"title\",\"type\":\"string\",\"required\":true},{\"name\":\"isbn\",\"type\":\"string\"},{\"name\":\"author_id\",\"type\":\"integer\",\"foreign_key\":\"Author.id\"}]}]}"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "crud_suite.py"},
+      {"type": "run", "cmd": "python crud_suite.py", "exit": 0},
+      {"type": "json_valid", "path": "openapi_spec.json"},
+      {"type": "file_match", "path": "openapi_spec.json", "text": "/authors"}
+    ],
+    "tags": ["python", "api", "codegen", "crud"]
+  },
+  {
+    "id": "mb-385",
+    "cat": "api",
+    "diff": "hard",
+    "title": "API Gateway Configuration Compiler",
+    "src": "m/agents",
+    "prompt": "Write a Python script gateway_compiler.py that reads gateway_config.json (a high-level API gateway configuration with routes, rate limits, auth requirements, CORS policies, request/response transformations, and circuit breaker settings per route). Compile it into three outputs: compiled_routes.json (flattened route table with all middleware resolved), middleware_chain.json (ordered middleware pipeline for each route), and validation_report.json (detecting conflicts like overlapping routes, inconsistent auth, or impossible rate limit combinations). Use only Python stdlib.",
+    "input": {
+      "gateway_config.json": "{\"global\":{\"rate_limit\":{\"requests_per_minute\":100},\"cors\":{\"origins\":[\"*\"],\"methods\":[\"GET\",\"POST\"]},\"auth\":\"api_key\"},\"routes\":[{\"path\":\"/public/health\",\"method\":\"GET\",\"auth\":\"none\",\"rate_limit\":{\"requests_per_minute\":1000},\"cache_ttl\":30},{\"path\":\"/api/users\",\"method\":\"GET\",\"auth\":\"bearer\",\"rate_limit\":{\"requests_per_minute\":50},\"transforms\":{\"response\":{\"remove_fields\":[\"password_hash\",\"internal_id\"]}}},{\"path\":\"/api/users\",\"method\":\"POST\",\"auth\":\"bearer\",\"rate_limit\":{\"requests_per_minute\":10},\"transforms\":{\"request\":{\"add_fields\":{\"created_by\":\"gateway\"}}}},{\"path\":\"/api/admin/*\",\"method\":\"*\",\"auth\":\"bearer+role:admin\",\"rate_limit\":{\"requests_per_minute\":30},\"circuit_breaker\":{\"threshold\":5,\"timeout\":60}},{\"path\":\"/api/users\",\"method\":\"GET\",\"auth\":\"api_key\",\"rate_limit\":{\"requests_per_minute\":200},\"note\":\"conflicting duplicate\"},{\"path\":\"/webhooks/stripe\",\"method\":\"POST\",\"auth\":\"webhook_signature\",\"rate_limit\":null,\"transforms\":{\"request\":{\"verify_signature\":\"stripe_secret\"}}}]}"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "gateway_compiler.py"},
+      {"type": "run", "cmd": "python gateway_compiler.py", "exit": 0},
+      {"type": "json_valid", "path": "compiled_routes.json"},
+      {"type": "file_match", "path": "validation_report.json", "text": "conflict"}
+    ],
+    "tags": ["python", "api", "gateway", "configuration"]
+  },
+  {
+    "id": "mb-386",
+    "cat": "api",
+    "diff": "hard",
+    "title": "API Load Test Scenario Generator and Analyzer",
+    "src": "m/agents",
+    "prompt": "Write a Python script load_test.py that reads scenario_config.json (defining API endpoints with expected latencies, error rates, concurrency levels, and ramp-up patterns) and simulates a load test using random sampling. Generate: test_plan.json (detailed step-by-step execution plan with timing), simulated_results.json (per-request results with timestamps, latencies, status codes sampled from configured distributions), analysis_report.json (percentile latencies p50/p95/p99, error rates, throughput over time windows, Apdex score), and analysis_report.md (formatted Markdown report with ASCII charts). Use only Python stdlib. Use random seed 42 for reproducibility.",
+    "input": {
+      "scenario_config.json": "{\"duration_seconds\":60,\"ramp_up_seconds\":10,\"max_concurrent\":50,\"endpoints\":[{\"name\":\"list_users\",\"method\":\"GET\",\"path\":\"/users\",\"weight\":40,\"latency_ms\":{\"mean\":50,\"stddev\":20},\"error_rate\":0.01},{\"name\":\"get_user\",\"method\":\"GET\",\"path\":\"/users/{id}\",\"weight\":30,\"latency_ms\":{\"mean\":30,\"stddev\":10},\"error_rate\":0.02},{\"name\":\"create_user\",\"method\":\"POST\",\"path\":\"/users\",\"weight\":15,\"latency_ms\":{\"mean\":100,\"stddev\":40},\"error_rate\":0.05},{\"name\":\"update_user\",\"method\":\"PUT\",\"path\":\"/users/{id}\",\"weight\":10,\"latency_ms\":{\"mean\":80,\"stddev\":30},\"error_rate\":0.03},{\"name\":\"delete_user\",\"method\":\"DELETE\",\"path\":\"/users/{id}\",\"weight\":5,\"latency_ms\":{\"mean\":40,\"stddev\":15},\"error_rate\":0.01}],\"apdex_threshold_ms\":100}"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "load_test.py"},
+      {"type": "run", "cmd": "python load_test.py", "exit": 0},
+      {"type": "json_valid", "path": "analysis_report.json"},
+      {"type": "file_match", "path": "analysis_report.json", "text": "p99"}
+    ],
+    "tags": ["python", "api", "load-testing", "analytics"]
+  },
+  {
+    "id": "mb-387",
+    "cat": "api",
+    "diff": "hard",
+    "title": "Multi-Version API Compatibility Checker",
+    "src": "m/coding",
+    "prompt": "Write a Python script compat_check.py that reads versions/ directory containing v1.json, v2.json, and v3.json (three OpenAPI-like API specs representing successive API versions). Analyze backward compatibility between consecutive versions: detect breaking changes (removed endpoints, removed required fields, narrowed types), non-breaking additions, and deprecations. Write compatibility_matrix.json (pairwise compatibility verdicts), breaking_changes.json (detailed list of all breaks with severity: critical/major/minor), migration_guide.md (step-by-step guide for migrating from v1 to v3), and summary.json (overall compatibility score per version pair). Use only Python stdlib.",
+    "input": {
+      "versions/v1.json": "{\"version\":\"1.0\",\"endpoints\":[{\"method\":\"GET\",\"path\":\"/users\",\"params\":[{\"name\":\"limit\",\"type\":\"integer\",\"required\":false}],\"response\":{\"type\":\"object\",\"properties\":{\"users\":{\"type\":\"array\"},\"count\":{\"type\":\"integer\"}}}},{\"method\":\"GET\",\"path\":\"/users/{id}\",\"response\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"},\"name\":{\"type\":\"string\"},\"email\":{\"type\":\"string\"},\"phone\":{\"type\":\"string\"}}}},{\"method\":\"POST\",\"path\":\"/users\",\"body\":{\"required\":[\"name\",\"email\"],\"properties\":{\"name\":{\"type\":\"string\"},\"email\":{\"type\":\"string\"}}}},{\"method\":\"DELETE\",\"path\":\"/users/{id}\"}]}",
+      "versions/v2.json": "{\"version\":\"2.0\",\"endpoints\":[{\"method\":\"GET\",\"path\":\"/users\",\"params\":[{\"name\":\"limit\",\"type\":\"integer\",\"required\":false},{\"name\":\"offset\",\"type\":\"integer\",\"required\":false}],\"response\":{\"type\":\"object\",\"properties\":{\"users\":{\"type\":\"array\"},\"count\":{\"type\":\"integer\"},\"page_info\":{\"type\":\"object\"}}}},{\"method\":\"GET\",\"path\":\"/users/{id}\",\"response\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"},\"name\":{\"type\":\"string\"},\"email\":{\"type\":\"string\"},\"created_at\":{\"type\":\"string\"}}}},{\"method\":\"POST\",\"path\":\"/users\",\"body\":{\"required\":[\"name\",\"email\",\"role\"],\"properties\":{\"name\":{\"type\":\"string\"},\"email\":{\"type\":\"string\"},\"role\":{\"type\":\"string\"}}}},{\"method\":\"PATCH\",\"path\":\"/users/{id}\",\"body\":{\"properties\":{\"name\":{\"type\":\"string\"},\"email\":{\"type\":\"string\"}}}}]}",
+      "versions/v3.json": "{\"version\":\"3.0\",\"endpoints\":[{\"method\":\"GET\",\"path\":\"/users\",\"params\":[{\"name\":\"limit\",\"type\":\"integer\",\"required\":true},{\"name\":\"cursor\",\"type\":\"string\",\"required\":false}],\"response\":{\"type\":\"object\",\"properties\":{\"data\":{\"type\":\"array\"},\"next_cursor\":{\"type\":\"string\"}}}},{\"method\":\"GET\",\"path\":\"/users/{id}\",\"response\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\"},\"name\":{\"type\":\"string\"},\"email\":{\"type\":\"string\"},\"created_at\":{\"type\":\"string\"},\"updated_at\":{\"type\":\"string\"}}}},{\"method\":\"POST\",\"path\":\"/users\",\"body\":{\"required\":[\"name\",\"email\"],\"properties\":{\"name\":{\"type\":\"string\"},\"email\":{\"type\":\"string\"},\"metadata\":{\"type\":\"object\"}}}},{\"method\":\"PATCH\",\"path\":\"/users/{id}\",\"body\":{\"properties\":{\"name\":{\"type\":\"string\"},\"email\":{\"type\":\"string\"},\"metadata\":{\"type\":\"object\"}}}}]}"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "compat_check.py"},
+      {"type": "run", "cmd": "python compat_check.py", "exit": 0},
+      {"type": "json_valid", "path": "compatibility_matrix.json"},
+      {"type": "file_match", "path": "breaking_changes.json", "text": "breaking"}
+    ],
+    "tags": ["python", "api", "compatibility", "versioning"]
+  },
+  {
+    "id": "mb-388",
+    "cat": "api",
+    "diff": "hard",
+    "title": "API Workflow Orchestrator",
+    "src": "m/agents",
+    "prompt": "Write a Python script orchestrator.py that reads workflow.json (a DAG of API calls with dependencies, conditional branching, data passing between steps, retry policies, and timeout settings). Simulate executing the workflow: resolve dependencies, pass outputs as inputs to downstream steps, handle conditional branches (evaluate simple conditions on step outputs), apply retries on simulated failures. Write execution_log.json (ordered array of step executions with timing, input, output, and status), final_state.json (accumulated state after workflow), and workflow_diagram.txt (ASCII art representation of the DAG). Use only Python stdlib. Use random seed 42.",
+    "input": {
+      "workflow.json": "{\"name\":\"user_onboarding\",\"steps\":[{\"id\":\"create_user\",\"method\":\"POST\",\"path\":\"/users\",\"input\":{\"name\":\"Test User\",\"email\":\"test@example.com\"},\"output_key\":\"user\",\"mock_response\":{\"id\":42,\"name\":\"Test User\",\"email\":\"test@example.com\"},\"retry\":{\"max_attempts\":3,\"backoff_ms\":1000},\"fail_rate\":0.3},{\"id\":\"create_profile\",\"method\":\"POST\",\"path\":\"/profiles\",\"depends_on\":[\"create_user\"],\"input_template\":{\"user_id\":\"${create_user.output.id}\",\"bio\":\"New user\"},\"output_key\":\"profile\",\"mock_response\":{\"profile_id\":100,\"user_id\":42},\"retry\":{\"max_attempts\":2,\"backoff_ms\":500},\"fail_rate\":0.1},{\"id\":\"check_premium\",\"method\":\"GET\",\"path\":\"/plans/check\",\"depends_on\":[\"create_user\"],\"input_template\":{\"email\":\"${create_user.output.email}\"},\"output_key\":\"plan_check\",\"mock_response\":{\"is_premium\":false},\"fail_rate\":0},{\"id\":\"assign_premium\",\"method\":\"POST\",\"path\":\"/subscriptions\",\"depends_on\":[\"check_premium\"],\"condition\":\"${check_premium.output.is_premium} == true\",\"input_template\":{\"user_id\":\"${create_user.output.id}\"},\"output_key\":\"subscription\",\"mock_response\":{\"sub_id\":\"sub_001\"},\"fail_rate\":0},{\"id\":\"send_welcome\",\"method\":\"POST\",\"path\":\"/notifications\",\"depends_on\":[\"create_profile\"],\"input_template\":{\"user_id\":\"${create_user.output.id}\",\"type\":\"welcome\"},\"output_key\":\"notification\",\"mock_response\":{\"sent\":true,\"message_id\":\"msg_001\"},\"fail_rate\":0.05}]}"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "orchestrator.py"},
+      {"type": "run", "cmd": "python orchestrator.py", "exit": 0},
+      {"type": "json_valid", "path": "execution_log.json"},
+      {"type": "json_valid", "path": "final_state.json"}
+    ],
+    "tags": ["python", "api", "workflow", "orchestration"]
+  },
+  {
+    "id": "mb-389",
+    "cat": "api",
+    "diff": "hard",
+    "title": "API Security Audit Scanner",
+    "src": "m/agents",
+    "prompt": "Write a Python script security_audit.py that reads api_spec.json (an OpenAPI-like spec) and security_rules.json (a set of security audit rules). Analyze the API spec for security issues: missing authentication on sensitive endpoints, overly permissive CORS, missing rate limits, PII exposure in responses, missing input validation, insecure defaults, verbose error responses. Write audit_report.json (structured findings with severity: critical/high/medium/low, affected endpoint, rule_id, description, and remediation), audit_summary.json (aggregate scores and pass/fail per category), and audit_report.md (formatted Markdown report with severity badges). Use only Python stdlib.",
+    "input": {
+      "api_spec.json": "{\"base_url\":\"https://api.example.com\",\"auth_default\":\"none\",\"cors\":{\"origins\":[\"*\"],\"credentials\":true},\"endpoints\":[{\"method\":\"GET\",\"path\":\"/users\",\"auth\":\"none\",\"response_fields\":[\"id\",\"name\",\"email\",\"ssn\",\"password_hash\"]},{\"method\":\"POST\",\"path\":\"/users\",\"auth\":\"api_key\",\"request_fields\":{\"name\":{\"type\":\"string\"},\"email\":{\"type\":\"string\"},\"password\":{\"type\":\"string\"}},\"validation\":{}},{\"method\":\"GET\",\"path\":\"/admin/users\",\"auth\":\"none\",\"response_fields\":[\"id\",\"name\",\"email\",\"role\",\"internal_notes\"]},{\"method\":\"DELETE\",\"path\":\"/users/{id}\",\"auth\":\"api_key\",\"rate_limit\":null},{\"method\":\"POST\",\"path\":\"/auth/login\",\"auth\":\"none\",\"request_fields\":{\"username\":{\"type\":\"string\"},\"password\":{\"type\":\"string\"}},\"error_response\":{\"include_stack_trace\":true,\"include_sql_query\":true}},{\"method\":\"GET\",\"path\":\"/health\",\"auth\":\"none\",\"response_fields\":[\"status\",\"db_host\",\"redis_host\",\"version\"]}]}",
+      "security_rules.json": "{\"rules\":[{\"id\":\"AUTH-001\",\"name\":\"Missing authentication\",\"severity\":\"critical\",\"check\":\"endpoints without auth on non-public paths\"},{\"id\":\"AUTH-002\",\"name\":\"Admin endpoint without strong auth\",\"severity\":\"critical\",\"check\":\"admin paths without bearer/oauth auth\"},{\"id\":\"PII-001\",\"name\":\"PII exposure\",\"severity\":\"high\",\"check\":\"response contains ssn, password_hash, or credit_card\"},{\"id\":\"PII-002\",\"name\":\"Internal data leak\",\"severity\":\"medium\",\"check\":\"response contains internal_notes, db_host, or stack traces\"},{\"id\":\"CORS-001\",\"name\":\"Overly permissive CORS\",\"severity\":\"high\",\"check\":\"wildcard origin with credentials\"},{\"id\":\"RATE-001\",\"name\":\"Missing rate limit on destructive ops\",\"severity\":\"medium\",\"check\":\"DELETE/PUT/POST without rate limit\"},{\"id\":\"INPUT-001\",\"name\":\"Missing input validation\",\"severity\":\"medium\",\"check\":\"POST/PUT endpoints without validation rules\"},{\"id\":\"ERR-001\",\"name\":\"Verbose error responses\",\"severity\":\"high\",\"check\":\"error responses including stack traces or SQL\"}]}"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "security_audit.py"},
+      {"type": "run", "cmd": "python security_audit.py", "exit": 0},
+      {"type": "json_valid", "path": "audit_report.json"},
+      {"type": "file_match", "path": "audit_report.json", "text": "critical"}
+    ],
+    "tags": ["python", "api", "security", "audit"]
+  },
+  {
+    "id": "mb-390",
+    "cat": "api",
+    "diff": "hard",
+    "title": "API SDK Generator with Type System",
+    "src": "m/builds",
+    "prompt": "Write a Python script sdk_generator.py that reads api_definition.json (a comprehensive API definition with models, endpoints, enums, and error types) and generates a complete Python SDK. The SDK must include: models.py (dataclass-style model classes with from_dict/to_dict methods and validation), client.py (client class with typed methods for every endpoint, URL construction, header management, and error handling), exceptions.py (custom exception hierarchy based on error types), and enums.py (enum classes). Also generate sdk_test.py that imports all generated modules and validates they are syntactically correct and classes are properly defined. Write all files. Use only Python stdlib.",
+    "input": {
+      "api_definition.json": "{\"name\":\"TaskManager\",\"version\":\"2.0.0\",\"base_url\":\"https://api.taskmanager.io/v2\",\"auth\":{\"type\":\"bearer\",\"header\":\"Authorization\"},\"enums\":[{\"name\":\"TaskStatus\",\"values\":[\"pending\",\"in_progress\",\"completed\",\"cancelled\"]},{\"name\":\"Priority\",\"values\":[\"low\",\"medium\",\"high\",\"critical\"]}],\"models\":[{\"name\":\"Task\",\"fields\":[{\"name\":\"id\",\"type\":\"string\",\"required\":true},{\"name\":\"title\",\"type\":\"string\",\"required\":true,\"max_length\":200},{\"name\":\"description\",\"type\":\"string\",\"required\":false},{\"name\":\"status\",\"type\":\"TaskStatus\",\"required\":true},{\"name\":\"priority\",\"type\":\"Priority\",\"required\":true},{\"name\":\"assignee_id\",\"type\":\"string\",\"required\":false},{\"name\":\"created_at\",\"type\":\"datetime\",\"required\":true},{\"name\":\"tags\",\"type\":\"list[string]\",\"required\":false}]},{\"name\":\"Project\",\"fields\":[{\"name\":\"id\",\"type\":\"string\",\"required\":true},{\"name\":\"name\",\"type\":\"string\",\"required\":true},{\"name\":\"tasks\",\"type\":\"list[Task]\",\"required\":false}]},{\"name\":\"User\",\"fields\":[{\"name\":\"id\",\"type\":\"string\",\"required\":true},{\"name\":\"username\",\"type\":\"string\",\"required\":true},{\"name\":\"email\",\"type\":\"string\",\"required\":true}]}],\"errors\":[{\"name\":\"NotFoundError\",\"status\":404,\"message\":\"Resource not found\"},{\"name\":\"ValidationError\",\"status\":422,\"message\":\"Validation failed\"},{\"name\":\"AuthError\",\"status\":401,\"message\":\"Authentication required\"},{\"name\":\"RateLimitError\",\"status\":429,\"message\":\"Rate limit exceeded\"}],\"endpoints\":[{\"name\":\"list_tasks\",\"method\":\"GET\",\"path\":\"/tasks\",\"params\":[{\"name\":\"status\",\"type\":\"TaskStatus\",\"required\":false},{\"name\":\"limit\",\"type\":\"integer\",\"required\":false,\"default\":20}],\"response\":\"list[Task]\"},{\"name\":\"create_task\",\"method\":\"POST\",\"path\":\"/tasks\",\"body\":\"Task\",\"response\":\"Task\"},{\"name\":\"get_task\",\"method\":\"GET\",\"path\":\"/tasks/{task_id}\",\"response\":\"Task\"},{\"name\":\"update_task\",\"method\":\"PATCH\",\"path\":\"/tasks/{task_id}\",\"body\":\"Task\",\"response\":\"Task\"},{\"name\":\"delete_task\",\"method\":\"DELETE\",\"path\":\"/tasks/{task_id}\",\"response\":null},{\"name\":\"list_projects\",\"method\":\"GET\",\"path\":\"/projects\",\"response\":\"list[Project]\"},{\"name\":\"get_project\",\"method\":\"GET\",\"path\":\"/projects/{project_id}\",\"response\":\"Project\"}]}"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "sdk_generator.py"},
+      {"type": "run", "cmd": "python sdk_generator.py", "exit": 0},
+      {"type": "file_exists", "path": "models.py"},
+      {"type": "run", "cmd": "python sdk_test.py", "exit": 0}
+    ],
+    "tags": ["python", "api", "sdk", "codegen"]
+  }
+]

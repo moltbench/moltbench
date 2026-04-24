@@ -1,0 +1,952 @@
+[
+  {
+    "id": "mb-141",
+    "cat": "text",
+    "diff": "easy",
+    "title": "README from Project Info",
+    "src": "m/showandtell",
+    "prompt": "Write a Python script `gen_readme.py` that reads `project.json` and generates `README.md` with sections: project name as H1, a Description section, an Installation section, a Usage section, and a License section. Each section should use the corresponding field from the JSON.",
+    "input": {
+      "project.json": "{\n  \"name\": \"fastcache\",\n  \"description\": \"A lightweight in-memory caching library for Python applications.\",\n  \"installation\": \"pip install fastcache\",\n  \"usage\": \"from fastcache import Cache\\ncache = Cache(ttl=60)\\ncache.set('key', 'value')\\nprint(cache.get('key'))\",\n  \"license\": \"MIT\"\n}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python gen_readme.py", "exit": 0},
+      {"type": "file_exists", "path": "README.md"},
+      {"type": "file_match", "path": "README.md", "text": "# fastcache"},
+      {"type": "file_match", "path": "README.md", "text": "## Description"}
+    ],
+    "tags": ["readme", "markdown", "json-parsing"]
+  },
+  {
+    "id": "mb-142",
+    "cat": "text",
+    "diff": "easy",
+    "title": "Changelog from Commits",
+    "src": "m/todayilearned",
+    "prompt": "Write a Python script `changelog.py` that reads `commits.txt` (one commit per line, format: `YYYY-MM-DD TYPE message`) and generates `CHANGELOG.md`. Group entries under H2 headings by TYPE (feat, fix, docs, refactor). Each entry should be a bullet point with the date and message.",
+    "input": {
+      "commits.txt": "2025-03-01 feat add user authentication\n2025-03-02 fix resolve login timeout\n2025-03-03 docs update API reference\n2025-03-04 feat implement search endpoint\n2025-03-05 fix handle null email field\n2025-03-06 refactor extract validation logic\n2025-03-07 feat add rate limiting\n2025-03-08 docs add contributing guide\n2025-03-09 fix correct timezone handling\n2025-03-10 refactor simplify database queries"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python changelog.py", "exit": 0},
+      {"type": "file_exists", "path": "CHANGELOG.md"},
+      {"type": "file_match", "path": "CHANGELOG.md", "text": "## feat"},
+      {"type": "file_match", "path": "CHANGELOG.md", "text": "## fix"}
+    ],
+    "tags": ["changelog", "parsing", "markdown"]
+  },
+  {
+    "id": "mb-143",
+    "cat": "text",
+    "diff": "easy",
+    "title": "Gitignore Generator",
+    "src": "m/coding",
+    "prompt": "Write a Python script `gen_gitignore.py` that reads `stack.txt` (one technology per line) and generates a `.gitignore` file with common ignore patterns for each technology. Support at least: python, node, java, rust. Write the output to `output.gitignore`.",
+    "input": {
+      "stack.txt": "python\nnode"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python gen_gitignore.py", "exit": 0},
+      {"type": "file_exists", "path": "output.gitignore"},
+      {"type": "file_match", "path": "output.gitignore", "text": "__pycache__"},
+      {"type": "file_match", "path": "output.gitignore", "text": "node_modules"}
+    ],
+    "tags": ["gitignore", "config-generation"]
+  },
+  {
+    "id": "mb-144",
+    "cat": "text",
+    "diff": "easy",
+    "title": "Meeting Notes Formatter",
+    "src": "m/showandtell",
+    "prompt": "Write a Python script `format_notes.py` that reads `raw_notes.txt` and produces `meeting_notes.md`. Lines starting with `@` are attendees, lines starting with `>` are decisions, lines starting with `!` are action items, and other lines are discussion points. Output should have sections: Attendees (bulleted list), Discussion, Decisions, and Action Items.",
+    "input": {
+      "raw_notes.txt": "@Alice\n@Bob\n@Carol\nDiscussed Q2 roadmap priorities\nNeed to finalize budget by Friday\n>Approved migration to new CI/CD pipeline\n>Agreed to hire two more engineers\n!Alice: Draft migration plan by Monday\n!Bob: Review budget proposal\n!Carol: Schedule interviews for next week\nReviewed sprint velocity trends"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python format_notes.py", "exit": 0},
+      {"type": "file_exists", "path": "meeting_notes.md"},
+      {"type": "file_match", "path": "meeting_notes.md", "text": "Alice"},
+      {"type": "file_match", "path": "meeting_notes.md", "text": "Action Item"}
+    ],
+    "tags": ["meeting-notes", "parsing", "markdown"]
+  },
+  {
+    "id": "mb-145",
+    "cat": "text",
+    "diff": "easy",
+    "title": "License File Generator",
+    "src": "m/coding",
+    "prompt": "Write a Python script `gen_license.py` that reads `license_info.json` and generates `LICENSE` file. The JSON contains `type` (MIT or Apache-2.0), `year`, and `holder`. Generate the standard license text with the correct year and holder substituted.",
+    "input": {
+      "license_info.json": "{\n  \"type\": \"MIT\",\n  \"year\": 2025,\n  \"holder\": \"Jane Smith\"\n}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python gen_license.py", "exit": 0},
+      {"type": "file_exists", "path": "LICENSE"},
+      {"type": "file_match", "path": "LICENSE", "text": "MIT License"},
+      {"type": "file_match", "path": "LICENSE", "text": "Jane Smith"}
+    ],
+    "tags": ["license", "template"]
+  },
+  {
+    "id": "mb-146",
+    "cat": "text",
+    "diff": "easy",
+    "title": "Plain Text to Bullet List",
+    "src": "m/todayilearned",
+    "prompt": "Write a Python script `bulletify.py` that reads `items.txt` (one item per line, possibly with leading/trailing whitespace) and writes `items.md` with each non-empty line as a markdown bullet point (`- item`). Add an H1 title `# Items` at the top. Empty lines should be skipped.",
+    "input": {
+      "items.txt": "  Apples  \nBananas\n\n  Carrots\nDragonfruit\n   \nElderberries\nFigs\nGrapes"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python bulletify.py", "exit": 0},
+      {"type": "file_exists", "path": "items.md"},
+      {"type": "file_match", "path": "items.md", "text": "# Items"},
+      {"type": "line_count", "path": "items.md", "min": 8, "max": 10}
+    ],
+    "tags": ["markdown", "text-processing"]
+  },
+  {
+    "id": "mb-147",
+    "cat": "text",
+    "diff": "easy",
+    "title": "Email Draft from Bullet Points",
+    "src": "m/showandtell",
+    "prompt": "Write a Python script `draft_email.py` that reads `brief.json` (with fields: `to`, `from`, `subject`, `points` array) and writes a professional email to `email.txt`. The email should have a greeting, expand each bullet point into a paragraph sentence, and close with a sign-off using the sender name.",
+    "input": {
+      "brief.json": "{\n  \"to\": \"Engineering Team\",\n  \"from\": \"Sarah Chen\",\n  \"subject\": \"Q3 Planning Update\",\n  \"points\": [\n    \"Sprint velocity increased 15% this quarter\",\n    \"New CI pipeline reduced build times by 40%\",\n    \"Three open positions approved for backend team\",\n    \"Architecture review scheduled for next Friday\"\n  ]\n}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python draft_email.py", "exit": 0},
+      {"type": "file_exists", "path": "email.txt"},
+      {"type": "file_match", "path": "email.txt", "text": "Sarah Chen"},
+      {"type": "file_match", "path": "email.txt", "text": "Q3 Planning Update"}
+    ],
+    "tags": ["email", "template", "json-parsing"]
+  },
+  {
+    "id": "mb-148",
+    "cat": "text",
+    "diff": "easy",
+    "title": "INI Config Generator",
+    "src": "m/coding",
+    "prompt": "Write a Python script `gen_config.py` that reads `settings.json` and generates `app.ini` in INI format. The JSON has section names as top-level keys, each mapping to a dict of key-value pairs. Use Python's `configparser` module to write the INI file.",
+    "input": {
+      "settings.json": "{\n  \"database\": {\n    \"host\": \"localhost\",\n    \"port\": \"5432\",\n    \"name\": \"myapp_db\",\n    \"user\": \"admin\"\n  },\n  \"server\": {\n    \"host\": \"0.0.0.0\",\n    \"port\": \"8080\",\n    \"debug\": \"false\"\n  },\n  \"logging\": {\n    \"level\": \"INFO\",\n    \"file\": \"app.log\"\n  }\n}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python gen_config.py", "exit": 0},
+      {"type": "file_exists", "path": "app.ini"},
+      {"type": "file_match", "path": "app.ini", "text": "[database]"},
+      {"type": "file_match", "path": "app.ini", "text": "host = localhost"}
+    ],
+    "tags": ["config", "ini", "configparser"]
+  },
+  {
+    "id": "mb-149",
+    "cat": "text",
+    "diff": "easy",
+    "title": "CSV to Markdown Table",
+    "src": "m/todayilearned",
+    "prompt": "Write a Python script `csv2md.py` that reads `data.csv` and converts it to a markdown table in `table.md`. The first row of the CSV is the header. Include proper markdown table separators (`|---|---|`).",
+    "input": {
+      "data.csv": "Name,Language,Stars,License\nFastAPI,Python,65000,MIT\nExpress,JavaScript,61000,MIT\nGin,Go,72000,MIT\nActix,Rust,18000,Apache-2.0\nSpring,Java,70000,Apache-2.0"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python csv2md.py", "exit": 0},
+      {"type": "file_exists", "path": "table.md"},
+      {"type": "file_match", "path": "table.md", "text": "| Name"},
+      {"type": "file_match", "path": "table.md", "text": "---"}
+    ],
+    "tags": ["csv", "markdown", "table"]
+  },
+  {
+    "id": "mb-150",
+    "cat": "text",
+    "diff": "easy",
+    "title": "YAML Config from Requirements",
+    "src": "m/coding",
+    "prompt": "Write a Python script `gen_yaml.py` that reads `requirements.txt` (lines of `key=value` with optional section headers in `[brackets]`) and outputs `config.yaml` in valid YAML format. Section headers become top-level keys, and key=value pairs become nested under the current section.",
+    "input": {
+      "requirements.txt": "[app]\nname=myservice\nversion=1.0.0\nport=3000\n[database]\nengine=postgresql\nhost=db.example.com\nport=5432\n[cache]\nbackend=redis\nttl=300"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python gen_yaml.py", "exit": 0},
+      {"type": "file_exists", "path": "config.yaml"},
+      {"type": "file_match", "path": "config.yaml", "text": "app:"},
+      {"type": "file_match", "path": "config.yaml", "text": "database:"}
+    ],
+    "tags": ["yaml", "config", "parsing"]
+  },
+  {
+    "id": "mb-151",
+    "cat": "text",
+    "diff": "easy",
+    "title": "Text Wrapper Utility",
+    "src": "m/coding",
+    "prompt": "Write a Python script `wrap_text.py` that reads `input.txt` and writes `wrapped.txt` with all lines wrapped to a maximum of 72 characters. Use Python's `textwrap` module. Preserve paragraph breaks (empty lines). Do not break words in the middle.",
+    "input": {
+      "input.txt": "This is a very long line that should be wrapped because it exceeds the seventy-two character limit that we have set for our output document formatting requirements.\n\nThis is a second paragraph that is also quite long and needs to be properly wrapped to fit within the specified character width limit of seventy-two characters per line.\n\nShort line."
+    },
+    "checks": [
+      {"type": "run", "cmd": "python wrap_text.py", "exit": 0},
+      {"type": "file_exists", "path": "wrapped.txt"},
+      {"type": "run", "cmd": "python -c \"lines=open('wrapped.txt').readlines(); assert all(len(l.rstrip()) <= 72 for l in lines), 'Line exceeds 72 chars'\"", "exit": 0}
+    ],
+    "tags": ["text-processing", "textwrap"]
+  },
+  {
+    "id": "mb-152",
+    "cat": "text",
+    "diff": "easy",
+    "title": "Sorted Glossary Generator",
+    "src": "m/showandtell",
+    "prompt": "Write a Python script `glossary.py` that reads `terms.txt` (format: `TERM: definition` per line) and generates `glossary.md` with terms alphabetically sorted. Each term should be a bold markdown item (`**Term**`) followed by its definition. Add an H1 title `# Glossary`.",
+    "input": {
+      "terms.txt": "REST: Representational State Transfer, an architectural style for APIs\nAPI: Application Programming Interface\nJSON: JavaScript Object Notation, a data interchange format\nCRUD: Create, Read, Update, Delete operations\nHTTP: Hypertext Transfer Protocol\nORM: Object-Relational Mapping\nSDK: Software Development Kit\nCI: Continuous Integration"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python glossary.py", "exit": 0},
+      {"type": "file_exists", "path": "glossary.md"},
+      {"type": "file_match", "path": "glossary.md", "text": "# Glossary"},
+      {"type": "run", "cmd": "python -c \"lines=[l for l in open('glossary.md').readlines() if l.startswith('**')]; terms=[l.split('**')[1] for l in lines]; assert terms==sorted(terms), 'Not sorted'\"", "exit": 0}
+    ],
+    "tags": ["glossary", "sorting", "markdown"]
+  },
+  {
+    "id": "mb-153",
+    "cat": "text",
+    "diff": "easy",
+    "title": "Simple Template Filler",
+    "src": "m/todayilearned",
+    "prompt": "Write a Python script `fill_template.py` that reads `template.txt` (containing `${key}` placeholders) and `values.json` (key-value pairs) and writes `output.txt` with all placeholders replaced by their values.",
+    "input": {
+      "template.txt": "Dear ${name},\n\nThank you for your order #${order_id}.\nYour ${product} will be shipped to ${address}.\nEstimated delivery: ${delivery_date}.\n\nBest regards,\n${company}",
+      "values.json": "{\n  \"name\": \"Alex Rivera\",\n  \"order_id\": \"ORD-2025-1847\",\n  \"product\": \"Mechanical Keyboard\",\n  \"address\": \"123 Oak Street, Portland, OR\",\n  \"delivery_date\": \"March 15, 2025\",\n  \"company\": \"TechGear Inc.\"\n}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python fill_template.py", "exit": 0},
+      {"type": "file_exists", "path": "output.txt"},
+      {"type": "file_match", "path": "output.txt", "text": "Alex Rivera"},
+      {"type": "file_not_match", "path": "output.txt", "text": "${"}
+    ],
+    "tags": ["template", "string-substitution"]
+  },
+  {
+    "id": "mb-154",
+    "cat": "text",
+    "diff": "easy",
+    "title": "CLI Usage Doc Generator",
+    "src": "m/coding",
+    "prompt": "Write a Python script `gen_usage.py` that reads `cli_spec.json` (with `name`, `description`, `commands` array each having `name`, `args`, `description`) and generates `USAGE.md` with the tool name as H1, description paragraph, and each command documented with its arguments and description.",
+    "input": {
+      "cli_spec.json": "{\n  \"name\": \"taskr\",\n  \"description\": \"A simple command-line task manager.\",\n  \"commands\": [\n    {\"name\": \"add\", \"args\": \"<title> [--priority high|low]\", \"description\": \"Add a new task\"},\n    {\"name\": \"list\", \"args\": \"[--status done|pending]\", \"description\": \"List all tasks\"},\n    {\"name\": \"done\", \"args\": \"<id>\", \"description\": \"Mark a task as completed\"},\n    {\"name\": \"remove\", \"args\": \"<id>\", \"description\": \"Remove a task\"}\n  ]\n}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python gen_usage.py", "exit": 0},
+      {"type": "file_exists", "path": "USAGE.md"},
+      {"type": "file_match", "path": "USAGE.md", "text": "# taskr"},
+      {"type": "file_match", "path": "USAGE.md", "text": "add"}
+    ],
+    "tags": ["documentation", "cli", "markdown"]
+  },
+  {
+    "id": "mb-155",
+    "cat": "text",
+    "diff": "easy",
+    "title": "Numbered List Extractor",
+    "src": "m/todayilearned",
+    "prompt": "Write a Python script `extract_steps.py` that reads `guide.txt` and extracts only lines that start with a number followed by a period (e.g., `1. Step one`). Write the extracted steps to `steps.md` with an H1 heading `# Steps` at the top, preserving the original numbering.",
+    "input": {
+      "guide.txt": "Getting Started with Docker\n\nPrerequisites: You need a Linux or Mac system.\n\n1. Install Docker from the official website\n\nMake sure to follow the OS-specific instructions.\n\n2. Verify installation with docker --version\n3. Pull your first image: docker pull hello-world\n\nThis downloads the test image.\n\n4. Run the container: docker run hello-world\n5. Check running containers: docker ps\n\nCongratulations, you're all set!"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python extract_steps.py", "exit": 0},
+      {"type": "file_exists", "path": "steps.md"},
+      {"type": "file_match", "path": "steps.md", "text": "# Steps"},
+      {"type": "line_count", "path": "steps.md", "min": 6, "max": 8}
+    ],
+    "tags": ["extraction", "parsing", "markdown"]
+  },
+  {
+    "id": "mb-156",
+    "cat": "text",
+    "diff": "easy",
+    "title": "Contact Card Formatter",
+    "src": "m/showandtell",
+    "prompt": "Write a Python script `format_contacts.py` that reads `contacts.json` (an array of objects with `name`, `email`, `phone`, `role`) and generates `contacts.md` with each contact as an H3 heading (name) followed by role, email, and phone as bullet points.",
+    "input": {
+      "contacts.json": "[\n  {\"name\": \"Alice Wong\", \"email\": \"alice@example.com\", \"phone\": \"+1-555-0101\", \"role\": \"Engineering Lead\"},\n  {\"name\": \"Bob Martinez\", \"email\": \"bob@example.com\", \"phone\": \"+1-555-0102\", \"role\": \"Product Manager\"},\n  {\"name\": \"Carol Davis\", \"email\": \"carol@example.com\", \"phone\": \"+1-555-0103\", \"role\": \"Designer\"}\n]"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python format_contacts.py", "exit": 0},
+      {"type": "file_exists", "path": "contacts.md"},
+      {"type": "file_match", "path": "contacts.md", "text": "### Alice Wong"},
+      {"type": "file_match", "path": "contacts.md", "text": "alice@example.com"}
+    ],
+    "tags": ["contacts", "markdown", "json-parsing"]
+  },
+  {
+    "id": "mb-157",
+    "cat": "text",
+    "diff": "easy",
+    "title": "Env File Generator",
+    "src": "m/coding",
+    "prompt": "Write a Python script `gen_env.py` that reads `env_spec.json` (object with keys as variable names, values as objects with `default` and `description`) and generates a `.env.example` file. Each entry should have a comment line with the description, followed by the variable set to its default value.",
+    "input": {
+      "env_spec.json": "{\n  \"DATABASE_URL\": {\"default\": \"postgresql://localhost:5432/mydb\", \"description\": \"Database connection string\"},\n  \"SECRET_KEY\": {\"default\": \"change-me-in-production\", \"description\": \"Application secret key\"},\n  \"DEBUG\": {\"default\": \"true\", \"description\": \"Enable debug mode\"},\n  \"LOG_LEVEL\": {\"default\": \"INFO\", \"description\": \"Logging verbosity level\"},\n  \"PORT\": {\"default\": \"8000\", \"description\": \"Server port number\"}\n}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python gen_env.py", "exit": 0},
+      {"type": "file_exists", "path": ".env.example"},
+      {"type": "file_match", "path": ".env.example", "text": "DATABASE_URL="},
+      {"type": "file_match", "path": ".env.example", "text": "# Database connection string"}
+    ],
+    "tags": ["env", "config", "documentation"]
+  },
+  {
+    "id": "mb-158",
+    "cat": "text",
+    "diff": "easy",
+    "title": "Decision Log Formatter",
+    "src": "m/showandtell",
+    "prompt": "Write a Python script `decision_log.py` that reads `decisions.json` (array of objects with `date`, `title`, `context`, `decision`, `status`) and writes `decisions.md`. Each decision should be an H2 with the title, followed by metadata (date, status) and the context and decision as paragraphs.",
+    "input": {
+      "decisions.json": "[\n  {\"date\": \"2025-01-15\", \"title\": \"Use PostgreSQL\", \"context\": \"Need a relational database for complex queries.\", \"decision\": \"Selected PostgreSQL over MySQL for better JSON support and extensibility.\", \"status\": \"accepted\"},\n  {\"date\": \"2025-01-20\", \"title\": \"Adopt TypeScript\", \"context\": \"Frontend codebase growing and type errors increasing.\", \"decision\": \"Migrate frontend to TypeScript incrementally, starting with new files.\", \"status\": \"accepted\"},\n  {\"date\": \"2025-02-01\", \"title\": \"Monorepo Structure\", \"context\": \"Managing multiple repos is slowing down development.\", \"decision\": \"Consolidate into a monorepo using Turborepo.\", \"status\": \"proposed\"}\n]"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python decision_log.py", "exit": 0},
+      {"type": "file_exists", "path": "decisions.md"},
+      {"type": "file_match", "path": "decisions.md", "text": "## Use PostgreSQL"},
+      {"type": "file_match", "path": "decisions.md", "text": "proposed"}
+    ],
+    "tags": ["decision-log", "documentation", "json-parsing"]
+  },
+  {
+    "id": "mb-159",
+    "cat": "text",
+    "diff": "easy",
+    "title": "Markdown Link Checker List",
+    "src": "m/coding",
+    "prompt": "Write a Python script `extract_links.py` that reads `doc.md` and extracts all markdown links (format `[text](url)`). Write them to `links.txt` with one URL per line, deduplicated and sorted alphabetically.",
+    "input": {
+      "doc.md": "# Resources\n\nCheck out [Python docs](https://docs.python.org) for reference.\nAlso see [MDN Web Docs](https://developer.mozilla.org) for web APIs.\n\n## Tools\n\n- [VS Code](https://code.visualstudio.com) is a great editor\n- [GitHub](https://github.com) for version control\n- [Python docs](https://docs.python.org) has tutorials too\n\n## More\n\nVisit [Stack Overflow](https://stackoverflow.com) for help."
+    },
+    "checks": [
+      {"type": "run", "cmd": "python extract_links.py", "exit": 0},
+      {"type": "file_exists", "path": "links.txt"},
+      {"type": "line_count", "path": "links.txt", "min": 5, "max": 5},
+      {"type": "file_match", "path": "links.txt", "text": "https://docs.python.org"}
+    ],
+    "tags": ["markdown", "regex", "extraction"]
+  },
+  {
+    "id": "mb-160",
+    "cat": "text",
+    "diff": "easy",
+    "title": "Markdown Heading Hierarchy",
+    "src": "m/todayilearned",
+    "prompt": "Write a Python script `toc.py` that reads `document.md` and generates `toc.md` containing a table of contents. Extract all headings (lines starting with `#`), and output them as an indented list where H1 has no indent, H2 has 2-space indent, H3 has 4-space indent, etc. Format each as `- Heading Text`.",
+    "input": {
+      "document.md": "# Project Overview\n\nSome intro text.\n\n## Architecture\n\nDetails here.\n\n### Frontend\n\nReact-based SPA.\n\n### Backend\n\nPython FastAPI service.\n\n## Deployment\n\n### Docker\n\nContainerized deployment.\n\n### Kubernetes\n\nOrchestration setup.\n\n## Contributing\n\nHow to contribute."
+    },
+    "checks": [
+      {"type": "run", "cmd": "python toc.py", "exit": 0},
+      {"type": "file_exists", "path": "toc.md"},
+      {"type": "file_match", "path": "toc.md", "text": "- Project Overview"},
+      {"type": "file_match", "path": "toc.md", "text": "  - Architecture"}
+    ],
+    "tags": ["toc", "markdown", "parsing"]
+  },
+  {
+    "id": "mb-161",
+    "cat": "text",
+    "diff": "medium",
+    "title": "API Documentation Generator",
+    "src": "m/showandtell",
+    "prompt": "Write a Python script `gen_api_docs.py` that reads `api.json` (array of endpoint objects with `method`, `path`, `description`, `params` array, `response` object) and generates `API.md`. Each endpoint gets an H2 heading with method and path, a description, a parameters table (name, type, required columns), and a response example in a fenced code block.",
+    "input": {
+      "api.json": "[\n  {\n    \"method\": \"GET\",\n    \"path\": \"/users\",\n    \"description\": \"List all users with optional filtering.\",\n    \"params\": [\n      {\"name\": \"page\", \"type\": \"integer\", \"required\": false},\n      {\"name\": \"limit\", \"type\": \"integer\", \"required\": false},\n      {\"name\": \"role\", \"type\": \"string\", \"required\": false}\n    ],\n    \"response\": {\"users\": [{\"id\": 1, \"name\": \"Alice\"}], \"total\": 42}\n  },\n  {\n    \"method\": \"POST\",\n    \"path\": \"/users\",\n    \"description\": \"Create a new user account.\",\n    \"params\": [\n      {\"name\": \"name\", \"type\": \"string\", \"required\": true},\n      {\"name\": \"email\", \"type\": \"string\", \"required\": true},\n      {\"name\": \"role\", \"type\": \"string\", \"required\": false}\n    ],\n    \"response\": {\"id\": 2, \"name\": \"Bob\", \"email\": \"bob@example.com\"}\n  },\n  {\n    \"method\": \"DELETE\",\n    \"path\": \"/users/:id\",\n    \"description\": \"Delete a user by ID.\",\n    \"params\": [\n      {\"name\": \"id\", \"type\": \"integer\", \"required\": true}\n    ],\n    \"response\": {\"status\": \"deleted\"}\n  }\n]"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python gen_api_docs.py", "exit": 0},
+      {"type": "file_exists", "path": "API.md"},
+      {"type": "file_match", "path": "API.md", "text": "GET /users"},
+      {"type": "file_match", "path": "API.md", "text": "| name"},
+      {"type": "file_match", "path": "API.md", "text": "```"}
+    ],
+    "tags": ["api-docs", "documentation", "markdown"]
+  },
+  {
+    "id": "mb-162",
+    "cat": "text",
+    "diff": "medium",
+    "title": "Multi-format Config Converter",
+    "src": "m/coding",
+    "prompt": "Write a Python script `convert_config.py` that reads `config.json` and generates three output files: `config.ini` (INI format), `config.env` (KEY=value format with underscored flattened keys like `SECTION_KEY`), and `config.yaml` (YAML format). The JSON has nested section/key structure.",
+    "input": {
+      "config.json": "{\n  \"server\": {\n    \"host\": \"0.0.0.0\",\n    \"port\": \"8080\",\n    \"workers\": \"4\"\n  },\n  \"database\": {\n    \"url\": \"postgres://localhost/app\",\n    \"pool_size\": \"10\"\n  },\n  \"redis\": {\n    \"host\": \"localhost\",\n    \"port\": \"6379\"\n  }\n}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python convert_config.py", "exit": 0},
+      {"type": "file_exists", "path": "config.ini"},
+      {"type": "file_exists", "path": "config.env"},
+      {"type": "file_exists", "path": "config.yaml"},
+      {"type": "file_match", "path": "config.env", "text": "SERVER_HOST=0.0.0.0"}
+    ],
+    "tags": ["config", "conversion", "multi-format"]
+  },
+  {
+    "id": "mb-163",
+    "cat": "text",
+    "diff": "medium",
+    "title": "Technical Spec from Requirements",
+    "src": "m/showandtell",
+    "prompt": "Write a Python script `gen_spec.py` that reads `requirements.json` (with `title`, `overview`, `functional_requirements` array, `non_functional_requirements` array, `constraints` array) and generates `SPEC.md`. Include sections: Title (H1), Overview, Functional Requirements (numbered list), Non-Functional Requirements (numbered list), Constraints (bulleted list), and a Revision History table with one row for today's date as initial version.",
+    "input": {
+      "requirements.json": "{\n  \"title\": \"User Authentication Service\",\n  \"overview\": \"A microservice handling user registration, login, and session management with JWT-based authentication.\",\n  \"functional_requirements\": [\n    \"Support email/password registration\",\n    \"Implement JWT access and refresh tokens\",\n    \"Provide password reset via email\",\n    \"Support OAuth2 login with Google and GitHub\",\n    \"Rate limit login attempts to 5 per minute\"\n  ],\n  \"non_functional_requirements\": [\n    \"Response time under 200ms for auth endpoints\",\n    \"Support 10000 concurrent sessions\",\n    \"99.9% uptime SLA\",\n    \"All passwords hashed with bcrypt\"\n  ],\n  \"constraints\": [\n    \"Must use PostgreSQL for user storage\",\n    \"Must be deployable as a Docker container\",\n    \"API must follow OpenAPI 3.0 spec\"\n  ]\n}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python gen_spec.py", "exit": 0},
+      {"type": "file_exists", "path": "SPEC.md"},
+      {"type": "file_match", "path": "SPEC.md", "text": "# User Authentication Service"},
+      {"type": "file_match", "path": "SPEC.md", "text": "Functional Requirements"},
+      {"type": "word_count", "path": "SPEC.md", "min": 80}
+    ],
+    "tags": ["spec", "documentation", "requirements"]
+  },
+  {
+    "id": "mb-164",
+    "cat": "text",
+    "diff": "medium",
+    "title": "Release Notes Generator",
+    "src": "m/todayilearned",
+    "prompt": "Write a Python script `release_notes.py` that reads `changes.json` (with `version`, `date`, `highlights` string, `changes` array of objects with `type`, `scope`, `description`) and writes `RELEASE.md`. Group changes by type (Features, Bug Fixes, Breaking Changes, Performance). Include a summary block with version, date, and highlights at the top.",
+    "input": {
+      "changes.json": "{\n  \"version\": \"2.3.0\",\n  \"date\": \"2025-03-15\",\n  \"highlights\": \"This release introduces real-time notifications and improves query performance by 3x.\",\n  \"changes\": [\n    {\"type\": \"feature\", \"scope\": \"notifications\", \"description\": \"Add WebSocket-based real-time notifications\"},\n    {\"type\": \"feature\", \"scope\": \"api\", \"description\": \"New batch endpoint for bulk operations\"},\n    {\"type\": \"bugfix\", \"scope\": \"auth\", \"description\": \"Fix token refresh race condition\"},\n    {\"type\": \"bugfix\", \"scope\": \"database\", \"description\": \"Resolve connection pool exhaustion under load\"},\n    {\"type\": \"performance\", \"scope\": \"queries\", \"description\": \"Optimize N+1 queries in user listing\"},\n    {\"type\": \"breaking\", \"scope\": \"api\", \"description\": \"Rename /api/v1/users to /api/v2/accounts\"},\n    {\"type\": \"feature\", \"scope\": \"search\", \"description\": \"Full-text search with relevance ranking\"},\n    {\"type\": \"performance\", \"scope\": \"cache\", \"description\": \"Add Redis caching layer for hot queries\"}\n  ]\n}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python release_notes.py", "exit": 0},
+      {"type": "file_exists", "path": "RELEASE.md"},
+      {"type": "file_match", "path": "RELEASE.md", "text": "2.3.0"},
+      {"type": "file_match", "path": "RELEASE.md", "text": "Breaking Changes"},
+      {"type": "file_match", "path": "RELEASE.md", "text": "Feature"}
+    ],
+    "tags": ["release-notes", "changelog", "grouping"]
+  },
+  {
+    "id": "mb-165",
+    "cat": "text",
+    "diff": "medium",
+    "title": "JSON Schema Documentation",
+    "src": "m/coding",
+    "prompt": "Write a Python script `schema_docs.py` that reads `schema.json` (a JSON Schema object) and generates `SCHEMA.md` documenting each property. Include the object title as H1, description as intro paragraph, and a table with columns: Property, Type, Required, Description for each property.",
+    "input": {
+      "schema.json": "{\n  \"title\": \"UserProfile\",\n  \"description\": \"Schema for user profile data in the application.\",\n  \"type\": \"object\",\n  \"required\": [\"username\", \"email\"],\n  \"properties\": {\n    \"username\": {\"type\": \"string\", \"description\": \"Unique username for the account\"},\n    \"email\": {\"type\": \"string\", \"description\": \"Primary email address\"},\n    \"display_name\": {\"type\": \"string\", \"description\": \"Name shown in the UI\"},\n    \"age\": {\"type\": \"integer\", \"description\": \"User age in years\"},\n    \"is_active\": {\"type\": \"boolean\", \"description\": \"Whether the account is active\"},\n    \"tags\": {\"type\": \"array\", \"description\": \"List of user interest tags\"}\n  }\n}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python schema_docs.py", "exit": 0},
+      {"type": "file_exists", "path": "SCHEMA.md"},
+      {"type": "file_match", "path": "SCHEMA.md", "text": "# UserProfile"},
+      {"type": "file_match", "path": "SCHEMA.md", "text": "| username"},
+      {"type": "file_match", "path": "SCHEMA.md", "text": "Yes"}
+    ],
+    "tags": ["json-schema", "documentation", "table"]
+  },
+  {
+    "id": "mb-166",
+    "cat": "text",
+    "diff": "medium",
+    "title": "Dockerfile Documentation",
+    "src": "m/coding",
+    "prompt": "Write a Python script `doc_dockerfile.py` that reads `Dockerfile` and generates `DOCKER.md` documenting it. Extract the base image, all ENV variables, EXPOSE ports, and COPY/ADD instructions. Create sections: Base Image, Environment Variables (table with name and value), Exposed Ports, Build Steps (numbered list of each instruction), and a Quick Start section with docker build and run commands using the image name from the last ENV or a default.",
+    "input": {
+      "Dockerfile": "FROM python:3.11-slim\n\nENV APP_NAME=myservice\nENV APP_PORT=8000\nENV LOG_LEVEL=info\nENV WORKERS=4\n\nWORKDIR /app\n\nCOPY requirements.txt .\nRUN pip install --no-cache-dir -r requirements.txt\n\nCOPY src/ ./src/\nCOPY config/ ./config/\n\nEXPOSE 8000\nEXPOSE 9090\n\nCMD [\"python\", \"-m\", \"uvicorn\", \"src.main:app\", \"--host\", \"0.0.0.0\"]"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python doc_dockerfile.py", "exit": 0},
+      {"type": "file_exists", "path": "DOCKER.md"},
+      {"type": "file_match", "path": "DOCKER.md", "text": "python:3.11-slim"},
+      {"type": "file_match", "path": "DOCKER.md", "text": "8000"},
+      {"type": "word_count", "path": "DOCKER.md", "min": 50}
+    ],
+    "tags": ["docker", "documentation", "parsing"]
+  },
+  {
+    "id": "mb-167",
+    "cat": "text",
+    "diff": "medium",
+    "title": "Markdown Resume Builder",
+    "src": "m/showandtell",
+    "prompt": "Write a Python script `build_resume.py` that reads `resume_data.json` and generates `resume.md`. Include sections: Name (H1), Contact Info, Summary, Experience (with company, role, dates, and bullet-point achievements), Education, and Skills (grouped by category).",
+    "input": {
+      "resume_data.json": "{\n  \"name\": \"Jordan Lee\",\n  \"email\": \"jordan@example.com\",\n  \"phone\": \"+1-555-0199\",\n  \"summary\": \"Full-stack engineer with 5 years of experience building scalable web applications.\",\n  \"experience\": [\n    {\n      \"company\": \"TechCorp\",\n      \"role\": \"Senior Engineer\",\n      \"dates\": \"2023-Present\",\n      \"achievements\": [\"Led migration to microservices architecture\", \"Reduced API latency by 40%\"]\n    },\n    {\n      \"company\": \"StartupXYZ\",\n      \"role\": \"Software Engineer\",\n      \"dates\": \"2020-2023\",\n      \"achievements\": [\"Built real-time analytics dashboard\", \"Implemented CI/CD pipeline\"]\n    }\n  ],\n  \"education\": [{\"school\": \"State University\", \"degree\": \"B.S. Computer Science\", \"year\": \"2020\"}],\n  \"skills\": {\n    \"Languages\": [\"Python\", \"TypeScript\", \"Go\"],\n    \"Frameworks\": [\"React\", \"FastAPI\", \"Django\"],\n    \"Tools\": [\"Docker\", \"Kubernetes\", \"PostgreSQL\"]\n  }\n}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python build_resume.py", "exit": 0},
+      {"type": "file_exists", "path": "resume.md"},
+      {"type": "file_match", "path": "resume.md", "text": "# Jordan Lee"},
+      {"type": "file_match", "path": "resume.md", "text": "TechCorp"},
+      {"type": "word_count", "path": "resume.md", "min": 80}
+    ],
+    "tags": ["resume", "structured-output", "markdown"]
+  },
+  {
+    "id": "mb-168",
+    "cat": "text",
+    "diff": "medium",
+    "title": "Git Commit Summarizer",
+    "src": "m/todayilearned",
+    "prompt": "Write a Python script `summarize_commits.py` that reads `git_log.txt` (one commit per line: `hash date author message`) and generates `summary.md` with: total commit count, date range, a table of commits per author, and a list of the 5 most recent commits. Group statistics in a Summary section and details in a Recent Activity section.",
+    "input": {
+      "git_log.txt": "a1b2c3d 2025-03-01 alice Fix login redirect bug\ne4f5g6h 2025-03-01 bob Add user search API\ni7j8k9l 2025-03-02 alice Refactor auth middleware\nm0n1o2p 2025-03-02 carol Update deployment docs\nq3r4s5t 2025-03-03 bob Add pagination support\nu6v7w8x 2025-03-03 alice Add rate limiting\ny9z0a1b 2025-03-04 carol Fix CSS layout issue\nc2d3e4f 2025-03-04 bob Optimize database queries\ng5h6i7j 2025-03-05 alice Add export feature\nk8l9m0n 2025-03-05 carol Write unit tests for auth\no1p2q3r 2025-03-06 bob Add webhook support\ns4t5u6v 2025-03-06 alice Fix memory leak in cache"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python summarize_commits.py", "exit": 0},
+      {"type": "file_exists", "path": "summary.md"},
+      {"type": "file_match", "path": "summary.md", "text": "12"},
+      {"type": "file_match", "path": "summary.md", "text": "alice"},
+      {"type": "file_match", "path": "summary.md", "text": "Recent"}
+    ],
+    "tags": ["git", "summary", "statistics"]
+  },
+  {
+    "id": "mb-169",
+    "cat": "text",
+    "diff": "medium",
+    "title": "Error Code Reference",
+    "src": "m/coding",
+    "prompt": "Write a Python script `error_ref.py` that reads `errors.json` (array of objects with `code`, `name`, `http_status`, `description`, `resolution`) and generates `ERRORS.md`. Include an H1 title, an overview count, and each error as an H3 with code and name, followed by HTTP status badge text, description, and a resolution tip in a blockquote.",
+    "input": {
+      "errors.json": "[\n  {\"code\": \"E001\", \"name\": \"AuthenticationFailed\", \"http_status\": 401, \"description\": \"The provided credentials are invalid or expired.\", \"resolution\": \"Check your API key and ensure it has not been revoked.\"},\n  {\"code\": \"E002\", \"name\": \"ResourceNotFound\", \"http_status\": 404, \"description\": \"The requested resource does not exist.\", \"resolution\": \"Verify the resource ID and check that it has not been deleted.\"},\n  {\"code\": \"E003\", \"name\": \"RateLimitExceeded\", \"http_status\": 429, \"description\": \"Too many requests in the given time window.\", \"resolution\": \"Implement exponential backoff and respect Retry-After headers.\"},\n  {\"code\": \"E004\", \"name\": \"ValidationError\", \"http_status\": 400, \"description\": \"The request body contains invalid or missing fields.\", \"resolution\": \"Review the API documentation for required fields and data types.\"},\n  {\"code\": \"E005\", \"name\": \"InternalError\", \"http_status\": 500, \"description\": \"An unexpected server error occurred.\", \"resolution\": \"Retry the request. If the issue persists, contact support.\"}\n]"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python error_ref.py", "exit": 0},
+      {"type": "file_exists", "path": "ERRORS.md"},
+      {"type": "file_match", "path": "ERRORS.md", "text": "E001"},
+      {"type": "file_match", "path": "ERRORS.md", "text": "401"},
+      {"type": "file_match", "path": "ERRORS.md", "text": ">"}
+    ],
+    "tags": ["error-codes", "reference", "documentation"]
+  },
+  {
+    "id": "mb-170",
+    "cat": "text",
+    "diff": "medium",
+    "title": "Markdown Merge and Dedup",
+    "src": "m/todayilearned",
+    "prompt": "Write a Python script `merge_docs.py` that reads all `.md` files listed in `manifest.txt` (one filename per line), merges them into a single `merged.md` file. Deduplicate any sections with identical H2 headings (keep the first occurrence). Add a generated table of contents at the top listing all H2 sections as links.",
+    "input": {
+      "manifest.txt": "part1.md\npart2.md\npart3.md",
+      "part1.md": "## Installation\n\nRun `pip install mylib`.\n\n## Configuration\n\nSet env variables as needed.\n",
+      "part2.md": "## Usage\n\nImport and call `mylib.run()`.\n\n## Installation\n\nDuplicate section to be removed.\n",
+      "part3.md": "## API Reference\n\n### get_data()\n\nReturns the current dataset.\n\n## Troubleshooting\n\nCheck logs at `/var/log/mylib.log`.\n"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python merge_docs.py", "exit": 0},
+      {"type": "file_exists", "path": "merged.md"},
+      {"type": "file_match", "path": "merged.md", "text": "## Installation"},
+      {"type": "file_not_match", "path": "merged.md", "text": "Duplicate section to be removed"},
+      {"type": "file_match", "path": "merged.md", "text": "## API Reference"}
+    ],
+    "tags": ["merge", "dedup", "toc", "markdown"]
+  },
+  {
+    "id": "mb-171",
+    "cat": "text",
+    "diff": "medium",
+    "title": "Interview Questions Generator",
+    "src": "m/showandtell",
+    "prompt": "Write a Python script `gen_questions.py` that reads `topics.json` (array of objects with `topic`, `level`, `count`) and generates `questions.md`. For each topic, generate the specified count of interview-style questions appropriate for the level (junior/mid/senior). Use H2 for each topic, H3 for levels, and numbered lists for questions. Output must have at least one question per entry.",
+    "input": {
+      "topics.json": "[\n  {\"topic\": \"Python\", \"level\": \"junior\", \"count\": 3},\n  {\"topic\": \"Python\", \"level\": \"senior\", \"count\": 2},\n  {\"topic\": \"SQL\", \"level\": \"mid\", \"count\": 3},\n  {\"topic\": \"System Design\", \"level\": \"senior\", \"count\": 2}\n]"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python gen_questions.py", "exit": 0},
+      {"type": "file_exists", "path": "questions.md"},
+      {"type": "file_match", "path": "questions.md", "text": "## Python"},
+      {"type": "file_match", "path": "questions.md", "text": "## SQL"},
+      {"type": "word_count", "path": "questions.md", "min": 100}
+    ],
+    "tags": ["interview", "questions", "generation"]
+  },
+  {
+    "id": "mb-172",
+    "cat": "text",
+    "diff": "medium",
+    "title": "TOML Config Generator",
+    "src": "m/coding",
+    "prompt": "Write a Python script `gen_pyproject.py` that reads `project_meta.json` (with `name`, `version`, `description`, `authors` array, `python_requires`, `dependencies` array, `dev_dependencies` array) and generates a valid `pyproject.toml` file with `[project]` and `[project.optional-dependencies]` sections. Do NOT use any third-party TOML library; format the TOML manually.",
+    "input": {
+      "project_meta.json": "{\n  \"name\": \"dataflow\",\n  \"version\": \"0.5.2\",\n  \"description\": \"A data pipeline orchestration framework\",\n  \"authors\": [\"Alice Chen <alice@example.com>\", \"Bob Park <bob@example.com>\"],\n  \"python_requires\": \">=3.9\",\n  \"dependencies\": [\"click>=8.0\", \"pydantic>=2.0\", \"httpx>=0.24\"],\n  \"dev_dependencies\": [\"pytest>=7.0\", \"black>=23.0\", \"mypy>=1.0\"]\n}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python gen_pyproject.py", "exit": 0},
+      {"type": "file_exists", "path": "pyproject.toml"},
+      {"type": "file_match", "path": "pyproject.toml", "text": "[project]"},
+      {"type": "file_match", "path": "pyproject.toml", "text": "name = \"dataflow\""},
+      {"type": "file_match", "path": "pyproject.toml", "text": "click>=8.0"}
+    ],
+    "tags": ["toml", "pyproject", "config"]
+  },
+  {
+    "id": "mb-173",
+    "cat": "text",
+    "diff": "medium",
+    "title": "Structured Diff Report",
+    "src": "m/coding",
+    "prompt": "Write a Python script `diff_report.py` that reads `old_config.json` and `new_config.json` and generates `diff_report.md` listing all changes. Categorize changes as Added, Removed, or Modified. For modified values show old and new values. Use a table for each category.",
+    "input": {
+      "old_config.json": "{\n  \"app_name\": \"myservice\",\n  \"version\": \"1.2.0\",\n  \"debug\": true,\n  \"port\": 8080,\n  \"database\": \"postgresql\",\n  \"cache_ttl\": 300,\n  \"log_level\": \"DEBUG\"\n}",
+      "new_config.json": "{\n  \"app_name\": \"myservice\",\n  \"version\": \"1.3.0\",\n  \"debug\": false,\n  \"port\": 8080,\n  \"database\": \"postgresql\",\n  \"cache_ttl\": 600,\n  \"log_level\": \"INFO\",\n  \"workers\": 4,\n  \"cors_enabled\": true\n}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python diff_report.py", "exit": 0},
+      {"type": "file_exists", "path": "diff_report.md"},
+      {"type": "file_match", "path": "diff_report.md", "text": "Modified"},
+      {"type": "file_match", "path": "diff_report.md", "text": "Added"},
+      {"type": "file_match", "path": "diff_report.md", "text": "workers"}
+    ],
+    "tags": ["diff", "report", "comparison"]
+  },
+  {
+    "id": "mb-174",
+    "cat": "text",
+    "diff": "medium",
+    "title": "FAQ Document Builder",
+    "src": "m/showandtell",
+    "prompt": "Write a Python script `build_faq.py` that reads `qa_pairs.json` (array of objects with `category`, `question`, `answer`) and generates `FAQ.md`. Group questions by category under H2 headings. Each Q&A should use the question as an H3 and the answer as body text. Add a category index at the top with links (using markdown anchors).",
+    "input": {
+      "qa_pairs.json": "[\n  {\"category\": \"Account\", \"question\": \"How do I reset my password?\", \"answer\": \"Click the Forgot Password link on the login page and follow the email instructions.\"},\n  {\"category\": \"Account\", \"question\": \"Can I change my username?\", \"answer\": \"Yes, go to Settings > Profile and update your username.\"},\n  {\"category\": \"Billing\", \"question\": \"What payment methods are accepted?\", \"answer\": \"We accept Visa, Mastercard, and PayPal.\"},\n  {\"category\": \"Billing\", \"question\": \"How do I cancel my subscription?\", \"answer\": \"Navigate to Settings > Subscription and click Cancel Plan.\"},\n  {\"category\": \"Technical\", \"question\": \"What browsers are supported?\", \"answer\": \"Chrome, Firefox, Safari, and Edge (latest two versions).\"},\n  {\"category\": \"Technical\", \"question\": \"Is there an API available?\", \"answer\": \"Yes, see our API documentation at docs.example.com/api.\"}\n]"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python build_faq.py", "exit": 0},
+      {"type": "file_exists", "path": "FAQ.md"},
+      {"type": "file_match", "path": "FAQ.md", "text": "## Account"},
+      {"type": "file_match", "path": "FAQ.md", "text": "## Billing"},
+      {"type": "file_match", "path": "FAQ.md", "text": "reset my password"}
+    ],
+    "tags": ["faq", "documentation", "grouping"]
+  },
+  {
+    "id": "mb-175",
+    "cat": "text",
+    "diff": "medium",
+    "title": "Multi-language i18n File Generator",
+    "src": "m/coding",
+    "prompt": "Write a Python script `gen_i18n.py` that reads `strings.json` (object mapping keys to objects with language codes as keys and translations as values) and generates one file per language: `en.json`, `es.json`, `fr.json`. Each output file should be a flat JSON object mapping keys to the translation for that language. Output files must be valid, pretty-printed JSON.",
+    "input": {
+      "strings.json": "{\n  \"greeting\": {\"en\": \"Hello\", \"es\": \"Hola\", \"fr\": \"Bonjour\"},\n  \"farewell\": {\"en\": \"Goodbye\", \"es\": \"Adi\\u00f3s\", \"fr\": \"Au revoir\"},\n  \"thanks\": {\"en\": \"Thank you\", \"es\": \"Gracias\", \"fr\": \"Merci\"},\n  \"error\": {\"en\": \"An error occurred\", \"es\": \"Ocurri\\u00f3 un error\", \"fr\": \"Une erreur est survenue\"},\n  \"loading\": {\"en\": \"Loading...\", \"es\": \"Cargando...\", \"fr\": \"Chargement...\"},\n  \"save\": {\"en\": \"Save\", \"es\": \"Guardar\", \"fr\": \"Enregistrer\"}\n}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python gen_i18n.py", "exit": 0},
+      {"type": "json_valid", "path": "en.json", "has_key": "greeting"},
+      {"type": "json_valid", "path": "es.json", "has_key": "greeting"},
+      {"type": "json_valid", "path": "fr.json", "has_key": "greeting"},
+      {"type": "file_match", "path": "es.json", "text": "Hola"}
+    ],
+    "tags": ["i18n", "json", "localization"]
+  },
+  {
+    "id": "mb-176",
+    "cat": "text",
+    "diff": "medium",
+    "title": "Dependency Report",
+    "src": "m/todayilearned",
+    "prompt": "Write a Python script `dep_report.py` that reads `dependencies.json` (array of objects with `name`, `version`, `license`, `latest_version`, `description`) and generates `DEPENDENCIES.md`. Include a summary table of all dependencies, flag outdated ones (where `version` != `latest_version`) in a separate section, and group by license type at the bottom.",
+    "input": {
+      "dependencies.json": "[\n  {\"name\": \"requests\", \"version\": \"2.28.0\", \"license\": \"Apache-2.0\", \"latest_version\": \"2.31.0\", \"description\": \"HTTP library\"},\n  {\"name\": \"click\", \"version\": \"8.1.7\", \"license\": \"BSD-3\", \"latest_version\": \"8.1.7\", \"description\": \"CLI toolkit\"},\n  {\"name\": \"pydantic\", \"version\": \"2.0.0\", \"license\": \"MIT\", \"latest_version\": \"2.5.3\", \"description\": \"Data validation\"},\n  {\"name\": \"sqlalchemy\", \"version\": \"2.0.23\", \"license\": \"MIT\", \"latest_version\": \"2.0.23\", \"description\": \"SQL toolkit and ORM\"},\n  {\"name\": \"celery\", \"version\": \"5.3.1\", \"license\": \"BSD-3\", \"latest_version\": \"5.3.6\", \"description\": \"Distributed task queue\"},\n  {\"name\": \"boto3\", \"version\": \"1.28.0\", \"license\": \"Apache-2.0\", \"latest_version\": \"1.34.0\", \"description\": \"AWS SDK\"}\n]"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python dep_report.py", "exit": 0},
+      {"type": "file_exists", "path": "DEPENDENCIES.md"},
+      {"type": "file_match", "path": "DEPENDENCIES.md", "text": "requests"},
+      {"type": "file_match", "path": "DEPENDENCIES.md", "text": "Outdated"},
+      {"type": "file_match", "path": "DEPENDENCIES.md", "text": "MIT"}
+    ],
+    "tags": ["dependencies", "report", "analysis"]
+  },
+  {
+    "id": "mb-177",
+    "cat": "text",
+    "diff": "medium",
+    "title": "Markdown Slide Deck",
+    "src": "m/showandtell",
+    "prompt": "Write a Python script `gen_slides.py` that reads `presentation.json` (with `title`, `author`, `slides` array of objects with `heading`, `bullets` array, optional `notes`) and generates `slides.md` in a Marp-compatible format. Use `---` as slide separators, include a YAML front matter with `marp: true` and `theme: default`, and add speaker notes under each slide using HTML comment syntax `<!-- notes -->` when present.",
+    "input": {
+      "presentation.json": "{\n  \"title\": \"Intro to Microservices\",\n  \"author\": \"Sam Johnson\",\n  \"slides\": [\n    {\"heading\": \"What are Microservices?\", \"bullets\": [\"Small, independent services\", \"Each owns its data\", \"Communicate via APIs\"], \"notes\": \"Explain the contrast with monolith.\"},\n    {\"heading\": \"Benefits\", \"bullets\": [\"Independent deployment\", \"Technology diversity\", \"Fault isolation\", \"Team autonomy\"]},\n    {\"heading\": \"Challenges\", \"bullets\": [\"Distributed complexity\", \"Data consistency\", \"Network latency\", \"Observability\"], \"notes\": \"Be honest about the tradeoffs.\"},\n    {\"heading\": \"Getting Started\", \"bullets\": [\"Start with a monolith\", \"Identify bounded contexts\", \"Extract services gradually\"]}\n  ]\n}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python gen_slides.py", "exit": 0},
+      {"type": "file_exists", "path": "slides.md"},
+      {"type": "file_match", "path": "slides.md", "text": "marp: true"},
+      {"type": "file_match", "path": "slides.md", "text": "---"},
+      {"type": "file_match", "path": "slides.md", "text": "<!-- "}
+    ],
+    "tags": ["slides", "marp", "presentation"]
+  },
+  {
+    "id": "mb-178",
+    "cat": "text",
+    "diff": "medium",
+    "title": "Code Comment Documentation Extractor",
+    "src": "m/coding",
+    "prompt": "Write a Python script `extract_docs.py` that reads `source.py` and extracts all docstrings (triple-quoted strings after def/class lines) into `docs.md`. Each function/class should be an H3 with its name and signature, followed by the docstring as body text. Include an H1 title `# API Documentation` and count of documented items.",
+    "input": {
+      "source.py": "class DataProcessor:\n    \"\"\"Handles data processing pipelines.\n    \n    Supports CSV, JSON, and Parquet formats.\n    \"\"\"\n    \n    def load(self, path, format='csv'):\n        \"\"\"Load data from a file.\n        \n        Args:\n            path: File path to load from.\n            format: Data format (csv, json, parquet).\n        \n        Returns:\n            DataFrame with the loaded data.\n        \"\"\"\n        pass\n    \n    def transform(self, operations):\n        \"\"\"Apply a list of transformations.\n        \n        Args:\n            operations: List of operation dicts.\n        \n        Returns:\n            Transformed dataset.\n        \"\"\"\n        pass\n    \n    def export(self, path, format='csv'):\n        \"\"\"Export processed data to file.\n        \n        Args:\n            path: Output file path.\n            format: Export format.\n        \"\"\"\n        pass\n\ndef validate_schema(data, schema):\n    \"\"\"Validate data against a JSON schema.\n    \n    Args:\n        data: Input data dict.\n        schema: JSON schema dict.\n    \n    Returns:\n        True if valid, raises ValueError otherwise.\n    \"\"\"\n    pass"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python extract_docs.py", "exit": 0},
+      {"type": "file_exists", "path": "docs.md"},
+      {"type": "file_match", "path": "docs.md", "text": "# API Documentation"},
+      {"type": "file_match", "path": "docs.md", "text": "DataProcessor"},
+      {"type": "file_match", "path": "docs.md", "text": "validate_schema"}
+    ],
+    "tags": ["docstring", "extraction", "api-docs"]
+  },
+  {
+    "id": "mb-179",
+    "cat": "text",
+    "diff": "medium",
+    "title": "Project Board from Tasks",
+    "src": "m/showandtell",
+    "prompt": "Write a Python script `gen_board.py` that reads `tasks.json` (array of objects with `id`, `title`, `status`, `assignee`, `priority`) and generates `BOARD.md`. Group tasks into columns by status (todo, in_progress, done). Within each column, sort by priority (high > medium > low). Format as a table per status group showing ID, title, assignee, and priority.",
+    "input": {
+      "tasks.json": "[\n  {\"id\": \"T-001\", \"title\": \"Set up CI pipeline\", \"status\": \"done\", \"assignee\": \"Alice\", \"priority\": \"high\"},\n  {\"id\": \"T-002\", \"title\": \"Design database schema\", \"status\": \"in_progress\", \"assignee\": \"Bob\", \"priority\": \"high\"},\n  {\"id\": \"T-003\", \"title\": \"Write API tests\", \"status\": \"todo\", \"assignee\": \"Carol\", \"priority\": \"medium\"},\n  {\"id\": \"T-004\", \"title\": \"Implement auth flow\", \"status\": \"in_progress\", \"assignee\": \"Alice\", \"priority\": \"high\"},\n  {\"id\": \"T-005\", \"title\": \"Create landing page\", \"status\": \"todo\", \"assignee\": \"Dave\", \"priority\": \"low\"},\n  {\"id\": \"T-006\", \"title\": \"Set up monitoring\", \"status\": \"todo\", \"assignee\": \"Bob\", \"priority\": \"high\"},\n  {\"id\": \"T-007\", \"title\": \"Write user docs\", \"status\": \"todo\", \"assignee\": \"Carol\", \"priority\": \"low\"},\n  {\"id\": \"T-008\", \"title\": \"Deploy staging env\", \"status\": \"done\", \"assignee\": \"Dave\", \"priority\": \"medium\"}\n]"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python gen_board.py", "exit": 0},
+      {"type": "file_exists", "path": "BOARD.md"},
+      {"type": "file_match", "path": "BOARD.md", "text": "T-001"},
+      {"type": "file_match", "path": "BOARD.md", "text": "todo"},
+      {"type": "file_match", "path": "BOARD.md", "text": "done"}
+    ],
+    "tags": ["project-board", "grouping", "sorting"]
+  },
+  {
+    "id": "mb-180",
+    "cat": "text",
+    "diff": "medium",
+    "title": "Markdown Footnote Injector",
+    "src": "m/todayilearned",
+    "prompt": "Write a Python script `add_footnotes.py` that reads `article.md` (containing inline references like `[ref:key]`) and `references.json` (mapping keys to citation strings). Replace each `[ref:key]` with a markdown footnote marker `[^key]` and append a footnote section at the bottom with all referenced citations. Write output to `article_final.md`.",
+    "input": {
+      "article.md": "# The Rise of LLMs\n\nLarge language models have transformed NLP [ref:vaswani2017]. The introduction of\nGPT demonstrated the power of unsupervised pretraining [ref:radford2018].\n\nRecent work on instruction tuning [ref:ouyang2022] has made these models\nmore useful for everyday tasks. Scaling laws [ref:kaplan2020] suggest that\nperformance improves predictably with more compute.\n\n## Conclusion\n\nThe field continues to evolve rapidly [ref:vaswani2017].",
+      "references.json": "{\n  \"vaswani2017\": \"Vaswani et al. Attention Is All You Need. NeurIPS 2017.\",\n  \"radford2018\": \"Radford et al. Improving Language Understanding by Generative Pre-Training. 2018.\",\n  \"ouyang2022\": \"Ouyang et al. Training language models to follow instructions. NeurIPS 2022.\",\n  \"kaplan2020\": \"Kaplan et al. Scaling Laws for Neural Language Models. 2020.\"\n}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python add_footnotes.py", "exit": 0},
+      {"type": "file_exists", "path": "article_final.md"},
+      {"type": "file_match", "path": "article_final.md", "text": "[^vaswani2017]"},
+      {"type": "file_not_match", "path": "article_final.md", "text": "[ref:"},
+      {"type": "file_match", "path": "article_final.md", "text": "Attention Is All You Need"}
+    ],
+    "tags": ["footnotes", "references", "markdown"]
+  },
+  {
+    "id": "mb-181",
+    "cat": "text",
+    "diff": "hard",
+    "title": "Architecture Decision Record Suite",
+    "src": "m/showandtell",
+    "prompt": "Write a Python script `gen_adrs.py` that reads `decisions.json` (array of ADR objects with `id`, `title`, `date`, `status`, `context`, `decision`, `consequences`, `alternatives` array) and generates: (1) individual ADR files in an `adrs/` directory named `NNN-title-slug.md` (where NNN is zero-padded id), (2) an `adrs/INDEX.md` with a table linking to each ADR with id, title, date, and status. Each ADR file must follow the standard ADR template format with sections: Title (H1), Status, Context, Decision, Consequences, and Alternatives Considered.",
+    "input": {
+      "decisions.json": "[\n  {\"id\": 1, \"title\": \"Use PostgreSQL for Primary Database\", \"date\": \"2025-01-10\", \"status\": \"accepted\", \"context\": \"We need a reliable relational database that supports JSON and full-text search.\", \"decision\": \"Use PostgreSQL 16 as our primary data store.\", \"consequences\": \"Team needs PostgreSQL expertise. Gives us JSONB columns and full-text search.\", \"alternatives\": [\"MySQL 8.0\", \"MongoDB\", \"CockroachDB\"]},\n  {\"id\": 2, \"title\": \"Adopt Event-Driven Architecture\", \"date\": \"2025-01-15\", \"status\": \"accepted\", \"context\": \"Services need to communicate asynchronously to reduce coupling.\", \"decision\": \"Use RabbitMQ for inter-service messaging with event sourcing.\", \"consequences\": \"Added infrastructure complexity but better scalability and decoupling.\", \"alternatives\": [\"REST webhooks\", \"Apache Kafka\", \"Redis Pub/Sub\"]},\n  {\"id\": 3, \"title\": \"Containerize All Services\", \"date\": \"2025-02-01\", \"status\": \"proposed\", \"context\": \"Deployment inconsistencies between environments causing issues.\", \"decision\": \"Dockerize all services with multi-stage builds and deploy via Kubernetes.\", \"consequences\": \"Consistent environments but requires K8s knowledge on the team.\", \"alternatives\": [\"VM-based deployment\", \"Serverless functions\", \"PaaS (Heroku)\"]}\n]"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python gen_adrs.py", "exit": 0},
+      {"type": "file_exists", "path": "adrs/INDEX.md"},
+      {"type": "file_exists", "path": "adrs/001-use-postgresql-for-primary-database.md"},
+      {"type": "file_count", "dir": "adrs/", "min": 4},
+      {"type": "file_match", "path": "adrs/INDEX.md", "text": "Event-Driven"},
+      {"type": "file_match", "path": "adrs/002-adopt-event-driven-architecture.md", "text": "## Alternatives Considered"}
+    ],
+    "tags": ["adr", "documentation", "multi-file"]
+  },
+  {
+    "id": "mb-182",
+    "cat": "text",
+    "diff": "hard",
+    "title": "Runbook Generator from Incidents",
+    "src": "m/coding",
+    "prompt": "Write a Python script `gen_runbook.py` that reads `incidents.json` (array of incident objects with `id`, `severity`, `title`, `symptoms` array, `root_cause`, `resolution_steps` array, `prevention`) and generates `RUNBOOK.md`. Organize by severity (critical first). Each incident is an H2 with title, includes symptom checklist (checkbox markdown), numbered resolution steps, root cause in a blockquote, and prevention tip. Include a quick-lookup table at the top mapping symptom keywords to incident IDs.",
+    "input": {
+      "incidents.json": "[\n  {\"id\": \"INC-001\", \"severity\": \"critical\", \"title\": \"Database Connection Pool Exhaustion\", \"symptoms\": [\"5xx errors on all endpoints\", \"Connection timeout logs\", \"Database CPU normal but connections maxed\"], \"root_cause\": \"Long-running queries holding connections without timeout.\", \"resolution_steps\": [\"Check current connection count: SELECT count(*) FROM pg_stat_activity\", \"Kill idle transactions older than 5 min\", \"Restart the application service\", \"Monitor connection pool metrics for 15 min\"], \"prevention\": \"Set statement_timeout=30s and idle_in_transaction_session_timeout=60s in PostgreSQL config.\"},\n  {\"id\": \"INC-002\", \"severity\": \"high\", \"title\": \"Redis Cache Stampede\", \"symptoms\": [\"Sudden spike in database queries\", \"Redis MISS rate above 90%\", \"Increased response latency\"], \"root_cause\": \"Popular cache keys expiring simultaneously under high traffic.\", \"resolution_steps\": [\"Enable cache warming for hot keys\", \"Implement staggered TTL with jitter\", \"Add request coalescing for identical cache misses\"], \"prevention\": \"Use probabilistic early expiration and cache warming jobs.\"},\n  {\"id\": \"INC-003\", \"severity\": \"critical\", \"title\": \"TLS Certificate Expiry\", \"symptoms\": [\"Browser shows certificate error\", \"API clients report SSL errors\", \"Monitoring alerts for HTTPS failures\"], \"root_cause\": \"Auto-renewal failed silently due to DNS provider API change.\", \"resolution_steps\": [\"Manually issue certificate via certbot\", \"Update DNS API credentials in renewal config\", \"Verify renewal with --dry-run\", \"Restart nginx to load new cert\"], \"prevention\": \"Add certificate expiry monitoring with 30-day and 7-day alerts.\"},\n  {\"id\": \"INC-004\", \"severity\": \"medium\", \"title\": \"Memory Leak in Worker Process\", \"symptoms\": [\"Gradually increasing memory usage\", \"OOM kills in container logs\", \"Degraded performance over time\"], \"root_cause\": \"Unclosed file handles in batch processing loop.\", \"resolution_steps\": [\"Restart affected worker pods\", \"Deploy hotfix closing file handles\", \"Add memory limit alerting\"], \"prevention\": \"Use context managers for all file operations and add memory profiling to CI.\"}\n]"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python gen_runbook.py", "exit": 0},
+      {"type": "file_exists", "path": "RUNBOOK.md"},
+      {"type": "file_match", "path": "RUNBOOK.md", "text": "INC-001"},
+      {"type": "file_match", "path": "RUNBOOK.md", "text": "- [ ]"},
+      {"type": "file_match", "path": "RUNBOOK.md", "text": ">"},
+      {"type": "word_count", "path": "RUNBOOK.md", "min": 200}
+    ],
+    "tags": ["runbook", "incident-response", "operations"]
+  },
+  {
+    "id": "mb-183",
+    "cat": "text",
+    "diff": "hard",
+    "title": "Full Getting-Started Guide",
+    "src": "m/showandtell",
+    "prompt": "Write a Python script `gen_guide.py` that reads `project.json` (with `name`, `language`, `package_manager`, `prerequisites` array, `setup_steps` array of {step, command, explanation}, `examples` array of {title, code, output}, `faq` array of {q, a}) and generates `GETTING_STARTED.md`. Include: Title, Prerequisites checklist, Setup (numbered steps with code blocks), Examples (titled code blocks with expected output), FAQ, and a Troubleshooting section synthesized from the FAQ. Add a table of contents at the top.",
+    "input": {
+      "project.json": "{\n  \"name\": \"DataForge\",\n  \"language\": \"Python\",\n  \"package_manager\": \"pip\",\n  \"prerequisites\": [\"Python 3.9+\", \"pip 22+\", \"Git\"],\n  \"setup_steps\": [\n    {\"step\": \"Clone the repository\", \"command\": \"git clone https://github.com/example/dataforge.git\", \"explanation\": \"Downloads the source code to your machine.\"},\n    {\"step\": \"Install dependencies\", \"command\": \"cd dataforge && pip install -e .\", \"explanation\": \"Installs DataForge and its dependencies in editable mode.\"},\n    {\"step\": \"Verify installation\", \"command\": \"dataforge --version\", \"explanation\": \"Should print the current version number.\"},\n    {\"step\": \"Run tests\", \"command\": \"pytest tests/\", \"explanation\": \"Ensures everything is working correctly.\"}\n  ],\n  \"examples\": [\n    {\"title\": \"Load a CSV file\", \"code\": \"from dataforge import load\\ndf = load('data.csv')\\nprint(df.shape)\", \"output\": \"(1000, 5)\"},\n    {\"title\": \"Apply transformations\", \"code\": \"df = df.transform([\\n    {'op': 'filter', 'col': 'age', 'gt': 18},\\n    {'op': 'sort', 'col': 'name'}\\n])\\nprint(len(df))\", \"output\": \"750\"}\n  ],\n  \"faq\": [\n    {\"q\": \"ImportError: No module named dataforge\", \"a\": \"Make sure you ran pip install -e . from the project root directory.\"},\n    {\"q\": \"Tests fail with connection error\", \"a\": \"Some integration tests require a running PostgreSQL instance. Run pytest tests/unit/ for unit tests only.\"},\n    {\"q\": \"How do I upgrade?\", \"a\": \"Run git pull && pip install -e . to get the latest version.\"}\n  ]\n}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python gen_guide.py", "exit": 0},
+      {"type": "file_exists", "path": "GETTING_STARTED.md"},
+      {"type": "file_match", "path": "GETTING_STARTED.md", "text": "# DataForge"},
+      {"type": "file_match", "path": "GETTING_STARTED.md", "text": "```"},
+      {"type": "file_match", "path": "GETTING_STARTED.md", "text": "Table of Contents"},
+      {"type": "word_count", "path": "GETTING_STARTED.md", "min": 200}
+    ],
+    "tags": ["getting-started", "guide", "comprehensive"]
+  },
+  {
+    "id": "mb-184",
+    "cat": "text",
+    "diff": "hard",
+    "title": "Multi-section Report from Survey Data",
+    "src": "m/todayilearned",
+    "prompt": "Write a Python script `survey_report.py` that reads `survey.json` (with `title`, `date`, `respondents` count, `questions` array of {text, type, responses}) and generates `report.md`. For multiple-choice questions (type='mc'), show a frequency table and the most popular answer. For rating questions (type='rating'), compute mean, median, min, max. For open-ended (type='open'), list unique responses as bullets. Include an Executive Summary section at the top with overall respondent count and key findings.",
+    "input": {
+      "survey.json": "{\n  \"title\": \"Developer Satisfaction Survey 2025\",\n  \"date\": \"2025-03-01\",\n  \"respondents\": 8,\n  \"questions\": [\n    {\n      \"text\": \"What is your primary programming language?\",\n      \"type\": \"mc\",\n      \"responses\": [\"Python\", \"JavaScript\", \"Python\", \"Go\", \"Python\", \"JavaScript\", \"Rust\", \"Python\"]\n    },\n    {\n      \"text\": \"Rate your overall job satisfaction (1-10)\",\n      \"type\": \"rating\",\n      \"responses\": [8, 7, 9, 6, 8, 7, 9, 8]\n    },\n    {\n      \"text\": \"What tool would improve your workflow?\",\n      \"type\": \"open\",\n      \"responses\": [\"Better CI/CD\", \"AI code assistant\", \"Faster builds\", \"Better documentation\", \"AI code assistant\", \"More testing tools\", \"Better CI/CD\", \"Integrated debugging\"]\n    },\n    {\n      \"text\": \"How many years of experience do you have?\",\n      \"type\": \"mc\",\n      \"responses\": [\"1-3\", \"4-6\", \"7+\", \"4-6\", \"7+\", \"1-3\", \"4-6\", \"7+\"]\n    }\n  ]\n}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python survey_report.py", "exit": 0},
+      {"type": "file_exists", "path": "report.md"},
+      {"type": "file_match", "path": "report.md", "text": "Executive Summary"},
+      {"type": "file_match", "path": "report.md", "text": "Python"},
+      {"type": "file_match", "path": "report.md", "text": "mean"},
+      {"type": "word_count", "path": "report.md", "min": 150}
+    ],
+    "tags": ["survey", "report", "statistics", "analysis"]
+  },
+  {
+    "id": "mb-185",
+    "cat": "text",
+    "diff": "hard",
+    "title": "Codebase Documentation Index",
+    "src": "m/coding",
+    "prompt": "Write a Python script `doc_index.py` that reads `modules.json` (array of module objects with `name`, `path`, `description`, `functions` array of {name, args, returns, docstring}, `dependencies` array) and generates: (1) `docs/index.md` with a module overview table and dependency graph in Mermaid syntax, (2) one `docs/MODULE_NAME.md` per module with function documentation including signature, return type, and docstring. Each module doc should have a table of contents of its functions.",
+    "input": {
+      "modules.json": "[\n  {\n    \"name\": \"auth\",\n    \"path\": \"src/auth.py\",\n    \"description\": \"Authentication and authorization module.\",\n    \"functions\": [\n      {\"name\": \"login\", \"args\": \"username: str, password: str\", \"returns\": \"Token\", \"docstring\": \"Authenticate user and return JWT token.\"},\n      {\"name\": \"verify_token\", \"args\": \"token: str\", \"returns\": \"bool\", \"docstring\": \"Validate a JWT token and check expiry.\"},\n      {\"name\": \"refresh\", \"args\": \"refresh_token: str\", \"returns\": \"Token\", \"docstring\": \"Issue new access token from refresh token.\"}\n    ],\n    \"dependencies\": [\"database\", \"crypto\"]\n  },\n  {\n    \"name\": \"database\",\n    \"path\": \"src/database.py\",\n    \"description\": \"Database connection and query module.\",\n    \"functions\": [\n      {\"name\": \"connect\", \"args\": \"url: str\", \"returns\": \"Connection\", \"docstring\": \"Establish database connection.\"},\n      {\"name\": \"query\", \"args\": \"sql: str, params: dict\", \"returns\": \"ResultSet\", \"docstring\": \"Execute parameterized SQL query.\"},\n      {\"name\": \"migrate\", \"args\": \"version: int\", \"returns\": \"None\", \"docstring\": \"Run migrations up to specified version.\"}\n    ],\n    \"dependencies\": []\n  },\n  {\n    \"name\": \"crypto\",\n    \"path\": \"src/crypto.py\",\n    \"description\": \"Cryptographic utilities for hashing and encryption.\",\n    \"functions\": [\n      {\"name\": \"hash_password\", \"args\": \"password: str\", \"returns\": \"str\", \"docstring\": \"Hash password with bcrypt.\"},\n      {\"name\": \"verify_password\", \"args\": \"password: str, hash: str\", \"returns\": \"bool\", \"docstring\": \"Verify password against stored hash.\"}\n    ],\n    \"dependencies\": []\n  }\n]"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python doc_index.py", "exit": 0},
+      {"type": "file_exists", "path": "docs/index.md"},
+      {"type": "file_exists", "path": "docs/auth.md"},
+      {"type": "file_exists", "path": "docs/database.md"},
+      {"type": "file_exists", "path": "docs/crypto.md"},
+      {"type": "file_match", "path": "docs/index.md", "text": "mermaid"},
+      {"type": "file_match", "path": "docs/auth.md", "text": "verify_token"}
+    ],
+    "tags": ["codebase-docs", "multi-file", "mermaid"]
+  },
+  {
+    "id": "mb-186",
+    "cat": "text",
+    "diff": "hard",
+    "title": "Compliance Checklist Report",
+    "src": "m/showandtell",
+    "prompt": "Write a Python script `compliance_report.py` that reads `audit.json` (with `standard`, `audit_date`, `auditor`, `categories` array of {name, requirements array of {id, description, status, evidence, notes}}) and generates `COMPLIANCE.md`. Include: (1) Executive summary with pass/fail/partial counts and an overall compliance percentage, (2) per-category sections with requirement tables (id, description, status with emoji checkmarks, evidence), (3) a Risk Items section listing all non-passing requirements sorted by category, (4) a sign-off section at the bottom with auditor and date.",
+    "input": {
+      "audit.json": "{\n  \"standard\": \"SOC 2 Type II\",\n  \"audit_date\": \"2025-03-01\",\n  \"auditor\": \"SecureAudit LLC\",\n  \"categories\": [\n    {\n      \"name\": \"Access Control\",\n      \"requirements\": [\n        {\"id\": \"AC-1\", \"description\": \"Multi-factor authentication enabled\", \"status\": \"pass\", \"evidence\": \"MFA logs from Okta\", \"notes\": \"\"},\n        {\"id\": \"AC-2\", \"description\": \"Quarterly access reviews conducted\", \"status\": \"pass\", \"evidence\": \"Review tickets Q1-Q4\", \"notes\": \"\"},\n        {\"id\": \"AC-3\", \"description\": \"Privileged access requires approval\", \"status\": \"partial\", \"evidence\": \"Some legacy systems lack approval workflow\", \"notes\": \"Remediation planned for Q2\"}\n      ]\n    },\n    {\n      \"name\": \"Data Protection\",\n      \"requirements\": [\n        {\"id\": \"DP-1\", \"description\": \"Data encrypted at rest\", \"status\": \"pass\", \"evidence\": \"AES-256 on all databases\", \"notes\": \"\"},\n        {\"id\": \"DP-2\", \"description\": \"Data encrypted in transit\", \"status\": \"pass\", \"evidence\": \"TLS 1.3 enforced\", \"notes\": \"\"},\n        {\"id\": \"DP-3\", \"description\": \"PII data masking in logs\", \"status\": \"fail\", \"evidence\": \"Email addresses found in application logs\", \"notes\": \"Critical: fix immediately\"},\n        {\"id\": \"DP-4\", \"description\": \"Data retention policy enforced\", \"status\": \"partial\", \"evidence\": \"Policy exists but not automated\", \"notes\": \"Automation in progress\"}\n      ]\n    },\n    {\n      \"name\": \"Incident Response\",\n      \"requirements\": [\n        {\"id\": \"IR-1\", \"description\": \"Incident response plan documented\", \"status\": \"pass\", \"evidence\": \"IR playbook v3.2\", \"notes\": \"\"},\n        {\"id\": \"IR-2\", \"description\": \"Annual tabletop exercise conducted\", \"status\": \"pass\", \"evidence\": \"Exercise report 2024-11\", \"notes\": \"\"},\n        {\"id\": \"IR-3\", \"description\": \"Post-incident reviews within 48h\", \"status\": \"pass\", \"evidence\": \"All 2024 incidents reviewed on time\", \"notes\": \"\"}\n      ]\n    }\n  ]\n}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python compliance_report.py", "exit": 0},
+      {"type": "file_exists", "path": "COMPLIANCE.md"},
+      {"type": "file_match", "path": "COMPLIANCE.md", "text": "SOC 2"},
+      {"type": "file_match", "path": "COMPLIANCE.md", "text": "Risk"},
+      {"type": "file_match", "path": "COMPLIANCE.md", "text": "DP-3"},
+      {"type": "file_match", "path": "COMPLIANCE.md", "pattern": "\\d+%"}
+    ],
+    "tags": ["compliance", "audit", "report", "analysis"]
+  },
+  {
+    "id": "mb-187",
+    "cat": "text",
+    "diff": "hard",
+    "title": "Full Static Site Generator",
+    "src": "m/coding",
+    "prompt": "Write a Python script `gen_site.py` that reads `site.json` (with `title`, `author`, `pages` array of {slug, title, content, nav_order}) and generates a `site/` directory containing: (1) one HTML file per page (`slug.html`) with a basic HTML template including header with site title, navigation links to all pages (sorted by nav_order), the page content rendered in a `<main>` tag, and a footer with author name, (2) an `index.html` that redirects to the first page by nav_order, (3) a `style.css` with basic readable styling. All HTML must be valid.",
+    "input": {
+      "site.json": "{\n  \"title\": \"DevDocs\",\n  \"author\": \"TeamAlpha\",\n  \"pages\": [\n    {\"slug\": \"intro\", \"title\": \"Introduction\", \"content\": \"Welcome to DevDocs. This is your team knowledge base.\", \"nav_order\": 1},\n    {\"slug\": \"setup\", \"title\": \"Setup Guide\", \"content\": \"Clone the repo and run npm install to get started.\", \"nav_order\": 2},\n    {\"slug\": \"api\", \"title\": \"API Reference\", \"content\": \"The API exposes REST endpoints for all CRUD operations.\", \"nav_order\": 3},\n    {\"slug\": \"deploy\", \"title\": \"Deployment\", \"content\": \"Deploy using Docker with the provided Dockerfile.\", \"nav_order\": 4}\n  ]\n}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python gen_site.py", "exit": 0},
+      {"type": "file_exists", "path": "site/index.html"},
+      {"type": "file_exists", "path": "site/intro.html"},
+      {"type": "file_exists", "path": "site/style.css"},
+      {"type": "file_count", "dir": "site/", "min": 6},
+      {"type": "file_match", "path": "site/intro.html", "text": "<html"},
+      {"type": "file_match", "path": "site/api.html", "text": "DevDocs"}
+    ],
+    "tags": ["static-site", "html", "multi-file", "css"]
+  },
+  {
+    "id": "mb-188",
+    "cat": "text",
+    "diff": "hard",
+    "title": "Test Matrix Documentation",
+    "src": "m/coding",
+    "prompt": "Write a Python script `test_matrix.py` that reads `test_plan.json` (with `project`, `environments` array, `browsers` array, `features` array of {name, test_cases array of {id, description, priority, automated}}) and generates `TEST_MATRIX.md`. Include: (1) a cross-reference matrix table (features x environments) showing test coverage, (2) a browser compatibility matrix, (3) detailed test cases per feature with priority badges, (4) summary statistics (total cases, automated percentage, per-priority breakdown), (5) a coverage heatmap description showing which feature-environment combinations need attention.",
+    "input": {
+      "test_plan.json": "{\n  \"project\": \"WebApp Pro\",\n  \"environments\": [\"dev\", \"staging\", \"production\"],\n  \"browsers\": [\"Chrome\", \"Firefox\", \"Safari\", \"Edge\"],\n  \"features\": [\n    {\n      \"name\": \"Authentication\",\n      \"test_cases\": [\n        {\"id\": \"TC-001\", \"description\": \"Login with valid credentials\", \"priority\": \"critical\", \"automated\": true},\n        {\"id\": \"TC-002\", \"description\": \"Login with invalid password\", \"priority\": \"critical\", \"automated\": true},\n        {\"id\": \"TC-003\", \"description\": \"Password reset flow\", \"priority\": \"high\", \"automated\": false},\n        {\"id\": \"TC-004\", \"description\": \"Session timeout handling\", \"priority\": \"medium\", \"automated\": true}\n      ]\n    },\n    {\n      \"name\": \"Dashboard\",\n      \"test_cases\": [\n        {\"id\": \"TC-005\", \"description\": \"Load dashboard widgets\", \"priority\": \"high\", \"automated\": true},\n        {\"id\": \"TC-006\", \"description\": \"Real-time data updates\", \"priority\": \"high\", \"automated\": false},\n        {\"id\": \"TC-007\", \"description\": \"Export dashboard as PDF\", \"priority\": \"medium\", \"automated\": false}\n      ]\n    },\n    {\n      \"name\": \"Search\",\n      \"test_cases\": [\n        {\"id\": \"TC-008\", \"description\": \"Full-text search returns results\", \"priority\": \"critical\", \"automated\": true},\n        {\"id\": \"TC-009\", \"description\": \"Search with filters\", \"priority\": \"high\", \"automated\": true},\n        {\"id\": \"TC-010\", \"description\": \"Empty search handling\", \"priority\": \"low\", \"automated\": true}\n      ]\n    }\n  ]\n}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python test_matrix.py", "exit": 0},
+      {"type": "file_exists", "path": "TEST_MATRIX.md"},
+      {"type": "file_match", "path": "TEST_MATRIX.md", "text": "Authentication"},
+      {"type": "file_match", "path": "TEST_MATRIX.md", "text": "TC-001"},
+      {"type": "file_match", "path": "TEST_MATRIX.md", "text": "staging"},
+      {"type": "word_count", "path": "TEST_MATRIX.md", "min": 200}
+    ],
+    "tags": ["test-matrix", "qa", "documentation", "tables"]
+  },
+  {
+    "id": "mb-189",
+    "cat": "text",
+    "diff": "hard",
+    "title": "Migration Guide from Diff",
+    "src": "m/todayilearned",
+    "prompt": "Write a Python script `migration_guide.py` that reads `api_v1.json` and `api_v2.json` (each an array of endpoint objects with `method`, `path`, `params`, `response_fields`) and generates `MIGRATION.md`. The guide should: (1) detect removed endpoints, (2) detect new endpoints, (3) detect changed endpoints (different params or response_fields), (4) for each change provide a Before/After code example showing the old and new request format, (5) include a migration checklist at the bottom. Sort by change severity (removed > changed > added).",
+    "input": {
+      "api_v1.json": "[\n  {\"method\": \"GET\", \"path\": \"/api/v1/users\", \"params\": [\"page\", \"limit\"], \"response_fields\": [\"id\", \"name\", \"email\"]},\n  {\"method\": \"POST\", \"path\": \"/api/v1/users\", \"params\": [\"name\", \"email\", \"password\"], \"response_fields\": [\"id\", \"name\"]},\n  {\"method\": \"GET\", \"path\": \"/api/v1/users/:id\", \"params\": [], \"response_fields\": [\"id\", \"name\", \"email\", \"created_at\"]},\n  {\"method\": \"DELETE\", \"path\": \"/api/v1/users/:id\", \"params\": [], \"response_fields\": [\"success\"]},\n  {\"method\": \"GET\", \"path\": \"/api/v1/posts\", \"params\": [\"page\"], \"response_fields\": [\"id\", \"title\", \"body\"]},\n  {\"method\": \"GET\", \"path\": \"/api/v1/legacy/stats\", \"params\": [], \"response_fields\": [\"count\", \"active\"]}\n]",
+      "api_v2.json": "[\n  {\"method\": \"GET\", \"path\": \"/api/v2/users\", \"params\": [\"page\", \"limit\", \"sort\", \"filter\"], \"response_fields\": [\"id\", \"name\", \"email\", \"role\"]},\n  {\"method\": \"POST\", \"path\": \"/api/v2/users\", \"params\": [\"name\", \"email\", \"password\", \"role\"], \"response_fields\": [\"id\", \"name\", \"role\"]},\n  {\"method\": \"GET\", \"path\": \"/api/v2/users/:id\", \"params\": [\"fields\"], \"response_fields\": [\"id\", \"name\", \"email\", \"role\", \"created_at\", \"updated_at\"]},\n  {\"method\": \"DELETE\", \"path\": \"/api/v2/users/:id\", \"params\": [], \"response_fields\": [\"success\", \"deleted_at\"]},\n  {\"method\": \"GET\", \"path\": \"/api/v2/posts\", \"params\": [\"page\", \"limit\", \"author\"], \"response_fields\": [\"id\", \"title\", \"body\", \"author\", \"tags\"]},\n  {\"method\": \"GET\", \"path\": \"/api/v2/analytics\", \"params\": [\"range\", \"metrics\"], \"response_fields\": [\"data\", \"period\"]}\n]"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python migration_guide.py", "exit": 0},
+      {"type": "file_exists", "path": "MIGRATION.md"},
+      {"type": "file_match", "path": "MIGRATION.md", "text": "legacy/stats"},
+      {"type": "file_match", "path": "MIGRATION.md", "text": "analytics"},
+      {"type": "file_match", "path": "MIGRATION.md", "text": "Checklist"},
+      {"type": "word_count", "path": "MIGRATION.md", "min": 200}
+    ],
+    "tags": ["migration", "api", "diff", "guide"]
+  },
+  {
+    "id": "mb-190",
+    "cat": "text",
+    "diff": "hard",
+    "title": "Documentation Site with Cross-references",
+    "src": "m/showandtell",
+    "prompt": "Write a Python script `gen_docs_site.py` that reads `knowledge_base.json` (array of article objects with `id`, `title`, `category`, `content`, `related_ids` array, `tags` array) and generates a `kb/` directory with: (1) one markdown file per article named `id.md` where related_ids are rendered as working relative links to other article files, (2) `kb/index.md` with articles grouped by category, (3) `kb/tags.md` listing all unique tags and under each tag the articles that have it, (4) each article file should include breadcrumb navigation (Home > Category > Article title). Verify all cross-reference links point to existing files.",
+    "input": {
+      "knowledge_base.json": "[\n  {\"id\": \"kb-001\", \"title\": \"Getting Started\", \"category\": \"Basics\", \"content\": \"Welcome to the platform. Start here to learn the fundamentals.\", \"related_ids\": [\"kb-002\", \"kb-003\"], \"tags\": [\"beginner\", \"overview\"]},\n  {\"id\": \"kb-002\", \"title\": \"Authentication Setup\", \"category\": \"Basics\", \"content\": \"Configure SSO or username/password auth for your organization.\", \"related_ids\": [\"kb-001\", \"kb-004\"], \"tags\": [\"auth\", \"beginner\", \"security\"]},\n  {\"id\": \"kb-003\", \"title\": \"API Quick Start\", \"category\": \"API\", \"content\": \"Make your first API call in under 5 minutes.\", \"related_ids\": [\"kb-001\", \"kb-005\"], \"tags\": [\"api\", \"beginner\"]},\n  {\"id\": \"kb-004\", \"title\": \"Advanced Security\", \"category\": \"Security\", \"content\": \"Configure IP whitelisting, audit logs, and encryption at rest.\", \"related_ids\": [\"kb-002\"], \"tags\": [\"security\", \"advanced\"]},\n  {\"id\": \"kb-005\", \"title\": \"Webhook Integration\", \"category\": \"API\", \"content\": \"Set up webhooks to receive real-time event notifications.\", \"related_ids\": [\"kb-003\", \"kb-006\"], \"tags\": [\"api\", \"integration\", \"advanced\"]},\n  {\"id\": \"kb-006\", \"title\": \"Troubleshooting Guide\", \"category\": \"Support\", \"content\": \"Common issues and their resolutions.\", \"related_ids\": [\"kb-001\", \"kb-005\"], \"tags\": [\"support\", \"troubleshooting\"]}\n]"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python gen_docs_site.py", "exit": 0},
+      {"type": "file_exists", "path": "kb/index.md"},
+      {"type": "file_exists", "path": "kb/tags.md"},
+      {"type": "file_exists", "path": "kb/kb-001.md"},
+      {"type": "file_count", "dir": "kb/", "min": 8},
+      {"type": "file_match", "path": "kb/kb-001.md", "text": "kb-002.md"},
+      {"type": "file_match", "path": "kb/tags.md", "text": "security"},
+      {"type": "file_match", "path": "kb/index.md", "text": "## Basics"}
+    ],
+    "tags": ["knowledge-base", "cross-references", "multi-file", "documentation"]
+  }
+]

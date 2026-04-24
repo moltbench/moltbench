@@ -1,0 +1,1372 @@
+[
+  {
+    "id": "mb-426",
+    "cat": "multi_step",
+    "diff": "easy",
+    "title": "CSV to JSON Report",
+    "src": "m/showandtell",
+    "prompt": "Read data.csv, compute the average and max of the 'score' column, and produce two files: output/summary.json (a JSON object with keys 'average', 'max', 'count') and output/report.md (a Markdown report with a table of the original data and a summary section). Write all logic in pipeline.py.",
+    "input": {
+      "data.csv": "name,score\nAlice,85\nBob,92\nCharlie,78\nDiana,95\nEve,88"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "pipeline.py"},
+      {"type": "run", "cmd": "python pipeline.py", "exit": 0},
+      {"type": "json_valid", "path": "output/summary.json", "min_length": 3},
+      {"type": "file_match", "path": "output/report.md", "pattern": "average|Average"}
+    ],
+    "tags": ["python", "csv", "json", "markdown", "pipeline"]
+  },
+  {
+    "id": "mb-427",
+    "cat": "multi_step",
+    "diff": "easy",
+    "title": "Project Scaffolding",
+    "src": "m/coding",
+    "prompt": "Create a Python project scaffold with the following structure: myproject/src/__init__.py, myproject/src/main.py (a 'hello world' main function), myproject/tests/__init__.py, myproject/tests/test_main.py (a unit test for main), myproject/config.json (with keys 'name', 'version', 'debug'), and myproject/README.md (with project name and description). Write the scaffolding script in scaffold.py that creates everything when run.",
+    "input": {},
+    "checks": [
+      {"type": "run", "cmd": "python scaffold.py", "exit": 0},
+      {"type": "file_exists", "path": "myproject/src/main.py"},
+      {"type": "json_valid", "path": "myproject/config.json", "min_length": 3},
+      {"type": "file_exists", "path": "myproject/tests/test_main.py"}
+    ],
+    "tags": ["python", "scaffolding", "project-setup"]
+  },
+  {
+    "id": "mb-428",
+    "cat": "multi_step",
+    "diff": "easy",
+    "title": "Text Cleaning Pipeline",
+    "src": "m/automation",
+    "prompt": "Read raw.txt, clean it by removing blank lines, trimming whitespace, and converting to lowercase. Then produce three output files: output/clean.txt (the cleaned text), output/stats.json (with keys 'original_lines', 'cleaned_lines', 'word_count'), and output/report.md (a summary of what was cleaned). Write all logic in pipeline.py.",
+    "input": {
+      "raw.txt": "  Hello World  \n\n  This is a TEST.  \n   \n  Multiple   spaces   here.  \n\n  FINAL line.  \n\n"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python pipeline.py", "exit": 0},
+      {"type": "file_exists", "path": "output/clean.txt"},
+      {"type": "json_valid", "path": "output/stats.json", "min_length": 3},
+      {"type": "file_not_match", "path": "output/clean.txt", "pattern": "^\\s*$"}
+    ],
+    "tags": ["python", "text-processing", "pipeline"]
+  },
+  {
+    "id": "mb-429",
+    "cat": "multi_step",
+    "diff": "easy",
+    "title": "Config Merge",
+    "src": "m/automation",
+    "prompt": "Read default.json and override.json. Merge them so that override values take priority over defaults. Write the merged result to output/merged.json. Also produce output/diff.md listing which keys were overridden vs kept from defaults. Write all logic in merge.py.",
+    "input": {
+      "default.json": "{\"host\": \"localhost\", \"port\": 8080, \"debug\": false, \"log_level\": \"info\", \"timeout\": 30}",
+      "override.json": "{\"port\": 9090, \"debug\": true, \"log_level\": \"debug\"}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python merge.py", "exit": 0},
+      {"type": "json_valid", "path": "output/merged.json", "min_length": 5},
+      {"type": "file_match", "path": "output/merged.json", "pattern": "9090"},
+      {"type": "file_exists", "path": "output/diff.md"}
+    ],
+    "tags": ["python", "json", "config", "merge"]
+  },
+  {
+    "id": "mb-430",
+    "cat": "multi_step",
+    "diff": "easy",
+    "title": "Word Frequency Counter",
+    "src": "m/showandtell",
+    "prompt": "Read text.txt, count word frequencies (case-insensitive), and produce: output/frequencies.json (object mapping words to counts, sorted by count descending), output/top10.txt (the top 10 most frequent words, one per line as 'word: count'), and output/report.md (a summary with total words and unique words). Write all logic in counter.py.",
+    "input": {
+      "text.txt": "the cat sat on the mat the cat ate the rat the dog chased the cat and the rat ran from the dog the cat sat again on the mat"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python counter.py", "exit": 0},
+      {"type": "json_valid", "path": "output/frequencies.json", "min_length": 5},
+      {"type": "file_exists", "path": "output/top10.txt"},
+      {"type": "file_match", "path": "output/report.md", "pattern": "[Tt]otal|[Uu]nique"}
+    ],
+    "tags": ["python", "text-analysis", "frequency"]
+  },
+  {
+    "id": "mb-431",
+    "cat": "multi_step",
+    "diff": "easy",
+    "title": "CSV Split and Summarize",
+    "src": "m/agents",
+    "prompt": "Read employees.csv and split it into separate CSV files by department in the output/ directory (e.g., output/Engineering.csv, output/Sales.csv). Also create output/summary.json with keys for each department mapping to employee count. Write all logic in split.py.",
+    "input": {
+      "employees.csv": "name,department,salary\nAlice,Engineering,95000\nBob,Sales,72000\nCharlie,Engineering,98000\nDiana,Sales,68000\nEve,Marketing,75000\nFrank,Engineering,102000\nGrace,Marketing,78000"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python split.py", "exit": 0},
+      {"type": "file_exists", "path": "output/Engineering.csv"},
+      {"type": "json_valid", "path": "output/summary.json", "min_length": 3},
+      {"type": "file_count", "path": "output", "pattern": "*.csv", "min": 3}
+    ],
+    "tags": ["python", "csv", "split", "aggregation"]
+  },
+  {
+    "id": "mb-432",
+    "cat": "multi_step",
+    "diff": "easy",
+    "title": "Simple ETL Pipeline",
+    "src": "m/automation",
+    "prompt": "Read orders.csv, filter out rows where quantity is 0, compute total_price (quantity * price) for each row, and produce: output/cleaned.csv (the filtered data with the new total_price column), output/totals.json (with keys 'total_revenue', 'order_count', 'avg_order_value'). Write all logic in etl.py.",
+    "input": {
+      "orders.csv": "order_id,product,quantity,price\n1,Widget,5,10.00\n2,Gadget,0,25.00\n3,Widget,3,10.00\n4,Doohickey,2,15.50\n5,Gadget,1,25.00\n6,Widget,0,10.00\n7,Doohickey,4,15.50"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python etl.py", "exit": 0},
+      {"type": "file_exists", "path": "output/cleaned.csv"},
+      {"type": "json_valid", "path": "output/totals.json", "min_length": 3},
+      {"type": "file_not_match", "path": "output/cleaned.csv", "pattern": ",0,"}
+    ],
+    "tags": ["python", "etl", "csv", "pipeline"]
+  },
+  {
+    "id": "mb-433",
+    "cat": "multi_step",
+    "diff": "easy",
+    "title": "Markdown Table Generator",
+    "src": "m/showandtell",
+    "prompt": "Read data.csv, convert it into a well-formatted Markdown table in output/table.md. Also create output/metadata.json with keys 'columns', 'rows', 'column_names'. Then create output/data.txt as a plain-text aligned table. Write all logic in generate.py.",
+    "input": {
+      "data.csv": "city,country,population,area_km2\nTokyo,Japan,13960000,2194\nDelhi,India,11030000,1484\nShanghai,China,24870000,6341\nSaoPaulo,Brazil,12330000,1521"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python generate.py", "exit": 0},
+      {"type": "file_match", "path": "output/table.md", "pattern": "\\|.*\\|"},
+      {"type": "json_valid", "path": "output/metadata.json", "min_length": 3},
+      {"type": "file_exists", "path": "output/data.txt"}
+    ],
+    "tags": ["python", "csv", "markdown", "formatting"]
+  },
+  {
+    "id": "mb-434",
+    "cat": "multi_step",
+    "diff": "easy",
+    "title": "Log Level Splitter",
+    "src": "m/automation",
+    "prompt": "Read app.log, split entries by log level (INFO, WARN, ERROR) into separate files: output/info.log, output/warn.log, output/error.log. Also create output/counts.json mapping each level to its line count. Write all logic in splitter.py.",
+    "input": {
+      "app.log": "2026-01-15 10:00:01 INFO Application started\n2026-01-15 10:00:05 INFO User login: alice\n2026-01-15 10:00:12 WARN Slow query detected: 2.3s\n2026-01-15 10:00:15 ERROR Database connection timeout\n2026-01-15 10:00:18 INFO Request processed\n2026-01-15 10:00:22 WARN Memory usage at 85%\n2026-01-15 10:00:25 ERROR Null pointer exception in module X\n2026-01-15 10:00:30 INFO User logout: alice\n2026-01-15 10:00:35 WARN Disk space below 10%"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python splitter.py", "exit": 0},
+      {"type": "file_exists", "path": "output/error.log"},
+      {"type": "json_valid", "path": "output/counts.json", "min_length": 3},
+      {"type": "line_count", "path": "output/info.log", "min": 4}
+    ],
+    "tags": ["python", "log-parsing", "pipeline"]
+  },
+  {
+    "id": "mb-435",
+    "cat": "multi_step",
+    "diff": "easy",
+    "title": "Contact Card Generator",
+    "src": "m/showandtell",
+    "prompt": "Read contacts.csv and generate: output/contacts.json (array of contact objects), output/directory.md (a Markdown directory listing each person with their info), and output/emails.txt (just email addresses, one per line). Write all logic in generate.py.",
+    "input": {
+      "contacts.csv": "name,email,phone,role\nAlice Chen,alice@example.com,555-0101,Engineer\nBob Smith,bob@example.com,555-0102,Designer\nCarol Davis,carol@example.com,555-0103,Manager\nDan Lee,dan@example.com,555-0104,Engineer\nEva Brown,eva@example.com,555-0105,Analyst"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python generate.py", "exit": 0},
+      {"type": "json_valid", "path": "output/contacts.json", "min_length": 5},
+      {"type": "file_match", "path": "output/directory.md", "pattern": "Alice Chen"},
+      {"type": "line_count", "path": "output/emails.txt", "min": 5}
+    ],
+    "tags": ["python", "csv", "json", "contacts"]
+  },
+  {
+    "id": "mb-436",
+    "cat": "multi_step",
+    "diff": "easy",
+    "title": "Grade Book Calculator",
+    "src": "m/coding",
+    "prompt": "Read grades.csv, compute each student's average grade, assign letter grades (A>=90, B>=80, C>=70, D>=60, F<60), and produce: output/results.csv (with added columns 'average' and 'letter_grade'), output/stats.json (with keys 'class_average', 'highest', 'lowest', 'pass_count', 'fail_count'), and output/report.md (a summary). Write all logic in gradebook.py.",
+    "input": {
+      "grades.csv": "student,math,science,english,history\nAlice,92,88,95,90\nBob,75,82,68,71\nCharlie,58,63,55,61\nDiana,98,95,97,99\nEve,84,79,88,82"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python gradebook.py", "exit": 0},
+      {"type": "file_match", "path": "output/results.csv", "pattern": "average"},
+      {"type": "json_valid", "path": "output/stats.json", "min_length": 4},
+      {"type": "file_exists", "path": "output/report.md"}
+    ],
+    "tags": ["python", "csv", "grades", "statistics"]
+  },
+  {
+    "id": "mb-437",
+    "cat": "multi_step",
+    "diff": "easy",
+    "title": "Inventory Snapshot",
+    "src": "m/agents",
+    "prompt": "Read inventory.csv, identify items where quantity < 10 as 'low stock'. Produce: output/low_stock.csv (only low stock items), output/inventory.json (full inventory as array of objects), output/alert.md (a Markdown alert listing low stock items with quantities). Write all logic in inventory.py.",
+    "input": {
+      "inventory.csv": "item,category,quantity,unit_price\nBolts,Hardware,250,0.15\nScrews,Hardware,8,0.10\nPaint,Supplies,3,24.99\nBrushes,Supplies,45,5.99\nNails,Hardware,5,0.08\nTape,Supplies,120,3.49\nGlue,Supplies,2,7.99"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python inventory.py", "exit": 0},
+      {"type": "file_exists", "path": "output/low_stock.csv"},
+      {"type": "json_valid", "path": "output/inventory.json", "min_length": 7},
+      {"type": "file_match", "path": "output/alert.md", "pattern": "[Ll]ow [Ss]tock"}
+    ],
+    "tags": ["python", "inventory", "csv", "alerts"]
+  },
+  {
+    "id": "mb-438",
+    "cat": "multi_step",
+    "diff": "easy",
+    "title": "Directory Index Generator",
+    "src": "m/coding",
+    "prompt": "Write scaffold.py that: (1) creates a directory structure docs/api/, docs/guides/, docs/tutorials/ with a placeholder .gitkeep in each, (2) generates docs/index.md listing all directories, (3) generates docs/manifest.json mapping each directory to its file count, (4) generates docs/tree.txt showing the directory tree. Run scaffold.py to produce everything.",
+    "input": {},
+    "checks": [
+      {"type": "run", "cmd": "python scaffold.py", "exit": 0},
+      {"type": "file_exists", "path": "docs/index.md"},
+      {"type": "json_valid", "path": "docs/manifest.json", "min_length": 3},
+      {"type": "file_exists", "path": "docs/tree.txt"}
+    ],
+    "tags": ["python", "scaffolding", "documentation"]
+  },
+  {
+    "id": "mb-439",
+    "cat": "multi_step",
+    "diff": "easy",
+    "title": "Multi-format Export",
+    "src": "m/showandtell",
+    "prompt": "Read source.txt, and produce three output formats: output/content.md (text wrapped in Markdown with a title header and paragraph formatting), output/content.json (a JSON object with keys 'title' set to the first line, 'body' set to the remaining text, 'word_count'), and output/content.txt (the original text with line numbers prepended). Write all logic in export.py.",
+    "input": {
+      "source.txt": "My Research Findings\nThe experiment yielded promising results across all test groups.\nGroup A showed a 23% improvement over baseline.\nGroup B showed a 31% improvement with the modified protocol.\nFurther testing is recommended to validate these initial findings."
+    },
+    "checks": [
+      {"type": "run", "cmd": "python export.py", "exit": 0},
+      {"type": "file_match", "path": "output/content.md", "pattern": "# "},
+      {"type": "json_valid", "path": "output/content.json", "min_length": 3},
+      {"type": "file_match", "path": "output/content.txt", "pattern": "^1"}
+    ],
+    "tags": ["python", "multi-format", "export"]
+  },
+  {
+    "id": "mb-440",
+    "cat": "multi_step",
+    "diff": "easy",
+    "title": "Bash Script + Validator",
+    "src": "m/coding",
+    "prompt": "Create build.sh that: (1) creates output/ directory, (2) copies data.csv into output/backup.csv, (3) counts lines in data.csv and writes the count to output/linecount.txt, (4) extracts just the header row into output/schema.txt. Then create validate.py that reads output/linecount.txt and output/schema.txt and produces output/validation.json with keys 'line_count', 'columns', 'valid' (boolean). Run build.sh first, then validate.py.",
+    "input": {
+      "data.csv": "id,name,value,active\n1,Alpha,100,true\n2,Beta,200,false\n3,Gamma,150,true\n4,Delta,300,true"
+    },
+    "checks": [
+      {"type": "run", "cmd": "bash build.sh && python validate.py", "exit": 0},
+      {"type": "file_exists", "path": "output/backup.csv"},
+      {"type": "json_valid", "path": "output/validation.json", "min_length": 3},
+      {"type": "file_exists", "path": "output/schema.txt"}
+    ],
+    "tags": ["bash", "python", "validation", "pipeline"]
+  },
+  {
+    "id": "mb-441",
+    "cat": "multi_step",
+    "diff": "easy",
+    "title": "Simple Changelog Generator",
+    "src": "m/automation",
+    "prompt": "Read commits.txt (one commit message per line prefixed with a type like 'feat:', 'fix:', 'docs:') and generate: output/changelog.md (commits grouped by type with Markdown headers), output/stats.json (object mapping each type to its count), output/summary.txt (one-line summary like '3 features, 2 fixes, 1 docs'). Write all logic in changelog.py.",
+    "input": {
+      "commits.txt": "feat: add user authentication\nfix: resolve login timeout issue\nfeat: implement dashboard widgets\ndocs: update API reference\nfix: correct date formatting bug\nfeat: add export to PDF feature\ndocs: add installation guide\nfix: fix memory leak in parser"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python changelog.py", "exit": 0},
+      {"type": "file_match", "path": "output/changelog.md", "pattern": "feat|fix|docs"},
+      {"type": "json_valid", "path": "output/stats.json", "min_length": 3},
+      {"type": "file_exists", "path": "output/summary.txt"}
+    ],
+    "tags": ["python", "changelog", "text-processing"]
+  },
+  {
+    "id": "mb-442",
+    "cat": "multi_step",
+    "diff": "easy",
+    "title": "CSV Validation Pipeline",
+    "src": "m/agents",
+    "prompt": "Read data.csv and validate it: check for missing values, check that 'age' is numeric and between 0-150, check that 'email' contains '@'. Produce: output/valid.csv (rows that pass all checks), output/invalid.csv (rows that fail), output/report.json (with keys 'total_rows', 'valid_rows', 'invalid_rows', 'errors' as array of strings). Write all logic in validate.py.",
+    "input": {
+      "data.csv": "name,age,email\nAlice,30,alice@test.com\nBob,,bob@test.com\nCharlie,25,charlie-no-at\nDiana,200,diana@test.com\nEve,28,eve@test.com\n,22,nobody@test.com\nFrank,35,frank@test.com"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python validate.py", "exit": 0},
+      {"type": "file_exists", "path": "output/valid.csv"},
+      {"type": "file_exists", "path": "output/invalid.csv"},
+      {"type": "json_valid", "path": "output/report.json", "min_length": 4}
+    ],
+    "tags": ["python", "csv", "validation", "pipeline"]
+  },
+  {
+    "id": "mb-443",
+    "cat": "multi_step",
+    "diff": "easy",
+    "title": "Environment Config Generator",
+    "src": "m/coding",
+    "prompt": "Read base_config.json and environments.json (listing env names and their overrides). For each environment, produce a merged config file: output/dev.json, output/staging.json, output/prod.json. Also produce output/matrix.md showing a table of which keys differ across environments. Write all logic in envgen.py.",
+    "input": {
+      "base_config.json": "{\"app_name\": \"MyApp\", \"port\": 3000, \"debug\": false, \"log_level\": \"warn\", \"db_pool\": 5}",
+      "environments.json": "{\"dev\": {\"debug\": true, \"log_level\": \"debug\", \"db_pool\": 2}, \"staging\": {\"port\": 8080, \"db_pool\": 10}, \"prod\": {\"port\": 80, \"db_pool\": 50, \"log_level\": \"error\"}}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python envgen.py", "exit": 0},
+      {"type": "json_valid", "path": "output/dev.json", "min_length": 4},
+      {"type": "json_valid", "path": "output/prod.json", "min_length": 4},
+      {"type": "file_match", "path": "output/matrix.md", "pattern": "\\|"}
+    ],
+    "tags": ["python", "config", "environments", "pipeline"]
+  },
+  {
+    "id": "mb-444",
+    "cat": "multi_step",
+    "diff": "easy",
+    "title": "File Type Organizer",
+    "src": "m/automation",
+    "prompt": "Write organize.py that reads manifest.json (a list of filenames with extensions) and: (1) groups them by extension, (2) creates output/by_extension.json mapping each extension to its list of files, (3) creates output/stats.txt with a line per extension showing count, (4) creates output/report.md with a Markdown section per extension listing the files.",
+    "input": {
+      "manifest.json": "[\"report.pdf\", \"data.csv\", \"image.png\", \"notes.txt\", \"backup.csv\", \"logo.png\", \"readme.txt\", \"chart.png\", \"export.pdf\", \"config.txt\"]"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python organize.py", "exit": 0},
+      {"type": "json_valid", "path": "output/by_extension.json", "min_length": 4},
+      {"type": "file_exists", "path": "output/stats.txt"},
+      {"type": "file_match", "path": "output/report.md", "pattern": "\\.csv|\\.png|\\.pdf|\\.txt"}
+    ],
+    "tags": ["python", "json", "organization", "pipeline"]
+  },
+  {
+    "id": "mb-445",
+    "cat": "multi_step",
+    "diff": "easy",
+    "title": "Task List Processor",
+    "src": "m/agents",
+    "prompt": "Read tasks.csv and generate: output/by_status.json (tasks grouped by status: 'todo', 'in_progress', 'done'), output/kanban.md (a Markdown Kanban-style board with sections per status), output/overdue.txt (list of tasks where due_date < '2026-03-01'). Write all logic in taskproc.py.",
+    "input": {
+      "tasks.csv": "id,title,status,assignee,due_date\n1,Design mockups,done,Alice,2026-01-15\n2,Build API,in_progress,Bob,2026-02-20\n3,Write tests,todo,Charlie,2026-03-10\n4,Deploy staging,todo,Diana,2026-02-25\n5,Fix login bug,done,Eve,2026-01-20\n6,Update docs,in_progress,Alice,2026-02-15\n7,Performance audit,todo,Bob,2026-04-01"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python taskproc.py", "exit": 0},
+      {"type": "json_valid", "path": "output/by_status.json", "min_length": 3},
+      {"type": "file_match", "path": "output/kanban.md", "pattern": "todo|in_progress|done"},
+      {"type": "file_exists", "path": "output/overdue.txt"}
+    ],
+    "tags": ["python", "csv", "task-management", "pipeline"]
+  },
+  {
+    "id": "mb-446",
+    "cat": "multi_step",
+    "diff": "easy",
+    "title": "Recipe Book Formatter",
+    "src": "m/showandtell",
+    "prompt": "Read recipes.json (array of recipe objects with 'name', 'ingredients', 'steps' fields) and produce: output/cookbook.md (formatted Markdown cookbook with each recipe as a section), output/shopping_list.txt (all unique ingredients sorted alphabetically, one per line), output/index.json (object mapping recipe names to ingredient counts). Write all logic in cookbook.py.",
+    "input": {
+      "recipes.json": "[{\"name\": \"Pasta Aglio e Olio\", \"ingredients\": [\"spaghetti\", \"garlic\", \"olive oil\", \"chili flakes\", \"parsley\"], \"steps\": [\"Boil pasta\", \"Saute garlic in olive oil\", \"Add chili flakes\", \"Toss pasta with sauce\", \"Garnish with parsley\"]}, {\"name\": \"Caesar Salad\", \"ingredients\": [\"romaine lettuce\", \"croutons\", \"parmesan\", \"olive oil\", \"lemon\", \"garlic\"], \"steps\": [\"Wash and chop lettuce\", \"Make dressing with oil, lemon, garlic\", \"Toss with croutons and parmesan\"]}, {\"name\": \"Tomato Soup\", \"ingredients\": [\"tomatoes\", \"onion\", \"garlic\", \"olive oil\", \"basil\", \"salt\"], \"steps\": [\"Saute onion and garlic\", \"Add tomatoes and simmer\", \"Blend until smooth\", \"Season with basil and salt\"]}]"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python cookbook.py", "exit": 0},
+      {"type": "file_match", "path": "output/cookbook.md", "pattern": "Pasta Aglio"},
+      {"type": "file_exists", "path": "output/shopping_list.txt"},
+      {"type": "json_valid", "path": "output/index.json", "min_length": 3}
+    ],
+    "tags": ["python", "json", "markdown", "formatting"]
+  },
+  {
+    "id": "mb-447",
+    "cat": "multi_step",
+    "diff": "easy",
+    "title": "Code Skeleton + Test",
+    "src": "m/coding",
+    "prompt": "Write pipeline.py that creates: src/calculator.py (a Calculator class with add, subtract, multiply, divide methods), tests/test_calculator.py (unit tests using unittest for all four methods, including a test for division by zero), and run_tests.py (a script that runs the tests and writes results to output/test_results.txt). Then run run_tests.py.",
+    "input": {},
+    "checks": [
+      {"type": "run", "cmd": "python pipeline.py && python run_tests.py", "exit": 0},
+      {"type": "file_exists", "path": "src/calculator.py"},
+      {"type": "file_exists", "path": "tests/test_calculator.py"},
+      {"type": "file_match", "path": "output/test_results.txt", "pattern": "OK|passed|PASS"}
+    ],
+    "tags": ["python", "testing", "code-generation"]
+  },
+  {
+    "id": "mb-448",
+    "cat": "multi_step",
+    "diff": "easy",
+    "title": "Survey Results Summarizer",
+    "src": "m/showandtell",
+    "prompt": "Read survey.csv and produce: output/results.json (average rating per question), output/summary.md (Markdown report with per-question averages and an overall satisfaction score), output/respondents.txt (list of unique respondent IDs). Write all logic in survey.py.",
+    "input": {
+      "survey.csv": "respondent_id,q1_rating,q2_rating,q3_rating,q4_rating\nR001,5,4,3,5\nR002,4,4,4,4\nR003,3,2,4,3\nR004,5,5,5,5\nR005,2,3,2,3\nR006,4,4,3,4\nR007,5,5,4,5"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python survey.py", "exit": 0},
+      {"type": "json_valid", "path": "output/results.json", "min_length": 4},
+      {"type": "file_match", "path": "output/summary.md", "pattern": "[Aa]verage|[Ss]core"},
+      {"type": "line_count", "path": "output/respondents.txt", "min": 7}
+    ],
+    "tags": ["python", "csv", "survey", "statistics"]
+  },
+  {
+    "id": "mb-449",
+    "cat": "multi_step",
+    "diff": "easy",
+    "title": "Address Book Normalizer",
+    "src": "m/automation",
+    "prompt": "Read addresses.csv (with inconsistent formatting: mixed case, extra spaces, varied state abbreviations). Clean and normalize each field, then produce: output/normalized.csv (cleaned data), output/duplicates.json (any entries with the same normalized name, as array), output/report.md (summary of changes made). Write all logic in normalize.py.",
+    "input": {
+      "addresses.csv": "name,street,city,state,zip\n  john doe  ,  123 Main St  ,  new york  ,  NY  ,10001\nJane Smith,456 Oak Ave,los angeles,CA,90001\n  JOHN DOE  ,123 main st,New York,ny,10001\nBob Wilson,789 Pine Rd,  CHICAGO  ,IL,60601\njane smith,456 oak ave,Los Angeles,ca,90001"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python normalize.py", "exit": 0},
+      {"type": "file_exists", "path": "output/normalized.csv"},
+      {"type": "json_valid", "path": "output/duplicates.json", "min_length": 1},
+      {"type": "file_exists", "path": "output/report.md"}
+    ],
+    "tags": ["python", "csv", "normalization", "dedup"]
+  },
+  {
+    "id": "mb-450",
+    "cat": "multi_step",
+    "diff": "easy",
+    "title": "Bookmark Organizer",
+    "src": "m/agents",
+    "prompt": "Read bookmarks.json (array of objects with 'url', 'title', 'category') and produce: output/by_category.md (bookmarks grouped under Markdown headers by category), output/stats.json (object with category counts and total count), output/urls.txt (all URLs, one per line). Write all logic in organize.py.",
+    "input": {
+      "bookmarks.json": "[{\"url\": \"https://example.com/python\", \"title\": \"Python Docs\", \"category\": \"Programming\"}, {\"url\": \"https://example.com/news\", \"title\": \"Daily News\", \"category\": \"News\"}, {\"url\": \"https://example.com/rust\", \"title\": \"Rust Book\", \"category\": \"Programming\"}, {\"url\": \"https://example.com/recipe\", \"title\": \"Best Cookies\", \"category\": \"Cooking\"}, {\"url\": \"https://example.com/ml\", \"title\": \"ML Tutorial\", \"category\": \"Programming\"}, {\"url\": \"https://example.com/weather\", \"title\": \"Weather App\", \"category\": \"News\"}]"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python organize.py", "exit": 0},
+      {"type": "file_match", "path": "output/by_category.md", "pattern": "Programming|Cooking|News"},
+      {"type": "json_valid", "path": "output/stats.json", "min_length": 3},
+      {"type": "line_count", "path": "output/urls.txt", "min": 6}
+    ],
+    "tags": ["python", "json", "organization"]
+  },
+  {
+    "id": "mb-451",
+    "cat": "multi_step",
+    "diff": "easy",
+    "title": "Student Roster Builder",
+    "src": "m/coding",
+    "prompt": "Read roster.csv, sort students by last name, and produce: output/sorted_roster.csv (sorted by last_name), output/roster.json (array of student objects), output/class_list.md (a numbered Markdown list of 'Last, First - Grade'), output/grade_counts.txt (count of students per grade level). Write all logic in roster.py.",
+    "input": {
+      "roster.csv": "first_name,last_name,grade,student_id\nAlice,Zhang,10,S001\nBob,Adams,11,S002\nCarol,Martinez,10,S003\nDan,Johnson,12,S004\nEva,Kim,11,S005\nFrank,Adams,10,S006"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python roster.py", "exit": 0},
+      {"type": "file_exists", "path": "output/sorted_roster.csv"},
+      {"type": "json_valid", "path": "output/roster.json", "min_length": 6},
+      {"type": "file_exists", "path": "output/class_list.md"}
+    ],
+    "tags": ["python", "csv", "sorting", "roster"]
+  },
+  {
+    "id": "mb-452",
+    "cat": "multi_step",
+    "diff": "medium",
+    "title": "Full Data Pipeline with Validation",
+    "src": "m/automation",
+    "prompt": "Build a complete data pipeline: Read sales.csv, validate data (reject rows with negative amounts or missing fields), clean the valid rows (trim whitespace, normalize dates to YYYY-MM-DD), compute per-region totals, and produce: output/clean.csv (validated and cleaned data), output/rejected.csv (invalid rows with reason column), output/by_region.json (region -> {total, count, average}), output/report.md (full pipeline report with sections for data quality, regional breakdown, and top performers). Write all logic in pipeline.py.",
+    "input": {
+      "sales.csv": "date,region,salesperson,amount,product\n2026-01-15,North,Alice,1500.00,Widget\n2026/02/20,South,Bob,-200.00,Gadget\n2026-01-22,North,Charlie,2300.50,Widget\n 2026-03-01 ,East,,1800.00,Doohickey\n2026-02-14,South,Diana,950.75,Gadget\n2026-01-30,North,Alice,3200.00,Premium Widget\n2026-03-15,West,Eve,1100.00,Widget\n2026-02-28,East,Frank,2750.25,Doohickey\n2026-01-10,South,Diana,400.00,Gadget\n2026-03-20,West,Eve,1650.50,Premium Widget"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python pipeline.py", "exit": 0},
+      {"type": "file_exists", "path": "output/clean.csv"},
+      {"type": "json_valid", "path": "output/by_region.json", "min_length": 3},
+      {"type": "file_match", "path": "output/report.md", "pattern": "[Rr]egion|[Tt]otal"}
+    ],
+    "tags": ["python", "data-pipeline", "validation", "csv"]
+  },
+  {
+    "id": "mb-453",
+    "cat": "multi_step",
+    "diff": "medium",
+    "title": "HTML Parser + Analysis",
+    "src": "m/showandtell",
+    "prompt": "Read page.html, extract all links (href attributes) and headings (h1-h6 text), then produce: output/links.json (array of {url, text} objects), output/headings.json (array of {level, text} objects), output/structure.md (document outline showing heading hierarchy with indentation), output/analysis.txt (stats: total links, broken links pattern ('#' only), heading count by level). Write all logic in parser.py. Use only Python stdlib (html.parser).",
+    "input": {
+      "page.html": "<!DOCTYPE html><html><head><title>Test Page</title></head><body><h1>Main Title</h1><p>Welcome to our <a href=\"https://example.com\">website</a>.</p><h2>Section One</h2><p>Some content with <a href=\"#\">broken link</a> and <a href=\"https://docs.example.com/api\">API docs</a>.</p><h3>Subsection A</h3><p>Details here. <a href=\"https://example.com/about\">About us</a></p><h2>Section Two</h2><p>More content. <a href=\"#top\">Back to top</a></p><h3>Subsection B</h3><p><a href=\"https://example.com/contact\">Contact</a> us.</p><h2>Section Three</h2><p>Final <a href=\"#\">placeholder</a> section.</p></body></html>"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python parser.py", "exit": 0},
+      {"type": "json_valid", "path": "output/links.json", "min_length": 5},
+      {"type": "json_valid", "path": "output/headings.json", "min_length": 5},
+      {"type": "file_match", "path": "output/structure.md", "pattern": "Main Title"}
+    ],
+    "tags": ["python", "html", "parsing", "analysis"]
+  },
+  {
+    "id": "mb-454",
+    "cat": "multi_step",
+    "diff": "medium",
+    "title": "Code Documentation Generator",
+    "src": "m/coding",
+    "prompt": "Read source.py, parse it to extract all function definitions (names, parameters, docstrings), then produce: output/api.json (array of function descriptors with 'name', 'params', 'docstring'), output/api_docs.md (formatted API documentation with function signatures and descriptions), output/toc.md (table of contents linking to each function), output/changelog.md (a template changelog with 'Added' section listing all functions). Write all logic in docgen.py. Use only Python stdlib (ast module).",
+    "input": {
+      "source.py": "def add(a, b):\n    \"\"\"Add two numbers and return the result.\"\"\"\n    return a + b\n\ndef subtract(a, b):\n    \"\"\"Subtract b from a and return the result.\"\"\"\n    return a - b\n\ndef multiply(a, b):\n    \"\"\"Multiply two numbers and return the product.\"\"\"\n    return a * b\n\ndef divide(a, b):\n    \"\"\"Divide a by b. Raises ValueError if b is zero.\"\"\"\n    if b == 0:\n        raise ValueError(\"Cannot divide by zero\")\n    return a / b\n\ndef power(base, exponent):\n    \"\"\"Raise base to the given exponent.\"\"\"\n    return base ** exponent\n\ndef factorial(n):\n    \"\"\"Compute the factorial of n. n must be non-negative.\"\"\"\n    if n < 0:\n        raise ValueError(\"n must be non-negative\")\n    if n <= 1:\n        return 1\n    return n * factorial(n - 1)\n"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python docgen.py", "exit": 0},
+      {"type": "json_valid", "path": "output/api.json", "min_length": 6},
+      {"type": "file_match", "path": "output/api_docs.md", "pattern": "factorial|divide|multiply"},
+      {"type": "file_match", "path": "output/toc.md", "pattern": "add|subtract"}
+    ],
+    "tags": ["python", "ast", "documentation", "code-analysis"]
+  },
+  {
+    "id": "mb-455",
+    "cat": "multi_step",
+    "diff": "medium",
+    "title": "Multi-CSV Join and Aggregate",
+    "src": "m/agents",
+    "prompt": "Read customers.csv and orders.csv, join them on customer_id, compute total spent per customer, and produce: output/joined.csv (full joined data), output/customer_totals.json (customer_id -> {name, total_spent, order_count}), output/top_customers.md (Markdown table of top 3 customers by total spent), output/summary.json (overall stats: total_revenue, total_orders, avg_order_value, unique_customers). Write all logic in warehouse.py.",
+    "input": {
+      "customers.csv": "customer_id,name,email,city\nC001,Alice Chen,alice@test.com,New York\nC002,Bob Smith,bob@test.com,Chicago\nC003,Carol Davis,carol@test.com,Boston\nC004,Dan Lee,dan@test.com,Seattle",
+      "orders.csv": "order_id,customer_id,amount,date\nO001,C001,150.00,2026-01-15\nO002,C002,85.50,2026-01-20\nO003,C001,230.00,2026-02-10\nO004,C003,190.75,2026-02-15\nO005,C001,75.00,2026-03-01\nO006,C002,320.00,2026-03-05\nO007,C004,95.25,2026-03-10\nO008,C003,410.50,2026-03-15\nO009,C002,55.00,2026-03-20"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python warehouse.py", "exit": 0},
+      {"type": "file_exists", "path": "output/joined.csv"},
+      {"type": "json_valid", "path": "output/customer_totals.json", "min_length": 4},
+      {"type": "json_valid", "path": "output/summary.json", "min_length": 4}
+    ],
+    "tags": ["python", "csv", "join", "warehouse"]
+  },
+  {
+    "id": "mb-456",
+    "cat": "multi_step",
+    "diff": "medium",
+    "title": "Release Notes Generator",
+    "src": "m/automation",
+    "prompt": "Read version.json (current version) and changes.json (array of change objects with 'type', 'description', 'breaking' fields). Bump the version (major if any breaking changes, minor if features, patch if only fixes), generate: output/version.json (updated version), output/release_notes.md (formatted release notes with Breaking Changes, Features, Fixes sections), output/tag.txt (the new version tag like 'v1.3.0'), output/manifest.json (release manifest with version, date, change_count, has_breaking). Write all logic in release.py.",
+    "input": {
+      "version.json": "{\"major\": 1, \"minor\": 2, \"patch\": 5}",
+      "changes.json": "[{\"type\": \"feature\", \"description\": \"Add dark mode support\", \"breaking\": false}, {\"type\": \"fix\", \"description\": \"Fix crash on empty input\", \"breaking\": false}, {\"type\": \"feature\", \"description\": \"New plugin API\", \"breaking\": true}, {\"type\": \"fix\", \"description\": \"Correct timezone handling\", \"breaking\": false}, {\"type\": \"feature\", \"description\": \"Add batch processing\", \"breaking\": false}]"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python release.py", "exit": 0},
+      {"type": "json_valid", "path": "output/version.json", "min_length": 3},
+      {"type": "file_match", "path": "output/tag.txt", "pattern": "v2\\.0\\.0"},
+      {"type": "file_match", "path": "output/release_notes.md", "pattern": "[Bb]reaking"}
+    ],
+    "tags": ["python", "release", "versioning", "changelog"]
+  },
+  {
+    "id": "mb-457",
+    "cat": "multi_step",
+    "diff": "medium",
+    "title": "Migration Workflow",
+    "src": "m/agents",
+    "prompt": "Read legacy_data.json (array of objects in old format with 'fullName', 'emailAddr', 'phoneNum', 'dept') and transform to new format (split fullName into 'first_name'/'last_name', rename emailAddr to 'email', phoneNum to 'phone', dept to 'department', add 'migrated_at' timestamp). Produce: output/migrated.json (new format), output/mapping.json (old_field -> new_field mapping), output/validation.json (per-record validation results), output/migration_report.md (summary with success/failure counts and field mapping table). Write all logic in migrate.py.",
+    "input": {
+      "legacy_data.json": "[{\"fullName\": \"Alice Chen\", \"emailAddr\": \"alice@old.com\", \"phoneNum\": \"555-0101\", \"dept\": \"ENG\"}, {\"fullName\": \"Bob Smith\", \"emailAddr\": \"bob@old.com\", \"phoneNum\": \"\", \"dept\": \"SALES\"}, {\"fullName\": \"Carol Davis\", \"emailAddr\": \"\", \"phoneNum\": \"555-0103\", \"dept\": \"HR\"}, {\"fullName\": \"Dan\", \"emailAddr\": \"dan@old.com\", \"phoneNum\": \"555-0104\", \"dept\": \"ENG\"}, {\"fullName\": \"Eva Marie Johnson\", \"emailAddr\": \"eva@old.com\", \"phoneNum\": \"555-0105\", \"dept\": \"MKT\"}]"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python migrate.py", "exit": 0},
+      {"type": "json_valid", "path": "output/migrated.json", "min_length": 5},
+      {"type": "json_valid", "path": "output/mapping.json", "min_length": 4},
+      {"type": "file_match", "path": "output/migration_report.md", "pattern": "[Mm]igrat"}
+    ],
+    "tags": ["python", "migration", "json", "transformation"]
+  },
+  {
+    "id": "mb-458",
+    "cat": "multi_step",
+    "diff": "medium",
+    "title": "Metrics Dashboard Config",
+    "src": "m/automation",
+    "prompt": "Read metrics.json (array of metric definitions with 'name', 'type', 'threshold', 'unit') and produce: output/dashboard.json (dashboard config with panels for each metric), output/alerts.json (alert rules: one per metric with warning at 80% threshold and critical at threshold), output/health_check.py (a script that reads metrics_data.json and checks against thresholds, outputting pass/fail), output/setup_report.md (summary of configured metrics, alert counts, dashboard layout). Write all logic in monitoring.py.",
+    "input": {
+      "metrics.json": "[{\"name\": \"cpu_usage\", \"type\": \"gauge\", \"threshold\": 90, \"unit\": \"percent\"}, {\"name\": \"memory_usage\", \"type\": \"gauge\", \"threshold\": 85, \"unit\": \"percent\"}, {\"name\": \"request_latency\", \"type\": \"histogram\", \"threshold\": 500, \"unit\": \"ms\"}, {\"name\": \"error_rate\", \"type\": \"counter\", \"threshold\": 5, \"unit\": \"percent\"}, {\"name\": \"disk_usage\", \"type\": \"gauge\", \"threshold\": 80, \"unit\": \"percent\"}]"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python monitoring.py", "exit": 0},
+      {"type": "json_valid", "path": "output/dashboard.json", "min_length": 5},
+      {"type": "json_valid", "path": "output/alerts.json", "min_length": 5},
+      {"type": "file_exists", "path": "output/health_check.py"}
+    ],
+    "tags": ["python", "monitoring", "config", "dashboard"]
+  },
+  {
+    "id": "mb-459",
+    "cat": "multi_step",
+    "diff": "medium",
+    "title": "Portfolio Page Generator",
+    "src": "m/showandtell",
+    "prompt": "Read projects.json (array of project objects with 'name', 'description', 'tags', 'url', 'year') and generate: output/portfolio.html (a simple HTML page with project cards), output/sitemap.json (array of page URLs), output/manifest.json (asset manifest mapping project names to their card IDs), output/tags.md (Markdown listing of all unique tags with project counts). Write all logic in portfolio.py.",
+    "input": {
+      "projects.json": "[{\"name\": \"TaskFlow\", \"description\": \"A kanban-style task management app\", \"tags\": [\"python\", \"web\", \"productivity\"], \"url\": \"https://example.com/taskflow\", \"year\": 2025}, {\"name\": \"DataViz\", \"description\": \"Interactive data visualization toolkit\", \"tags\": [\"python\", \"data\", \"charts\"], \"url\": \"https://example.com/dataviz\", \"year\": 2024}, {\"name\": \"SecurePass\", \"description\": \"Password manager with encryption\", \"tags\": [\"python\", \"security\", \"cli\"], \"url\": \"https://example.com/securepass\", \"year\": 2025}, {\"name\": \"BlogEngine\", \"description\": \"Static site generator for blogs\", \"tags\": [\"python\", \"web\", \"markdown\"], \"url\": \"https://example.com/blogengine\", \"year\": 2024}]"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python portfolio.py", "exit": 0},
+      {"type": "file_match", "path": "output/portfolio.html", "pattern": "<html|<!DOCTYPE"},
+      {"type": "json_valid", "path": "output/manifest.json", "min_length": 4},
+      {"type": "file_match", "path": "output/tags.md", "pattern": "python"}
+    ],
+    "tags": ["python", "html", "portfolio", "generator"]
+  },
+  {
+    "id": "mb-460",
+    "cat": "multi_step",
+    "diff": "medium",
+    "title": "Log Analysis Pipeline",
+    "src": "m/agents",
+    "prompt": "Read server.log (structured log lines with timestamp, level, source, message), parse each line, detect anomalies (ERROR level or messages containing 'timeout', 'fail', 'crash'), classify them by source, and produce: output/parsed.json (all parsed log entries), output/anomalies.json (only anomalous entries with classification), output/incident_report.md (formatted incident report grouping issues by source with timeline), output/stats.json (log counts by level and source). Write all logic in analyze.py.",
+    "input": {
+      "server.log": "2026-03-15 10:00:01 INFO auth User login successful\n2026-03-15 10:00:05 INFO api Request processed in 120ms\n2026-03-15 10:00:12 WARN db Slow query detected: 3.2s\n2026-03-15 10:00:15 ERROR api Request timeout after 30s\n2026-03-15 10:00:18 INFO auth User session refreshed\n2026-03-15 10:00:22 ERROR db Connection pool exhausted\n2026-03-15 10:00:25 INFO api Request processed in 95ms\n2026-03-15 10:00:30 ERROR auth Authentication service crash\n2026-03-15 10:00:35 WARN api Response time degraded\n2026-03-15 10:00:40 INFO db Query completed\n2026-03-15 10:00:45 ERROR api Downstream service failure\n2026-03-15 10:00:50 INFO auth User login successful\n2026-03-15 10:00:55 WARN db Lock contention on table users"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python analyze.py", "exit": 0},
+      {"type": "json_valid", "path": "output/parsed.json", "min_length": 10},
+      {"type": "json_valid", "path": "output/anomalies.json", "min_length": 3},
+      {"type": "file_match", "path": "output/incident_report.md", "pattern": "timeout|crash|fail"}
+    ],
+    "tags": ["python", "log-analysis", "anomaly-detection", "pipeline"]
+  },
+  {
+    "id": "mb-461",
+    "cat": "multi_step",
+    "diff": "medium",
+    "title": "Test Framework Builder",
+    "src": "m/coding",
+    "prompt": "Read spec.json (array of test specifications with 'function', 'input', 'expected_output') and generate: src/functions.py (implementations of all specified functions), tests/test_all.py (unittest-based tests for each spec), output/runner.py (test runner that captures results), then run the runner and write output/results.json (test results with pass/fail per test) and output/coverage.md (which functions were tested). Write the generator as generate.py.",
+    "input": {
+      "spec.json": "[{\"function\": \"reverse_string\", \"input\": [\"hello\"], \"expected_output\": \"olleh\"}, {\"function\": \"sum_list\", \"input\": [[1, 2, 3, 4]], \"expected_output\": 10}, {\"function\": \"is_palindrome\", \"input\": [\"racecar\"], \"expected_output\": true}, {\"function\": \"is_palindrome\", \"input\": [\"hello\"], \"expected_output\": false}, {\"function\": \"capitalize_words\", \"input\": [\"hello world\"], \"expected_output\": \"Hello World\"}, {\"function\": \"flatten_list\", \"input\": [[[1, [2, 3]], [4, 5]]], \"expected_output\": [1, 2, 3, 4, 5]}]"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python generate.py", "exit": 0},
+      {"type": "file_exists", "path": "src/functions.py"},
+      {"type": "file_exists", "path": "tests/test_all.py"},
+      {"type": "json_valid", "path": "output/results.json", "min_length": 4}
+    ],
+    "tags": ["python", "testing", "code-generation", "framework"]
+  },
+  {
+    "id": "mb-462",
+    "cat": "multi_step",
+    "diff": "medium",
+    "title": "Dependency Graph Builder",
+    "src": "m/coding",
+    "prompt": "Read deps.json (object mapping module names to arrays of dependencies). Perform topological sort to determine build order, detect any cycles, and produce: output/build_order.json (array of modules in build order), output/graph.md (Markdown visualization showing each module and its deps), output/layers.json (modules grouped by dependency layer/depth), output/report.md (analysis including which modules are leaves, which are roots, cycle detection result). Write all logic in depgraph.py.",
+    "input": {
+      "deps.json": "{\"app\": [\"api\", \"ui\"], \"api\": [\"auth\", \"db\"], \"ui\": [\"components\", \"styles\"], \"auth\": [\"crypto\", \"db\"], \"db\": [\"config\"], \"components\": [\"styles\"], \"styles\": [], \"config\": [], \"crypto\": []}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python depgraph.py", "exit": 0},
+      {"type": "json_valid", "path": "output/build_order.json", "min_length": 9},
+      {"type": "json_valid", "path": "output/layers.json", "min_length": 3},
+      {"type": "file_match", "path": "output/report.md", "pattern": "[Rr]oot|[Ll]eaf|[Cc]ycle"}
+    ],
+    "tags": ["python", "graph", "topological-sort", "build-system"]
+  },
+  {
+    "id": "mb-463",
+    "cat": "multi_step",
+    "diff": "medium",
+    "title": "Inventory CRUD System",
+    "src": "m/agents",
+    "prompt": "Build an inventory management system: Read initial_stock.json (array of items with 'sku', 'name', 'quantity', 'price'), then apply operations.json (array of operations: 'add', 'remove', 'update', 'search'). Produce: output/final_stock.json (inventory after all operations), output/operations_log.json (log of each operation with success/failure status), output/low_stock.csv (items with quantity < 5), output/report.md (operation summary with success rate, stock changes, alerts). Write all logic in inventory.py.",
+    "input": {
+      "initial_stock.json": "[{\"sku\": \"W001\", \"name\": \"Widget A\", \"quantity\": 50, \"price\": 9.99}, {\"sku\": \"W002\", \"name\": \"Widget B\", \"quantity\": 3, \"price\": 14.99}, {\"sku\": \"G001\", \"name\": \"Gadget X\", \"quantity\": 25, \"price\": 24.99}, {\"sku\": \"G002\", \"name\": \"Gadget Y\", \"quantity\": 8, \"price\": 34.99}]",
+      "operations.json": "[{\"op\": \"add\", \"sku\": \"D001\", \"name\": \"Doohickey\", \"quantity\": 15, \"price\": 19.99}, {\"op\": \"remove\", \"sku\": \"W002\"}, {\"op\": \"update\", \"sku\": \"W001\", \"quantity\": 45}, {\"op\": \"update\", \"sku\": \"INVALID\", \"quantity\": 10}, {\"op\": \"add\", \"sku\": \"W003\", \"name\": \"Widget C\", \"quantity\": 2, \"price\": 11.99}, {\"op\": \"update\", \"sku\": \"G002\", \"price\": 29.99}]"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python inventory.py", "exit": 0},
+      {"type": "json_valid", "path": "output/final_stock.json", "min_length": 4},
+      {"type": "json_valid", "path": "output/operations_log.json", "min_length": 6},
+      {"type": "file_exists", "path": "output/low_stock.csv"}
+    ],
+    "tags": ["python", "inventory", "crud", "operations"]
+  },
+  {
+    "id": "mb-464",
+    "cat": "multi_step",
+    "diff": "medium",
+    "title": "Workflow Scheduler",
+    "src": "m/automation",
+    "prompt": "Read workflow.json (array of task objects with 'id', 'name', 'duration_hours', 'depends_on' array). Resolve dependencies, compute start/end times assuming tasks start ASAP at hour 0, and produce: output/schedule.json (each task with computed start_hour and end_hour), output/timeline.md (Markdown Gantt-like chart using ASCII bars), output/critical_path.json (the longest dependency chain), output/summary.txt (total duration, parallel tasks, bottleneck task). Write all logic in scheduler.py.",
+    "input": {
+      "workflow.json": "[{\"id\": \"T1\", \"name\": \"Requirements\", \"duration_hours\": 4, \"depends_on\": []}, {\"id\": \"T2\", \"name\": \"Design\", \"duration_hours\": 6, \"depends_on\": [\"T1\"]}, {\"id\": \"T3\", \"name\": \"Backend Dev\", \"duration_hours\": 10, \"depends_on\": [\"T2\"]}, {\"id\": \"T4\", \"name\": \"Frontend Dev\", \"duration_hours\": 8, \"depends_on\": [\"T2\"]}, {\"id\": \"T5\", \"name\": \"Testing\", \"duration_hours\": 5, \"depends_on\": [\"T3\", \"T4\"]}, {\"id\": \"T6\", \"name\": \"Deployment\", \"duration_hours\": 2, \"depends_on\": [\"T5\"]}, {\"id\": \"T7\", \"name\": \"Documentation\", \"duration_hours\": 3, \"depends_on\": [\"T2\"]}]"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python scheduler.py", "exit": 0},
+      {"type": "json_valid", "path": "output/schedule.json", "min_length": 7},
+      {"type": "json_valid", "path": "output/critical_path.json", "min_length": 3},
+      {"type": "file_match", "path": "output/timeline.md", "pattern": "Requirements|Design|Deploy"}
+    ],
+    "tags": ["python", "scheduling", "dependency-resolution", "workflow"]
+  },
+  {
+    "id": "mb-465",
+    "cat": "multi_step",
+    "diff": "easy",
+    "title": "Content Pipeline Multi-Format",
+    "src": "m/showandtell",
+    "prompt": "Read articles.json (array of article objects with 'title', 'author', 'date', 'body', 'tags'). Process each article and produce multiple output formats: output/articles.md (all articles formatted as Markdown with frontmatter), output/feed.json (a JSON feed object with 'items' array), output/index.html (simple HTML index page listing articles with links), output/tags_index.json (mapping each tag to article titles). Write all logic in pipeline.py.",
+    "input": {
+      "articles.json": "[{\"title\": \"Getting Started with Python\", \"author\": \"Alice\", \"date\": \"2026-01-15\", \"body\": \"Python is a versatile programming language that is easy to learn. It supports multiple paradigms and has a vast ecosystem of libraries.\", \"tags\": [\"python\", \"tutorial\", \"beginner\"]}, {\"title\": \"Understanding Data Structures\", \"author\": \"Bob\", \"date\": \"2026-02-01\", \"body\": \"Data structures are fundamental to computer science. Arrays, linked lists, trees, and graphs each have unique properties and use cases.\", \"tags\": [\"cs\", \"data-structures\", \"tutorial\"]}, {\"title\": \"Web Development Best Practices\", \"author\": \"Carol\", \"date\": \"2026-02-20\", \"body\": \"Modern web development requires attention to performance, accessibility, and security. Use semantic HTML and progressive enhancement.\", \"tags\": [\"web\", \"best-practices\", \"beginner\"]}]"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python pipeline.py", "exit": 0},
+      {"type": "file_match", "path": "output/articles.md", "pattern": "Getting Started"},
+      {"type": "json_valid", "path": "output/feed.json", "min_length": 3},
+      {"type": "file_match", "path": "output/index.html", "pattern": "<html|<!DOCTYPE"}
+    ],
+    "tags": ["python", "content", "multi-format", "pipeline"]
+  },
+  {
+    "id": "mb-466",
+    "cat": "multi_step",
+    "diff": "medium",
+    "title": "Config Audit Workflow",
+    "src": "m/automation",
+    "prompt": "Read configs/ directory contents (app.json, db.json, cache.json) containing configuration. Audit them for: missing required keys (defined in schema.json), deprecated keys, and values outside valid ranges. Produce: output/audit_report.json (per-file audit results), output/issues.md (Markdown report of all issues found), output/fix_suggestions.json (suggested fixes for each issue), output/compliant.json (merged config with only valid values). Write all logic in audit.py.",
+    "input": {
+      "schema.json": "{\"required_keys\": {\"app\": [\"name\", \"version\", \"port\", \"env\"], \"db\": [\"host\", \"port\", \"name\", \"pool_size\"], \"cache\": [\"host\", \"port\", \"ttl\"]}, \"deprecated\": [\"verbose\", \"legacy_mode\"], \"valid_ranges\": {\"port\": [1, 65535], \"pool_size\": [1, 100], \"ttl\": [1, 86400]}}",
+      "configs/app.json": "{\"name\": \"MyApp\", \"version\": \"2.1.0\", \"port\": 8080, \"verbose\": true, \"log_level\": \"info\"}",
+      "configs/db.json": "{\"host\": \"localhost\", \"port\": 70000, \"name\": \"mydb\", \"pool_size\": 10, \"legacy_mode\": true}",
+      "configs/cache.json": "{\"host\": \"redis://localhost\", \"port\": 6379}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python audit.py", "exit": 0},
+      {"type": "json_valid", "path": "output/audit_report.json", "min_length": 3},
+      {"type": "file_match", "path": "output/issues.md", "pattern": "deprecated|missing|[Rr]ange|[Ii]nvalid"},
+      {"type": "json_valid", "path": "output/fix_suggestions.json", "min_length": 2}
+    ],
+    "tags": ["python", "config", "audit", "validation"]
+  },
+  {
+    "id": "mb-467",
+    "cat": "multi_step",
+    "diff": "medium",
+    "title": "CSV to SQLite and Report",
+    "src": "m/coding",
+    "prompt": "Read products.csv and reviews.csv, load them into an in-memory SQLite database, run aggregate queries (average rating per product, most reviewed product, rating distribution), and produce: output/products_enriched.json (each product with avg_rating and review_count), output/analytics.json (top rated, most reviewed, rating histogram), output/report.md (formatted analytics report with tables), output/queries.sql (the SQL queries used). Write all logic in analytics.py.",
+    "input": {
+      "products.csv": "product_id,name,category,price\nP001,Laptop Pro,Electronics,999.99\nP002,Wireless Mouse,Electronics,29.99\nP003,Standing Desk,Furniture,449.99\nP004,Monitor 4K,Electronics,599.99\nP005,Ergonomic Chair,Furniture,349.99",
+      "reviews.csv": "review_id,product_id,rating,reviewer\nR01,P001,5,Alice\nR02,P001,4,Bob\nR03,P002,3,Carol\nR04,P003,5,Dan\nR05,P001,4,Eve\nR06,P004,5,Alice\nR07,P002,4,Dan\nR08,P005,3,Bob\nR09,P003,4,Carol\nR10,P004,4,Eve\nR11,P002,2,Alice\nR12,P005,5,Dan"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python analytics.py", "exit": 0},
+      {"type": "json_valid", "path": "output/products_enriched.json", "min_length": 5},
+      {"type": "json_valid", "path": "output/analytics.json", "min_length": 3},
+      {"type": "file_match", "path": "output/queries.sql", "pattern": "SELECT|AVG|COUNT"}
+    ],
+    "tags": ["python", "sqlite", "analytics", "pipeline"]
+  },
+  {
+    "id": "mb-468",
+    "cat": "multi_step",
+    "diff": "medium",
+    "title": "API Mock Server Config",
+    "src": "m/coding",
+    "prompt": "Read api_spec.json (array of endpoint definitions with 'method', 'path', 'request_schema', 'response_example', 'status_code') and generate: output/routes.py (a mapping dict of routes to handlers), output/mock_responses.json (all mock response data keyed by 'METHOD /path'), output/api_docs.md (formatted API documentation with request/response examples), output/test_cases.json (generated test cases for each endpoint). Write all logic in mockgen.py.",
+    "input": {
+      "api_spec.json": "[{\"method\": \"GET\", \"path\": \"/users\", \"request_schema\": {}, \"response_example\": [{\"id\": 1, \"name\": \"Alice\"}], \"status_code\": 200}, {\"method\": \"POST\", \"path\": \"/users\", \"request_schema\": {\"name\": \"string\", \"email\": \"string\"}, \"response_example\": {\"id\": 2, \"name\": \"Bob\", \"email\": \"bob@test.com\"}, \"status_code\": 201}, {\"method\": \"GET\", \"path\": \"/users/:id\", \"request_schema\": {}, \"response_example\": {\"id\": 1, \"name\": \"Alice\", \"email\": \"alice@test.com\"}, \"status_code\": 200}, {\"method\": \"PUT\", \"path\": \"/users/:id\", \"request_schema\": {\"name\": \"string\"}, \"response_example\": {\"id\": 1, \"name\": \"Updated\"}, \"status_code\": 200}, {\"method\": \"DELETE\", \"path\": \"/users/:id\", \"request_schema\": {}, \"response_example\": {\"message\": \"deleted\"}, \"status_code\": 200}]"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python mockgen.py", "exit": 0},
+      {"type": "file_exists", "path": "output/routes.py"},
+      {"type": "json_valid", "path": "output/mock_responses.json", "min_length": 5},
+      {"type": "json_valid", "path": "output/test_cases.json", "min_length": 5}
+    ],
+    "tags": ["python", "api", "mock", "code-generation"]
+  },
+  {
+    "id": "mb-469",
+    "cat": "multi_step",
+    "diff": "medium",
+    "title": "Multi-Config Priority Merge",
+    "src": "m/automation",
+    "prompt": "Read three config files: defaults.json (lowest priority), env.json (medium priority), local.json (highest priority). Deep-merge them respecting priority. Produce: output/merged.json (final merged config), output/provenance.json (for each final key, which file it came from), output/diff_report.md (table showing key, default value, env value, local value, final value), output/validation.json (check that final config has all required keys from defaults). Write all logic in merger.py.",
+    "input": {
+      "defaults.json": "{\"server\": {\"host\": \"0.0.0.0\", \"port\": 3000, \"workers\": 4}, \"database\": {\"host\": \"localhost\", \"port\": 5432, \"name\": \"app_db\", \"pool\": 5}, \"logging\": {\"level\": \"info\", \"file\": \"app.log\", \"rotate\": true}}",
+      "env.json": "{\"server\": {\"port\": 8080, \"workers\": 8}, \"database\": {\"host\": \"db.staging.local\", \"pool\": 20}, \"logging\": {\"level\": \"warn\"}}",
+      "local.json": "{\"server\": {\"port\": 9090}, \"database\": {\"name\": \"dev_db\"}, \"logging\": {\"level\": \"debug\", \"rotate\": false}}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python merger.py", "exit": 0},
+      {"type": "json_valid", "path": "output/merged.json", "min_length": 5},
+      {"type": "json_valid", "path": "output/provenance.json", "min_length": 5},
+      {"type": "file_match", "path": "output/diff_report.md", "pattern": "\\|.*\\|"}
+    ],
+    "tags": ["python", "config", "deep-merge", "provenance"]
+  },
+  {
+    "id": "mb-470",
+    "cat": "multi_step",
+    "diff": "medium",
+    "title": "Time Series Analyzer",
+    "src": "m/showandtell",
+    "prompt": "Read timeseries.csv (date and value columns), compute a 3-day moving average, identify peaks (local maxima) and troughs (local minima), and produce: output/analysis.csv (original data plus moving_avg, is_peak, is_trough columns), output/peaks.json (array of {date, value} for peaks), output/troughs.json (array of {date, value} for troughs), output/chart_data.md (ASCII line chart description showing trends and marked peaks). Write all logic in tsanalyze.py.",
+    "input": {
+      "timeseries.csv": "date,value\n2026-01-01,100\n2026-01-02,105\n2026-01-03,115\n2026-01-04,108\n2026-01-05,95\n2026-01-06,98\n2026-01-07,120\n2026-01-08,135\n2026-01-09,128\n2026-01-10,110\n2026-01-11,105\n2026-01-12,112\n2026-01-13,125\n2026-01-14,140\n2026-01-15,132"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python tsanalyze.py", "exit": 0},
+      {"type": "file_match", "path": "output/analysis.csv", "pattern": "moving_avg"},
+      {"type": "json_valid", "path": "output/peaks.json", "min_length": 2},
+      {"type": "json_valid", "path": "output/troughs.json", "min_length": 1}
+    ],
+    "tags": ["python", "time-series", "analysis", "statistics"]
+  },
+  {
+    "id": "mb-471",
+    "cat": "multi_step",
+    "diff": "medium",
+    "title": "Bash + Python Audit Pipeline",
+    "src": "m/automation",
+    "prompt": "Create a two-stage pipeline: (1) scan.sh scans the source/ directory for Python files and generates output/file_list.txt (one file per line) and output/line_counts.csv (filename,line_count), (2) audit.py reads those outputs, analyzes each file for long lines (>80 chars), missing docstrings, and TODO comments, then produces output/audit.json (per-file issues) and output/audit_report.md (formatted report with severity levels). Write both scripts.",
+    "input": {
+      "source/utils.py": "def helper(x):\n    return x * 2\n\n# TODO: add error handling\ndef process(data):\n    result = [helper(item) for item in data if item is not None and item > 0 and helper(item) < 1000 and isinstance(item, (int, float))]\n    return result\n",
+      "source/main.py": "\"\"\"Main application module.\"\"\"\n\ndef run():\n    \"\"\"Run the application.\"\"\"\n    print('Running')\n\ndef stop():\n    print('Stopping')\n",
+      "source/config.py": "# Configuration\nDEBUG = True\nPORT = 8080\nHOST = 'localhost'\n# TODO: move to env vars\nSECRET = 'hardcoded'\n"
+    },
+    "checks": [
+      {"type": "run", "cmd": "bash scan.sh && python audit.py", "exit": 0},
+      {"type": "file_exists", "path": "output/file_list.txt"},
+      {"type": "json_valid", "path": "output/audit.json", "min_length": 3},
+      {"type": "file_match", "path": "output/audit_report.md", "pattern": "TODO|docstring|long"}
+    ],
+    "tags": ["bash", "python", "audit", "code-quality"]
+  },
+  {
+    "id": "mb-472",
+    "cat": "multi_step",
+    "diff": "medium",
+    "title": "Event Processing System",
+    "src": "m/agents",
+    "prompt": "Read events.json (array of events with 'timestamp', 'type', 'user', 'data'). Process events through a pipeline: filter duplicates, group by user, compute session durations (gap > 30min = new session), and produce: output/sessions.json (user -> sessions with start/end times), output/user_stats.json (per-user: event_count, session_count, avg_session_duration), output/timeline.md (chronological event timeline), output/anomalies.json (users with unusually high event rates). Write all logic in events.py.",
+    "input": {
+      "events.json": "[{\"timestamp\": \"2026-03-15T10:00:00\", \"type\": \"login\", \"user\": \"alice\", \"data\": {}}, {\"timestamp\": \"2026-03-15T10:05:00\", \"type\": \"page_view\", \"user\": \"alice\", \"data\": {\"page\": \"/home\"}}, {\"timestamp\": \"2026-03-15T10:10:00\", \"type\": \"login\", \"user\": \"bob\", \"data\": {}}, {\"timestamp\": \"2026-03-15T10:12:00\", \"type\": \"page_view\", \"user\": \"alice\", \"data\": {\"page\": \"/settings\"}}, {\"timestamp\": \"2026-03-15T10:15:00\", \"type\": \"page_view\", \"user\": \"bob\", \"data\": {\"page\": \"/home\"}}, {\"timestamp\": \"2026-03-15T10:20:00\", \"type\": \"click\", \"user\": \"alice\", \"data\": {\"element\": \"save\"}}, {\"timestamp\": \"2026-03-15T11:00:00\", \"type\": \"login\", \"user\": \"alice\", \"data\": {}}, {\"timestamp\": \"2026-03-15T11:02:00\", \"type\": \"page_view\", \"user\": \"alice\", \"data\": {\"page\": \"/dashboard\"}}, {\"timestamp\": \"2026-03-15T10:05:00\", \"type\": \"page_view\", \"user\": \"alice\", \"data\": {\"page\": \"/home\"}}, {\"timestamp\": \"2026-03-15T11:30:00\", \"type\": \"logout\", \"user\": \"bob\", \"data\": {}}]"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python events.py", "exit": 0},
+      {"type": "json_valid", "path": "output/sessions.json", "min_length": 2},
+      {"type": "json_valid", "path": "output/user_stats.json", "min_length": 2},
+      {"type": "file_exists", "path": "output/timeline.md"}
+    ],
+    "tags": ["python", "event-processing", "sessions", "pipeline"]
+  },
+  {
+    "id": "mb-473",
+    "cat": "multi_step",
+    "diff": "medium",
+    "title": "Schema Validator and Migrator",
+    "src": "m/coding",
+    "prompt": "Read schema_v1.json (old schema definition) and schema_v2.json (new schema). Compare them to find: added fields, removed fields, renamed fields (heuristic: same type, similar name), type changes. Then apply the migration to data_v1.json (array of records) producing output/data_v2.json. Also produce: output/migration_map.json (field transformation mappings), output/breaking_changes.json (changes that could lose data), output/report.md (migration analysis report). Write all logic in schema_migrate.py.",
+    "input": {
+      "schema_v1.json": "{\"fields\": {\"user_name\": \"string\", \"user_email\": \"string\", \"age\": \"integer\", \"active\": \"boolean\", \"signup_date\": \"string\", \"score\": \"integer\"}}",
+      "schema_v2.json": "{\"fields\": {\"username\": \"string\", \"email\": \"string\", \"age\": \"integer\", \"is_active\": \"boolean\", \"created_at\": \"string\", \"level\": \"string\", \"bio\": \"string\"}}",
+      "data_v1.json": "[{\"user_name\": \"alice\", \"user_email\": \"alice@test.com\", \"age\": 30, \"active\": true, \"signup_date\": \"2025-01-15\", \"score\": 85}, {\"user_name\": \"bob\", \"user_email\": \"bob@test.com\", \"age\": 25, \"active\": false, \"signup_date\": \"2025-03-20\", \"score\": 92}]"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python schema_migrate.py", "exit": 0},
+      {"type": "json_valid", "path": "output/data_v2.json", "min_length": 2},
+      {"type": "json_valid", "path": "output/migration_map.json", "min_length": 3},
+      {"type": "file_match", "path": "output/report.md", "pattern": "[Aa]dded|[Rr]emoved|[Rr]ename"}
+    ],
+    "tags": ["python", "schema", "migration", "data-transformation"]
+  },
+  {
+    "id": "mb-474",
+    "cat": "multi_step",
+    "diff": "medium",
+    "title": "Expense Report System",
+    "src": "m/showandtell",
+    "prompt": "Read expenses.csv (date, category, description, amount, employee) and policy.json (per-category spending limits and rules). Validate expenses against policy, compute per-employee and per-category totals. Produce: output/approved.csv (expenses within policy), output/flagged.csv (expenses exceeding policy with reason column), output/summary.json (per-employee totals, per-category totals, total approved, total flagged), output/report.md (formatted expense report with policy compliance summary). Write all logic in expenses.py.",
+    "input": {
+      "expenses.csv": "date,category,description,amount,employee\n2026-03-01,Travel,Flight to NYC,450.00,Alice\n2026-03-02,Meals,Team dinner,280.00,Alice\n2026-03-03,Supplies,Notebooks,35.00,Bob\n2026-03-05,Travel,Taxi to airport,85.00,Alice\n2026-03-06,Meals,Client lunch,150.00,Bob\n2026-03-07,Equipment,Keyboard,250.00,Carol\n2026-03-08,Travel,Hotel 2 nights,600.00,Alice\n2026-03-10,Meals,Solo dinner,95.00,Carol\n2026-03-12,Supplies,Printer paper,22.00,Bob\n2026-03-15,Equipment,Monitor,800.00,Carol",
+      "policy.json": "{\"limits\": {\"Travel\": 500, \"Meals\": 200, \"Supplies\": 100, \"Equipment\": 300}, \"notes\": \"Per-transaction limits. Meals above 200 need manager approval. Equipment above 300 needs director approval.\"}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python expenses.py", "exit": 0},
+      {"type": "file_exists", "path": "output/approved.csv"},
+      {"type": "file_exists", "path": "output/flagged.csv"},
+      {"type": "json_valid", "path": "output/summary.json", "min_length": 4}
+    ],
+    "tags": ["python", "expenses", "policy", "validation"]
+  },
+  {
+    "id": "mb-475",
+    "cat": "multi_step",
+    "diff": "easy",
+    "title": "Diff and Patch Generator",
+    "src": "m/coding",
+    "prompt": "Read file_v1.txt and file_v2.txt, compute a line-by-line diff, and produce: output/diff.txt (unified diff format showing additions/deletions), output/patch.json (structured patch object with line numbers and operations), output/stats.json (lines_added, lines_removed, lines_unchanged, similarity_ratio), output/summary.md (human-readable diff summary with change highlights). Write all logic in differ.py using only Python stdlib (difflib).",
+    "input": {
+      "file_v1.txt": "# Configuration\nhost = localhost\nport = 3000\ndebug = true\nlog_level = info\nmax_connections = 100\ntimeout = 30\nretry = 3\n# End of config",
+      "file_v2.txt": "# Configuration v2\nhost = 0.0.0.0\nport = 8080\ndebug = false\nlog_level = warn\nmax_connections = 200\ntimeout = 30\nretry = 5\nworkers = 4\n# End of config"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python differ.py", "exit": 0},
+      {"type": "file_match", "path": "output/diff.txt", "pattern": "\\+|\\-"},
+      {"type": "json_valid", "path": "output/patch.json", "min_length": 3},
+      {"type": "json_valid", "path": "output/stats.json", "min_length": 4}
+    ],
+    "tags": ["python", "diff", "patch", "text-processing"]
+  },
+  {
+    "id": "mb-476",
+    "cat": "multi_step",
+    "diff": "medium",
+    "title": "Survey Form Builder",
+    "src": "m/agents",
+    "prompt": "Read survey_def.json (survey definition with title, description, and questions array — each question has 'type', 'text', 'options' if applicable, 'required'). Generate: output/survey.html (an HTML form rendering the survey), output/validation.py (a script that validates submitted JSON answers against the survey schema), output/sample_response.json (a valid sample response), output/documentation.md (survey documentation with question list and answer format). Write all logic in formbuilder.py.",
+    "input": {
+      "survey_def.json": "{\"title\": \"Employee Satisfaction Survey\", \"description\": \"Annual employee feedback\", \"questions\": [{\"id\": \"q1\", \"type\": \"radio\", \"text\": \"How satisfied are you with your role?\", \"options\": [\"Very satisfied\", \"Satisfied\", \"Neutral\", \"Dissatisfied\"], \"required\": true}, {\"id\": \"q2\", \"type\": \"text\", \"text\": \"What could we improve?\", \"required\": false}, {\"id\": \"q3\", \"type\": \"checkbox\", \"text\": \"Which benefits do you value most?\", \"options\": [\"Health insurance\", \"Remote work\", \"Training budget\", \"Gym membership\"], \"required\": true}, {\"id\": \"q4\", \"type\": \"number\", \"text\": \"How many years have you worked here?\", \"required\": true}, {\"id\": \"q5\", \"type\": \"radio\", \"text\": \"Would you recommend us as an employer?\", \"options\": [\"Definitely\", \"Probably\", \"Not sure\", \"No\"], \"required\": true}]}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python formbuilder.py", "exit": 0},
+      {"type": "file_match", "path": "output/survey.html", "pattern": "<form|<input|<select"},
+      {"type": "file_exists", "path": "output/validation.py"},
+      {"type": "json_valid", "path": "output/sample_response.json", "min_length": 5}
+    ],
+    "tags": ["python", "html", "form-builder", "survey"]
+  },
+  {
+    "id": "mb-477",
+    "cat": "multi_step",
+    "diff": "medium",
+    "title": "Matrix Operations Library + Tests",
+    "src": "m/coding",
+    "prompt": "Create a matrix operations library and comprehensive test suite: src/matrix.py (Matrix class with add, multiply, transpose, determinant for 2x2), tests/test_matrix.py (at least 8 unittest test cases covering all operations including edge cases), output/runner.py (runs tests and captures results). Then execute and produce output/test_report.json (pass/fail per test) and output/api.md (API documentation for the Matrix class). Write the generator as build.py.",
+    "input": {},
+    "checks": [
+      {"type": "run", "cmd": "python build.py", "exit": 0},
+      {"type": "file_exists", "path": "src/matrix.py"},
+      {"type": "file_exists", "path": "tests/test_matrix.py"},
+      {"type": "json_valid", "path": "output/test_report.json", "min_length": 4}
+    ],
+    "tags": ["python", "math", "testing", "library"]
+  },
+  {
+    "id": "mb-478",
+    "cat": "multi_step",
+    "diff": "medium",
+    "title": "Access Log Analyzer",
+    "src": "m/automation",
+    "prompt": "Read access.log (Apache-style access log entries) and produce: output/by_status.json (request counts grouped by HTTP status code), output/by_path.json (hit counts per URL path, sorted descending), output/by_hour.json (request counts per hour of day), output/report.md (formatted analysis with top paths, error rate, peak hours, and recommendations). Write all logic in logparse.py.",
+    "input": {
+      "access.log": "192.168.1.1 - - [15/Mar/2026:10:05:23] \"GET /index.html HTTP/1.1\" 200 1234\n192.168.1.2 - - [15/Mar/2026:10:12:45] \"GET /api/users HTTP/1.1\" 200 567\n192.168.1.1 - - [15/Mar/2026:10:15:02] \"POST /api/login HTTP/1.1\" 200 89\n192.168.1.3 - - [15/Mar/2026:11:00:15] \"GET /api/users HTTP/1.1\" 200 567\n192.168.1.2 - - [15/Mar/2026:11:30:45] \"GET /missing HTTP/1.1\" 404 0\n192.168.1.4 - - [15/Mar/2026:12:05:23] \"GET /index.html HTTP/1.1\" 200 1234\n192.168.1.1 - - [15/Mar/2026:12:15:02] \"POST /api/data HTTP/1.1\" 500 0\n192.168.1.3 - - [15/Mar/2026:13:00:15] \"GET /api/users HTTP/1.1\" 200 567\n192.168.1.5 - - [15/Mar/2026:13:05:23] \"GET /index.html HTTP/1.1\" 200 1234\n192.168.1.2 - - [15/Mar/2026:14:12:45] \"GET /api/users HTTP/1.1\" 200 567\n192.168.1.1 - - [15/Mar/2026:14:15:02] \"DELETE /api/users/1 HTTP/1.1\" 403 0\n192.168.1.4 - - [15/Mar/2026:15:30:45] \"GET /missing HTTP/1.1\" 404 0"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python logparse.py", "exit": 0},
+      {"type": "json_valid", "path": "output/by_status.json", "min_length": 3},
+      {"type": "json_valid", "path": "output/by_path.json", "min_length": 4},
+      {"type": "file_match", "path": "output/report.md", "pattern": "404|500|error|[Ee]rror"}
+    ],
+    "tags": ["python", "log-parsing", "analytics", "web"]
+  },
+  {
+    "id": "mb-479",
+    "cat": "multi_step",
+    "diff": "medium",
+    "title": "Data Anonymizer Pipeline",
+    "src": "m/agents",
+    "prompt": "Read users.csv containing PII (name, email, phone, ssn, address). Anonymize the data by: hashing emails, masking SSNs (show last 4 only), replacing names with pseudonyms, redacting phone numbers. Produce: output/anonymized.csv (cleaned data), output/mapping.json (original-to-pseudonym name mapping -- in a real system this would be encrypted), output/pii_report.json (which columns contained PII and what method was used), output/validation.md (confirmation that no raw PII exists in output). Write all logic in anonymize.py.",
+    "input": {
+      "users.csv": "id,name,email,phone,ssn,address,department\n1,Alice Chen,alice.chen@company.com,555-123-4567,123-45-6789,123 Main St,Engineering\n2,Bob Smith,bob.smith@company.com,555-234-5678,234-56-7890,456 Oak Ave,Sales\n3,Carol Davis,carol.davis@company.com,555-345-6789,345-67-8901,789 Pine Rd,HR\n4,Dan Lee,dan.lee@company.com,555-456-7890,456-78-9012,321 Elm Blvd,Engineering\n5,Eva Brown,eva.brown@company.com,555-567-8901,567-89-0123,654 Maple Dr,Marketing"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python anonymize.py", "exit": 0},
+      {"type": "file_not_match", "path": "output/anonymized.csv", "pattern": "alice\\.chen@|bob\\.smith@|123-45-6789"},
+      {"type": "json_valid", "path": "output/pii_report.json", "min_length": 4},
+      {"type": "file_exists", "path": "output/validation.md"}
+    ],
+    "tags": ["python", "privacy", "anonymization", "pipeline"]
+  },
+  {
+    "id": "mb-480",
+    "cat": "multi_step",
+    "diff": "medium",
+    "title": "Static Site Generator",
+    "src": "m/showandtell",
+    "prompt": "Read pages.json (array of page objects with 'slug', 'title', 'content', 'template' - either 'default' or 'wide'). Generate a static site: output/site/index.html (home page linking to all pages), output/site/{slug}.html (one HTML page per entry using the appropriate template), output/site/sitemap.json (array of {url, title, last_modified}), output/build_log.txt (log of each file generated with timestamp). Write all logic in sitegen.py.",
+    "input": {
+      "pages.json": "[{\"slug\": \"about\", \"title\": \"About Us\", \"content\": \"We are a team of developers building great software.\", \"template\": \"default\"}, {\"slug\": \"services\", \"title\": \"Our Services\", \"content\": \"We offer web development, mobile apps, and cloud consulting.\", \"template\": \"wide\"}, {\"slug\": \"contact\", \"title\": \"Contact\", \"content\": \"Email us at hello@example.com or call 555-0100.\", \"template\": \"default\"}, {\"slug\": \"blog\", \"title\": \"Blog\", \"content\": \"Stay tuned for our latest updates and technical articles.\", \"template\": \"wide\"}]"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python sitegen.py", "exit": 0},
+      {"type": "file_exists", "path": "output/site/index.html"},
+      {"type": "file_exists", "path": "output/site/about.html"},
+      {"type": "json_valid", "path": "output/site/sitemap.json", "min_length": 4}
+    ],
+    "tags": ["python", "html", "static-site", "generator"]
+  },
+  {
+    "id": "mb-481",
+    "cat": "multi_step",
+    "diff": "medium",
+    "title": "CSV Pivot Table Generator",
+    "src": "m/showandtell",
+    "prompt": "Read sales_data.csv and create a pivot table: rows are 'region', columns are 'quarter', values are sum of 'revenue'. Also compute row totals and column totals. Produce: output/pivot.csv (the pivot table with totals), output/pivot.json (same data as nested JSON), output/chart_data.json (data formatted for bar chart: region -> [Q1, Q2, Q3, Q4]), output/analysis.md (insights about best/worst performing regions and quarters). Write all logic in pivot.py.",
+    "input": {
+      "sales_data.csv": "region,quarter,product,revenue\nNorth,Q1,Widget,15000\nSouth,Q1,Widget,12000\nNorth,Q2,Widget,18000\nEast,Q1,Gadget,9000\nSouth,Q2,Gadget,11000\nWest,Q1,Widget,8000\nNorth,Q3,Widget,22000\nEast,Q2,Widget,13000\nSouth,Q3,Gadget,14000\nWest,Q2,Gadget,10000\nNorth,Q4,Widget,20000\nEast,Q3,Widget,16000\nSouth,Q4,Widget,13000\nWest,Q3,Widget,12000\nEast,Q4,Gadget,11000\nWest,Q4,Gadget,9000"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python pivot.py", "exit": 0},
+      {"type": "file_match", "path": "output/pivot.csv", "pattern": "North|South|East|West"},
+      {"type": "json_valid", "path": "output/chart_data.json", "min_length": 4},
+      {"type": "file_match", "path": "output/analysis.md", "pattern": "[Bb]est|[Hh]ighest|[Tt]op"}
+    ],
+    "tags": ["python", "csv", "pivot-table", "analytics"]
+  },
+  {
+    "id": "mb-482",
+    "cat": "multi_step",
+    "diff": "medium",
+    "title": "Permission Matrix Analyzer",
+    "src": "m/agents",
+    "prompt": "Read roles.json (role definitions with permissions) and users.json (user-to-role mappings). Compute the effective permission set for each user, detect conflicts (e.g., a user having both 'read' and 'deny_read'), and produce: output/effective_permissions.json (user -> [permissions]), output/conflicts.json (array of {user, conflicting_permissions, roles_involved}), output/matrix.md (Markdown permission matrix table: users as rows, permissions as columns, checkmarks), output/audit.md (security audit summary). Write all logic in perms.py.",
+    "input": {
+      "roles.json": "{\"admin\": [\"read\", \"write\", \"delete\", \"manage_users\"], \"editor\": [\"read\", \"write\"], \"viewer\": [\"read\"], \"moderator\": [\"read\", \"delete\", \"deny_write\"], \"restricted\": [\"deny_read\", \"deny_write\"]}",
+      "users.json": "[{\"name\": \"alice\", \"roles\": [\"admin\"]}, {\"name\": \"bob\", \"roles\": [\"editor\", \"moderator\"]}, {\"name\": \"carol\", \"roles\": [\"viewer\"]}, {\"name\": \"dan\", \"roles\": [\"editor\", \"restricted\"]}, {\"name\": \"eve\", \"roles\": [\"moderator\", \"viewer\"]}]"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python perms.py", "exit": 0},
+      {"type": "json_valid", "path": "output/effective_permissions.json", "min_length": 5},
+      {"type": "json_valid", "path": "output/conflicts.json", "min_length": 1},
+      {"type": "file_match", "path": "output/matrix.md", "pattern": "\\|.*alice.*\\|"}
+    ],
+    "tags": ["python", "permissions", "rbac", "security"]
+  },
+  {
+    "id": "mb-483",
+    "cat": "multi_step",
+    "diff": "easy",
+    "title": "INI to Multi-Format Converter",
+    "src": "m/automation",
+    "prompt": "Read config.ini (INI-style configuration with sections and key-value pairs). Parse it and convert to three formats: output/config.json (nested JSON with sections as top-level keys), output/config_flat.json (flat key-value pairs using 'section.key' notation), output/config.env (shell-style environment variables as SECTION_KEY=value). Also produce output/validation.json (parse results: section_count, key_count, any parse errors). Write all logic in converter.py using Python stdlib (configparser).",
+    "input": {
+      "config.ini": "[server]\nhost = 0.0.0.0\nport = 8080\nworkers = 4\n\n[database]\nhost = db.local\nport = 5432\nname = production\npool_size = 20\n\n[logging]\nlevel = info\nfile = /var/log/app.log\nrotate = true\nmax_size = 100MB\n\n[cache]\nbackend = redis\nhost = cache.local\nttl = 3600"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python converter.py", "exit": 0},
+      {"type": "json_valid", "path": "output/config.json", "min_length": 4},
+      {"type": "file_match", "path": "output/config.env", "pattern": "SERVER_HOST|DATABASE_PORT"},
+      {"type": "json_valid", "path": "output/validation.json", "min_length": 3}
+    ],
+    "tags": ["python", "config", "converter", "multi-format"]
+  },
+  {
+    "id": "mb-484",
+    "cat": "multi_step",
+    "diff": "easy",
+    "title": "Batch File Renamer + Report",
+    "src": "m/automation",
+    "prompt": "Read manifest.json (array of {old_name, new_name} rename operations). Write rename.py that: (1) creates dummy files matching old_name in workspace/files/, (2) performs the renames, (3) produces output/rename_log.json (array of {old, new, status, timestamp}), (4) produces output/rollback.sh (a bash script that would undo all renames), (5) produces output/summary.md (rename summary with success/failure counts). Run rename.py to execute.",
+    "input": {
+      "manifest.json": "[{\"old_name\": \"IMG_001.jpg\", \"new_name\": \"vacation_beach.jpg\"}, {\"old_name\": \"IMG_002.jpg\", \"new_name\": \"vacation_sunset.jpg\"}, {\"old_name\": \"DOC_001.txt\", \"new_name\": \"meeting_notes.txt\"}, {\"old_name\": \"DOC_002.txt\", \"new_name\": \"project_plan.txt\"}, {\"old_name\": \"SCAN_001.pdf\", \"new_name\": \"receipt_march.pdf\"}]"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python rename.py", "exit": 0},
+      {"type": "file_exists", "path": "workspace/files/vacation_beach.jpg"},
+      {"type": "json_valid", "path": "output/rename_log.json", "min_length": 5},
+      {"type": "file_match", "path": "output/rollback.sh", "pattern": "mv "}
+    ],
+    "tags": ["python", "file-management", "batch", "rename"]
+  },
+  {
+    "id": "mb-485",
+    "cat": "multi_step",
+    "diff": "medium",
+    "title": "JSON Schema Generator + Validator",
+    "src": "m/coding",
+    "prompt": "Read sample_data.json (array of objects). Infer a JSON schema from the data (detect types, required fields, value patterns), then validate each record against the inferred schema. Produce: output/schema.json (the inferred schema), output/validation_results.json (per-record: valid boolean and list of issues), output/sample_valid.json (one valid example matching schema), output/report.md (schema summary with field types, constraints, and validation results). Write all logic in schemagen.py.",
+    "input": {
+      "sample_data.json": "[{\"name\": \"Alice\", \"age\": 30, \"email\": \"alice@test.com\", \"active\": true, \"score\": 85.5}, {\"name\": \"Bob\", \"age\": \"twenty-five\", \"email\": \"bob@test.com\", \"active\": true, \"score\": 92.0}, {\"name\": \"\", \"age\": 28, \"email\": \"invalid-email\", \"active\": false, \"score\": 78.3}, {\"name\": \"Diana\", \"age\": 35, \"email\": \"diana@test.com\", \"active\": true}, {\"name\": \"Eve\", \"age\": -5, \"email\": \"eve@test.com\", \"active\": true, \"score\": 88.1}]"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python schemagen.py", "exit": 0},
+      {"type": "json_valid", "path": "output/schema.json", "min_length": 5},
+      {"type": "json_valid", "path": "output/validation_results.json", "min_length": 5},
+      {"type": "file_match", "path": "output/report.md", "pattern": "[Ss]chema|[Ff]ield|[Tt]ype"}
+    ],
+    "tags": ["python", "json-schema", "validation", "inference"]
+  },
+  {
+    "id": "mb-486",
+    "cat": "multi_step",
+    "diff": "hard",
+    "title": "Full Build System Simulator",
+    "src": "m/coding",
+    "prompt": "Read build.json (modules with source files, dependencies, build commands). Implement a full build system simulator: resolve dependency graph, detect cycles, compute topological build order, simulate parallel build (tracking which modules can build concurrently), compute critical path. Produce: output/build_order.json (topological order), output/parallel_plan.json (array of build stages, each stage listing modules that can build in parallel), output/simulation.json (per-module: start_time, end_time, duration, dependencies_wait), output/critical_path.json (the longest chain determining total build time), output/gantt.md (ASCII Gantt chart of the build), output/report.md (full build analysis with optimization suggestions). Write all logic in build_system.py.",
+    "input": {
+      "build.json": "{\"modules\": {\"core\": {\"sources\": [\"core.py\"], \"deps\": [], \"build_time\": 3}, \"utils\": {\"sources\": [\"utils.py\"], \"deps\": [\"core\"], \"build_time\": 2}, \"auth\": {\"sources\": [\"auth.py\"], \"deps\": [\"core\", \"utils\"], \"build_time\": 4}, \"db\": {\"sources\": [\"db.py\"], \"deps\": [\"core\"], \"build_time\": 5}, \"api\": {\"sources\": [\"api.py\"], \"deps\": [\"auth\", \"db\"], \"build_time\": 3}, \"ui\": {\"sources\": [\"ui.py\"], \"deps\": [\"utils\"], \"build_time\": 6}, \"tests\": {\"sources\": [\"test.py\"], \"deps\": [\"api\", \"ui\"], \"build_time\": 4}, \"docs\": {\"sources\": [\"docs.py\"], \"deps\": [\"api\"], \"build_time\": 2}, \"deploy\": {\"sources\": [\"deploy.py\"], \"deps\": [\"tests\", \"docs\"], \"build_time\": 1}}}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python build_system.py", "exit": 0},
+      {"type": "json_valid", "path": "output/build_order.json", "min_length": 9},
+      {"type": "json_valid", "path": "output/parallel_plan.json", "min_length": 3},
+      {"type": "json_valid", "path": "output/critical_path.json", "min_length": 3}
+    ],
+    "tags": ["python", "build-system", "graph", "scheduling", "simulation"]
+  },
+  {
+    "id": "mb-487",
+    "cat": "multi_step",
+    "diff": "hard",
+    "title": "Complete REST API Scaffold",
+    "src": "m/coding",
+    "prompt": "Read api_design.json (resource definitions with fields, relationships, and CRUD endpoints). Generate a complete project: src/models.py (data classes for each resource), src/routes.py (route definitions mapping endpoints to handlers), src/handlers.py (handler functions with in-memory storage), src/validators.py (input validation functions), tests/test_api.py (comprehensive tests for all endpoints), output/openapi.json (OpenAPI 3.0 spec), output/postman.json (Postman collection), output/docs.md (API documentation). Write the generator as scaffold.py.",
+    "input": {
+      "api_design.json": "{\"resources\": [{\"name\": \"User\", \"fields\": {\"id\": \"int\", \"username\": \"string\", \"email\": \"string\", \"active\": \"boolean\"}, \"endpoints\": [\"list\", \"get\", \"create\", \"update\", \"delete\"]}, {\"name\": \"Post\", \"fields\": {\"id\": \"int\", \"title\": \"string\", \"body\": \"string\", \"author_id\": \"int\", \"published\": \"boolean\"}, \"endpoints\": [\"list\", \"get\", \"create\", \"update\"], \"belongs_to\": \"User\"}, {\"name\": \"Comment\", \"fields\": {\"id\": \"int\", \"text\": \"string\", \"post_id\": \"int\", \"user_id\": \"int\"}, \"endpoints\": [\"list\", \"get\", \"create\", \"delete\"], \"belongs_to\": \"Post\"}]}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python scaffold.py", "exit": 0},
+      {"type": "file_exists", "path": "src/models.py"},
+      {"type": "file_exists", "path": "src/handlers.py"},
+      {"type": "json_valid", "path": "output/openapi.json", "min_length": 10}
+    ],
+    "tags": ["python", "api", "scaffold", "code-generation", "rest"]
+  },
+  {
+    "id": "mb-488",
+    "cat": "multi_step",
+    "diff": "hard",
+    "title": "Data Warehouse ETL Pipeline",
+    "src": "m/agents",
+    "prompt": "Read three source CSVs: products.csv, orders.csv, customers.csv. Build a complete ETL pipeline: extract and validate each source, transform by joining orders with products and customers (computing extended_price, customer lifetime value, product popularity), load into a star-schema structure. Produce: output/fact_orders.csv (fact table with all computed fields), output/dim_products.json (product dimension with aggregated stats), output/dim_customers.json (customer dimension with computed LTV), output/data_quality.json (per-source validation: null counts, type errors, duplicate checks), output/dashboard.json (pre-computed KPIs: total_revenue, avg_order_value, top_products, top_customers), output/etl_report.md (full pipeline report with data lineage). Write all logic in etl_pipeline.py.",
+    "input": {
+      "products.csv": "product_id,name,category,unit_price\nP001,Laptop Pro,Electronics,999.99\nP002,Wireless Mouse,Electronics,29.99\nP003,Standing Desk,Furniture,449.99\nP004,Monitor 4K,Electronics,599.99\nP005,Ergonomic Chair,Furniture,349.99\nP006,USB Hub,Electronics,24.99\nP007,Desk Lamp,Furniture,79.99",
+      "orders.csv": "order_id,customer_id,product_id,quantity,order_date\nO001,C001,P001,1,2026-01-15\nO002,C002,P002,2,2026-01-20\nO003,C001,P003,1,2026-01-25\nO004,C003,P004,1,2026-02-01\nO005,C002,P001,1,2026-02-10\nO006,C001,P006,3,2026-02-15\nO007,C004,P005,1,2026-02-20\nO008,C003,P002,1,2026-03-01\nO009,C002,P007,2,2026-03-05\nO010,C001,P004,1,2026-03-10\nO011,C004,P003,1,2026-03-15\nO012,C003,P006,4,2026-03-20",
+      "customers.csv": "customer_id,name,email,city,signup_date\nC001,Alice Chen,alice@test.com,New York,2025-06-15\nC002,Bob Smith,bob@test.com,Chicago,2025-08-20\nC003,Carol Davis,carol@test.com,Boston,2025-10-01\nC004,Dan Lee,dan@test.com,Seattle,2026-01-05"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python etl_pipeline.py", "exit": 0},
+      {"type": "file_exists", "path": "output/fact_orders.csv"},
+      {"type": "json_valid", "path": "output/dim_customers.json", "min_length": 4},
+      {"type": "json_valid", "path": "output/dashboard.json", "min_length": 4}
+    ],
+    "tags": ["python", "etl", "data-warehouse", "star-schema", "pipeline"]
+  },
+  {
+    "id": "mb-489",
+    "cat": "multi_step",
+    "diff": "hard",
+    "title": "Full Test Suite Generator",
+    "src": "m/coding",
+    "prompt": "Read module.py (a Python module with multiple classes and functions). Analyze it using the ast module to extract all testable entities. Generate: tests/test_unit.py (unit tests for each function and method), tests/test_edge.py (edge case tests: empty inputs, boundary values, type errors), tests/test_integration.py (integration tests combining multiple functions), src/test_runner.py (custom test runner that produces structured output), output/results.json (test results: per-test pass/fail with timing), output/coverage.json (which functions/methods were tested), output/report.md (test summary with coverage percentage). Write the generator as testgen.py and run the suite.",
+    "input": {
+      "module.py": "class Stack:\n    def __init__(self):\n        self._items = []\n\n    def push(self, item):\n        self._items.append(item)\n\n    def pop(self):\n        if not self._items:\n            raise IndexError('Stack is empty')\n        return self._items.pop()\n\n    def peek(self):\n        if not self._items:\n            raise IndexError('Stack is empty')\n        return self._items[-1]\n\n    def is_empty(self):\n        return len(self._items) == 0\n\n    def size(self):\n        return len(self._items)\n\n\ndef is_balanced(text):\n    \"\"\"Check if parentheses/brackets are balanced.\"\"\"\n    stack = Stack()\n    pairs = {')': '(', ']': '[', '}': '{'}\n    for ch in text:\n        if ch in '([{':\n            stack.push(ch)\n        elif ch in ')]}':\n            if stack.is_empty() or stack.pop() != pairs[ch]:\n                return False\n    return stack.is_empty()\n\n\ndef evaluate_postfix(expression):\n    \"\"\"Evaluate a postfix expression. Tokens separated by spaces.\"\"\"\n    stack = Stack()\n    ops = {'+': lambda a, b: a + b, '-': lambda a, b: a - b,\n           '*': lambda a, b: a * b, '/': lambda a, b: a / b}\n    for token in expression.split():\n        if token in ops:\n            b, a = stack.pop(), stack.pop()\n            stack.push(ops[token](a, b))\n        else:\n            stack.push(float(token))\n    return stack.pop()\n"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python testgen.py", "exit": 0},
+      {"type": "file_exists", "path": "tests/test_unit.py"},
+      {"type": "file_exists", "path": "tests/test_edge.py"},
+      {"type": "json_valid", "path": "output/results.json", "min_length": 5}
+    ],
+    "tags": ["python", "testing", "ast", "code-analysis", "coverage"]
+  },
+  {
+    "id": "mb-490",
+    "cat": "multi_step",
+    "diff": "hard",
+    "title": "Multi-Source Data Reconciliation",
+    "src": "m/agents",
+    "prompt": "Read source_a.csv, source_b.csv, and source_c.csv (three systems with overlapping records, identified by 'record_id'). Reconcile: find records present in all three, find discrepancies where the same record_id has different values across sources, determine the 'golden record' (majority-wins for conflicts, or latest timestamp if tied). Produce: output/golden_records.csv (reconciled master data), output/discrepancies.json (per-field discrepancies with source values), output/coverage.json (record_id -> which sources have it), output/missing.json (records only in one source), output/reconciliation_report.md (full reconciliation report with data quality scores per source). Write all logic in reconcile.py.",
+    "input": {
+      "source_a.csv": "record_id,name,email,status,updated_at\n1001,Alice Chen,alice@company.com,active,2026-03-15\n1002,Bob Smith,bob@company.com,active,2026-03-10\n1003,Carol Davis,carol@company.com,inactive,2026-02-28\n1004,Dan Lee,dan@company.com,active,2026-03-01\n1006,Frank Wu,frank@company.com,active,2026-03-12",
+      "source_b.csv": "record_id,name,email,status,updated_at\n1001,Alice Chen,alice@newmail.com,active,2026-03-18\n1002,Bob Smith,bob@company.com,inactive,2026-03-20\n1003,Carol Davis,carol@company.com,inactive,2026-02-28\n1005,Eva Brown,eva@company.com,active,2026-03-05\n1006,Frank Wu,frank@company.com,active,2026-03-08",
+      "source_c.csv": "record_id,name,email,status,updated_at\n1001,Alice Chen,alice@company.com,active,2026-03-10\n1002,Robert Smith,bob@company.com,active,2026-03-15\n1003,Carol Davis,carol@company.com,active,2026-03-20\n1004,Dan Lee,dan@company.com,active,2026-03-05\n1005,Eva Brown,eva@company.com,active,2026-03-10"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python reconcile.py", "exit": 0},
+      {"type": "file_exists", "path": "output/golden_records.csv"},
+      {"type": "json_valid", "path": "output/discrepancies.json", "min_length": 2},
+      {"type": "json_valid", "path": "output/coverage.json", "min_length": 5}
+    ],
+    "tags": ["python", "reconciliation", "data-quality", "multi-source"]
+  },
+  {
+    "id": "mb-491",
+    "cat": "multi_step",
+    "diff": "hard",
+    "title": "Microservice Architecture Generator",
+    "src": "m/coding",
+    "prompt": "Read architecture.json (microservice definitions with names, ports, dependencies, endpoints, and shared data contracts). Generate the complete scaffold: services/{name}/main.py (entry point for each service), services/{name}/config.json (per-service config), shared/contracts.py (shared data models), output/docker_compose.json (service orchestration config), output/api_gateway.json (routing rules mapping external paths to internal services), output/dependency_graph.md (Mermaid-syntax dependency diagram), output/deployment_report.md (architecture overview with port assignments, dependency analysis, potential single-points-of-failure). Write the generator as architect.py.",
+    "input": {
+      "architecture.json": "{\"services\": [{\"name\": \"gateway\", \"port\": 8000, \"deps\": [\"auth\", \"users\", \"orders\"], \"endpoints\": [\"/api/*\"]}, {\"name\": \"auth\", \"port\": 8001, \"deps\": [\"users\"], \"endpoints\": [\"/auth/login\", \"/auth/verify\"]}, {\"name\": \"users\", \"port\": 8002, \"deps\": [\"db\"], \"endpoints\": [\"/users\", \"/users/:id\"]}, {\"name\": \"orders\", \"port\": 8003, \"deps\": [\"users\", \"products\", \"db\"], \"endpoints\": [\"/orders\", \"/orders/:id\"]}, {\"name\": \"products\", \"port\": 8004, \"deps\": [\"db\"], \"endpoints\": [\"/products\", \"/products/:id\"]}, {\"name\": \"db\", \"port\": 5432, \"deps\": [], \"endpoints\": []}], \"contracts\": [{\"name\": \"User\", \"fields\": {\"id\": \"int\", \"name\": \"str\", \"email\": \"str\"}}, {\"name\": \"Order\", \"fields\": {\"id\": \"int\", \"user_id\": \"int\", \"product_ids\": \"list\", \"total\": \"float\"}}, {\"name\": \"Product\", \"fields\": {\"id\": \"int\", \"name\": \"str\", \"price\": \"float\"}}]}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python architect.py", "exit": 0},
+      {"type": "file_exists", "path": "services/auth/main.py"},
+      {"type": "file_exists", "path": "services/orders/config.json"},
+      {"type": "json_valid", "path": "output/docker_compose.json", "min_length": 6}
+    ],
+    "tags": ["python", "microservices", "architecture", "scaffold", "code-generation"]
+  },
+  {
+    "id": "mb-492",
+    "cat": "multi_step",
+    "diff": "hard",
+    "title": "Regex Engine Test Suite",
+    "src": "m/coding",
+    "prompt": "Build a comprehensive regex pattern library and test suite. Read patterns.json (array of regex patterns with description, positive test cases, and negative test cases). Generate: src/patterns.py (compiled pattern registry with descriptions), tests/test_patterns.py (parameterized tests for all positive/negative cases), tests/test_edge_cases.py (additional edge case tests for catastrophic backtracking patterns, empty strings, unicode), output/runner.py (test runner producing structured results), output/results.json (pass/fail per test case per pattern), output/pattern_docs.md (pattern reference guide with examples), output/complexity_report.json (analysis: pattern lengths, character class usage, backreference count). Write the generator as build_tests.py and run the suite.",
+    "input": {
+      "patterns.json": "[{\"name\": \"email\", \"pattern\": \"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}$\", \"description\": \"Basic email validation\", \"positive\": [\"user@example.com\", \"name.last@domain.org\", \"test+tag@sub.domain.co\"], \"negative\": [\"@domain.com\", \"user@\", \"user@.com\", \"plain text\"]}, {\"name\": \"ipv4\", \"pattern\": \"^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$\", \"description\": \"IPv4 address validation\", \"positive\": [\"192.168.1.1\", \"0.0.0.0\", \"255.255.255.255\"], \"negative\": [\"256.1.1.1\", \"1.2.3\", \"1.2.3.4.5\", \"abc.def.ghi.jkl\"]}, {\"name\": \"date_iso\", \"pattern\": \"^\\\\d{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12][0-9]|3[01])$\", \"description\": \"ISO 8601 date format\", \"positive\": [\"2026-01-15\", \"2026-12-31\", \"2000-06-01\"], \"negative\": [\"2026-13-01\", \"2026-00-15\", \"26-01-15\", \"2026/01/15\"]}, {\"name\": \"hex_color\", \"pattern\": \"^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$\", \"description\": \"CSS hex color code\", \"positive\": [\"#fff\", \"#FF0000\", \"#a1B2c3\"], \"negative\": [\"#gg0000\", \"FF0000\", \"#12345\", \"#1234567\"]}, {\"name\": \"phone_us\", \"pattern\": \"^\\\\(?\\\\d{3}\\\\)?[-.\\\\s]?\\\\d{3}[-.\\\\s]?\\\\d{4}$\", \"description\": \"US phone number\", \"positive\": [\"555-123-4567\", \"(555) 123-4567\", \"5551234567\", \"555.123.4567\"], \"negative\": [\"555-12-4567\", \"55-123-4567\", \"555-1234-567\", \"abcdefghij\"]}]"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python build_tests.py", "exit": 0},
+      {"type": "file_exists", "path": "src/patterns.py"},
+      {"type": "file_exists", "path": "tests/test_patterns.py"},
+      {"type": "json_valid", "path": "output/results.json", "min_length": 5}
+    ],
+    "tags": ["python", "regex", "testing", "validation"]
+  },
+  {
+    "id": "mb-493",
+    "cat": "multi_step",
+    "diff": "hard",
+    "title": "Interpreter + REPL Generator",
+    "src": "m/coding",
+    "prompt": "Build a simple expression language interpreter: Read grammar.json (defines operators, precedence, and supported types). Generate: src/lexer.py (tokenizer that handles numbers, operators, parentheses, variable names), src/parser.py (recursive descent parser building an AST), src/evaluator.py (AST evaluator with variable storage), tests/test_interpreter.py (tests for lexing, parsing, and evaluation), output/examples.json (5 example expressions with their evaluated results), output/grammar_docs.md (language documentation). Write the generator as build_interpreter.py, then run tests and capture output/test_results.json.",
+    "input": {
+      "grammar.json": "{\"operators\": {\"+\": {\"precedence\": 1, \"assoc\": \"left\"}, \"-\": {\"precedence\": 1, \"assoc\": \"left\"}, \"*\": {\"precedence\": 2, \"assoc\": \"left\"}, \"/\": {\"precedence\": 2, \"assoc\": \"left\"}, \"^\": {\"precedence\": 3, \"assoc\": \"right\"}}, \"types\": [\"integer\", \"float\"], \"features\": [\"parentheses\", \"variables\", \"assignment\"]}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python build_interpreter.py", "exit": 0},
+      {"type": "file_exists", "path": "src/lexer.py"},
+      {"type": "file_exists", "path": "src/parser.py"},
+      {"type": "json_valid", "path": "output/test_results.json", "min_length": 3}
+    ],
+    "tags": ["python", "interpreter", "parser", "ast", "language"]
+  },
+  {
+    "id": "mb-494",
+    "cat": "multi_step",
+    "diff": "hard",
+    "title": "Database Migration System",
+    "src": "m/agents",
+    "prompt": "Read schema_history.json (array of schema versions in chronological order, each defining tables with columns and types). Build a migration system: generate forward and backward migration scripts between consecutive versions, validate that migrations are reversible, simulate running all migrations on sample data. Produce: migrations/001_to_002.py, migrations/002_to_003.py (migration scripts), migrations/rollback_002_to_001.py, migrations/rollback_003_to_002.py (rollback scripts), output/migration_plan.json (ordered list of migrations to go from v1 to v3), output/schema_diff.json (per-version changes: added/removed/modified tables and columns), output/simulation.json (simulated migration results on sample data), output/report.md (comprehensive migration analysis). Write all logic in migrator.py.",
+    "input": {
+      "schema_history.json": "[{\"version\": 1, \"tables\": {\"users\": {\"id\": \"INTEGER PRIMARY KEY\", \"name\": \"TEXT\", \"email\": \"TEXT\"}, \"posts\": {\"id\": \"INTEGER PRIMARY KEY\", \"user_id\": \"INTEGER\", \"title\": \"TEXT\", \"body\": \"TEXT\"}}}, {\"version\": 2, \"tables\": {\"users\": {\"id\": \"INTEGER PRIMARY KEY\", \"name\": \"TEXT\", \"email\": \"TEXT\", \"role\": \"TEXT DEFAULT 'user'\", \"created_at\": \"TEXT\"}, \"posts\": {\"id\": \"INTEGER PRIMARY KEY\", \"user_id\": \"INTEGER\", \"title\": \"TEXT\", \"body\": \"TEXT\", \"published\": \"BOOLEAN DEFAULT 0\"}, \"comments\": {\"id\": \"INTEGER PRIMARY KEY\", \"post_id\": \"INTEGER\", \"user_id\": \"INTEGER\", \"text\": \"TEXT\"}}}, {\"version\": 3, \"tables\": {\"users\": {\"id\": \"INTEGER PRIMARY KEY\", \"username\": \"TEXT\", \"email\": \"TEXT\", \"role\": \"TEXT DEFAULT 'user'\", \"created_at\": \"TEXT\", \"last_login\": \"TEXT\"}, \"posts\": {\"id\": \"INTEGER PRIMARY KEY\", \"author_id\": \"INTEGER\", \"title\": \"TEXT\", \"content\": \"TEXT\", \"published\": \"BOOLEAN DEFAULT 0\", \"category\": \"TEXT\"}, \"comments\": {\"id\": \"INTEGER PRIMARY KEY\", \"post_id\": \"INTEGER\", \"user_id\": \"INTEGER\", \"text\": \"TEXT\", \"created_at\": \"TEXT\"}, \"categories\": {\"id\": \"INTEGER PRIMARY KEY\", \"name\": \"TEXT\", \"slug\": \"TEXT\"}}}]",
+      "sample_data.json": "{\"users\": [{\"id\": 1, \"name\": \"Alice\", \"email\": \"alice@test.com\"}, {\"id\": 2, \"name\": \"Bob\", \"email\": \"bob@test.com\"}], \"posts\": [{\"id\": 1, \"user_id\": 1, \"title\": \"Hello World\", \"body\": \"My first post\"}, {\"id\": 2, \"user_id\": 2, \"title\": \"Second Post\", \"body\": \"Another post\"}]}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python migrator.py", "exit": 0},
+      {"type": "file_exists", "path": "migrations/001_to_002.py"},
+      {"type": "file_exists", "path": "migrations/rollback_003_to_002.py"},
+      {"type": "json_valid", "path": "output/schema_diff.json", "min_length": 2}
+    ],
+    "tags": ["python", "database", "migration", "schema", "versioning"]
+  },
+  {
+    "id": "mb-495",
+    "cat": "multi_step",
+    "diff": "hard",
+    "title": "Rule Engine + Audit Trail",
+    "src": "m/agents",
+    "prompt": "Read rules.json (business rules with conditions, actions, and priorities) and events.json (array of events to evaluate). Build a rule engine that: evaluates each event against all rules (highest priority first, stop on first match), logs decisions with full audit trail, and detects conflicting rules. Produce: output/decisions.json (per-event: matched_rule, action_taken, evaluation_order), output/audit_trail.json (detailed log: per-event, per-rule evaluation with condition results), output/conflicts.json (pairs of rules that could match the same event differently), output/rule_coverage.json (which rules were triggered and how many times), output/report.md (rule engine analysis with coverage stats, conflict warnings, and optimization suggestions). Write all logic in engine.py.",
+    "input": {
+      "rules.json": "[{\"id\": \"R1\", \"name\": \"High Value Alert\", \"priority\": 1, \"conditions\": {\"amount\": {\">=\": 10000}, \"type\": \"transaction\"}, \"action\": \"flag_review\"}, {\"id\": \"R2\", \"name\": \"Suspicious Pattern\", \"priority\": 2, \"conditions\": {\"frequency\": {\">=\": 5}, \"window_minutes\": {\"<=\": 60}}, \"action\": \"block\"}, {\"id\": \"R3\", \"name\": \"New Account Check\", \"priority\": 3, \"conditions\": {\"account_age_days\": {\"<\": 30}, \"amount\": {\">=\": 1000}}, \"action\": \"require_verification\"}, {\"id\": \"R4\", \"name\": \"International Transfer\", \"priority\": 4, \"conditions\": {\"type\": \"transfer\", \"international\": true}, \"action\": \"flag_review\"}, {\"id\": \"R5\", \"name\": \"Low Risk Pass\", \"priority\": 10, \"conditions\": {\"amount\": {\"<\": 100}}, \"action\": \"approve\"}, {\"id\": \"R6\", \"name\": \"Default Review\", \"priority\": 99, \"conditions\": {}, \"action\": \"manual_review\"}]",
+      "events.json": "[{\"id\": \"E1\", \"type\": \"transaction\", \"amount\": 15000, \"account_age_days\": 90, \"frequency\": 1, \"window_minutes\": 0, \"international\": false}, {\"id\": \"E2\", \"type\": \"transaction\", \"amount\": 50, \"account_age_days\": 365, \"frequency\": 1, \"window_minutes\": 0, \"international\": false}, {\"id\": \"E3\", \"type\": \"transfer\", \"amount\": 5000, \"account_age_days\": 15, \"frequency\": 1, \"window_minutes\": 0, \"international\": true}, {\"id\": \"E4\", \"type\": \"transaction\", \"amount\": 3000, \"account_age_days\": 10, \"frequency\": 8, \"window_minutes\": 30, \"international\": false}, {\"id\": \"E5\", \"type\": \"transaction\", \"amount\": 500, \"account_age_days\": 200, \"frequency\": 2, \"window_minutes\": 120, \"international\": false}]"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python engine.py", "exit": 0},
+      {"type": "json_valid", "path": "output/decisions.json", "min_length": 5},
+      {"type": "json_valid", "path": "output/audit_trail.json", "min_length": 5},
+      {"type": "json_valid", "path": "output/rule_coverage.json", "min_length": 3}
+    ],
+    "tags": ["python", "rules-engine", "audit", "business-logic"]
+  },
+  {
+    "id": "mb-496",
+    "cat": "multi_step",
+    "diff": "hard",
+    "title": "Compiler Pipeline Simulator",
+    "src": "m/coding",
+    "prompt": "Simulate a multi-stage compiler pipeline: Read source.txt (simple pseudo-code with variable assignments, arithmetic, and print statements). Implement: (1) Lexer stage producing tokens, (2) Parser stage producing AST, (3) Semantic analysis checking for undefined variables and type mismatches, (4) Code generation producing Python output, (5) Optimization pass (constant folding). Produce: output/tokens.json (lexer output), output/ast.json (parser output), output/errors.json (semantic analysis errors/warnings), output/optimized_ast.json (after optimization), output/generated.py (generated Python code), output/execution_result.txt (result of running generated code), output/pipeline_report.md (stage-by-stage analysis with timing and transformation details). Write all logic in compiler.py.",
+    "input": {
+      "source.txt": "x = 10\ny = 20\nz = x + y\nw = z * 2 + 5\na = 3 + 4\nb = a * 2\nprint x\nprint z\nprint w\nprint b"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python compiler.py", "exit": 0},
+      {"type": "json_valid", "path": "output/tokens.json", "min_length": 10},
+      {"type": "json_valid", "path": "output/ast.json", "min_length": 5},
+      {"type": "file_exists", "path": "output/generated.py"}
+    ],
+    "tags": ["python", "compiler", "lexer", "parser", "code-generation"]
+  },
+  {
+    "id": "mb-497",
+    "cat": "multi_step",
+    "diff": "hard",
+    "title": "Distributed Task Simulator",
+    "src": "m/agents",
+    "prompt": "Read cluster.json (worker nodes with capacities and speeds) and tasks.json (tasks with resource requirements, priorities, dependencies, and estimated durations). Simulate distributed task scheduling: implement FIFO, priority-based, and shortest-job-first algorithms; detect resource deadlocks; compute utilization per worker. Produce: output/schedule_fifo.json (FIFO schedule with task-to-worker assignments and timing), output/schedule_priority.json (priority-based schedule), output/schedule_sjf.json (shortest-job-first schedule), output/comparison.json (metrics per algorithm: makespan, avg_wait, utilization, fairness), output/resource_timeline.json (per-worker resource usage over time), output/report.md (comparison report with recommendation for best algorithm). Write all logic in simulator.py.",
+    "input": {
+      "cluster.json": "{\"workers\": [{\"id\": \"W1\", \"cpu\": 4, \"memory\": 8, \"speed_factor\": 1.0}, {\"id\": \"W2\", \"cpu\": 8, \"memory\": 16, \"speed_factor\": 1.5}, {\"id\": \"W3\", \"cpu\": 2, \"memory\": 4, \"speed_factor\": 0.8}]}",
+      "tasks.json": "[{\"id\": \"T1\", \"cpu\": 2, \"memory\": 4, \"duration\": 10, \"priority\": 1, \"deps\": []}, {\"id\": \"T2\", \"cpu\": 1, \"memory\": 2, \"duration\": 5, \"priority\": 3, \"deps\": []}, {\"id\": \"T3\", \"cpu\": 4, \"memory\": 8, \"duration\": 15, \"priority\": 2, \"deps\": [\"T1\"]}, {\"id\": \"T4\", \"cpu\": 1, \"memory\": 1, \"duration\": 3, \"priority\": 5, \"deps\": []}, {\"id\": \"T5\", \"cpu\": 2, \"memory\": 4, \"duration\": 8, \"priority\": 2, \"deps\": [\"T1\", \"T2\"]}, {\"id\": \"T6\", \"cpu\": 3, \"memory\": 6, \"duration\": 12, \"priority\": 1, \"deps\": [\"T3\"]}, {\"id\": \"T7\", \"cpu\": 1, \"memory\": 2, \"duration\": 4, \"priority\": 4, \"deps\": []}, {\"id\": \"T8\", \"cpu\": 2, \"memory\": 3, \"duration\": 7, \"priority\": 3, \"deps\": [\"T4\", \"T7\"]}]"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python simulator.py", "exit": 0},
+      {"type": "json_valid", "path": "output/schedule_fifo.json", "min_length": 8},
+      {"type": "json_valid", "path": "output/comparison.json", "min_length": 3},
+      {"type": "file_match", "path": "output/report.md", "pattern": "[Mm]akespan|[Uu]tilization|[Rr]ecommend"}
+    ],
+    "tags": ["python", "scheduling", "simulation", "distributed-systems"]
+  },
+  {
+    "id": "mb-498",
+    "cat": "multi_step",
+    "diff": "hard",
+    "title": "API Versioning Migration Tool",
+    "src": "m/automation",
+    "prompt": "Read api_v1.json and api_v2.json (two API version specs with endpoint definitions, request/response schemas). Analyze breaking changes, generate migration code and documentation. Produce: output/breaking_changes.json (list of breaking changes with severity: removed endpoints, changed types, renamed fields), output/migration_guide.md (developer guide for migrating from v1 to v2), output/adapter.py (a compatibility adapter that translates v1 requests to v2 format and v2 responses back to v1 format), output/test_adapter.py (tests verifying the adapter works correctly), output/deprecation_schedule.json (proposed deprecation timeline), output/changelog.md (detailed API changelog). Write all logic in api_migrate.py and run the adapter tests.",
+    "input": {
+      "api_v1.json": "{\"endpoints\": [{\"path\": \"/users\", \"method\": \"GET\", \"response\": {\"type\": \"array\", \"items\": {\"id\": \"int\", \"name\": \"string\", \"email\": \"string\"}}}, {\"path\": \"/users/:id\", \"method\": \"GET\", \"response\": {\"id\": \"int\", \"name\": \"string\", \"email\": \"string\", \"active\": \"boolean\"}}, {\"path\": \"/users\", \"method\": \"POST\", \"request\": {\"name\": \"string\", \"email\": \"string\"}, \"response\": {\"id\": \"int\", \"name\": \"string\"}}, {\"path\": \"/posts\", \"method\": \"GET\", \"response\": {\"type\": \"array\", \"items\": {\"id\": \"int\", \"title\": \"string\", \"body\": \"string\", \"user_id\": \"int\"}}}, {\"path\": \"/posts/:id/comments\", \"method\": \"GET\", \"response\": {\"type\": \"array\", \"items\": {\"id\": \"int\", \"text\": \"string\", \"author\": \"string\"}}}]}",
+      "api_v2.json": "{\"endpoints\": [{\"path\": \"/users\", \"method\": \"GET\", \"response\": {\"type\": \"object\", \"data\": {\"type\": \"array\", \"items\": {\"id\": \"int\", \"username\": \"string\", \"email\": \"string\", \"role\": \"string\"}}, \"meta\": {\"total\": \"int\", \"page\": \"int\"}}}, {\"path\": \"/users/:id\", \"method\": \"GET\", \"response\": {\"id\": \"int\", \"username\": \"string\", \"email\": \"string\", \"role\": \"string\", \"is_active\": \"boolean\", \"created_at\": \"string\"}}, {\"path\": \"/users\", \"method\": \"POST\", \"request\": {\"username\": \"string\", \"email\": \"string\", \"role\": \"string\"}, \"response\": {\"id\": \"int\", \"username\": \"string\", \"role\": \"string\"}}, {\"path\": \"/articles\", \"method\": \"GET\", \"response\": {\"type\": \"object\", \"data\": {\"type\": \"array\", \"items\": {\"id\": \"int\", \"title\": \"string\", \"content\": \"string\", \"author_id\": \"int\", \"tags\": \"array\"}}}}, {\"path\": \"/articles/:id/comments\", \"method\": \"GET\", \"response\": {\"type\": \"object\", \"data\": {\"type\": \"array\", \"items\": {\"id\": \"int\", \"body\": \"string\", \"author_id\": \"int\", \"created_at\": \"string\"}}}}]}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python api_migrate.py", "exit": 0},
+      {"type": "json_valid", "path": "output/breaking_changes.json", "min_length": 3},
+      {"type": "file_exists", "path": "output/adapter.py"},
+      {"type": "file_match", "path": "output/migration_guide.md", "pattern": "[Bb]reaking|[Mm]igrat|[Dd]eprecat"}
+    ],
+    "tags": ["python", "api", "migration", "versioning", "compatibility"]
+  },
+  {
+    "id": "mb-499",
+    "cat": "multi_step",
+    "diff": "hard",
+    "title": "State Machine + Simulator",
+    "src": "m/agents",
+    "prompt": "Read state_machine.json (states, transitions with conditions and actions, initial state) and scenarios.json (array of event sequences to simulate). Build a state machine simulator that: validates the machine definition (reachability, dead states, determinism), simulates each scenario tracking state transitions and actions, detects stuck states or infinite loops. Produce: output/validation.json (machine analysis: reachable states, dead states, determinism check), output/simulations.json (per-scenario: state trace, actions executed, final state, error if stuck), output/state_graph.md (Mermaid-syntax state diagram), output/coverage.json (which states and transitions were exercised across all scenarios), output/report.md (comprehensive analysis with scenario summaries and machine health). Write all logic in statemachine.py.",
+    "input": {
+      "state_machine.json": "{\"initial\": \"idle\", \"states\": [\"idle\", \"processing\", \"waiting_approval\", \"approved\", \"rejected\", \"completed\", \"error\", \"archived\"], \"transitions\": [{\"from\": \"idle\", \"to\": \"processing\", \"event\": \"submit\", \"action\": \"validate_input\"}, {\"from\": \"processing\", \"to\": \"waiting_approval\", \"event\": \"processed\", \"action\": \"notify_approver\"}, {\"from\": \"processing\", \"to\": \"error\", \"event\": \"error\", \"action\": \"log_error\"}, {\"from\": \"waiting_approval\", \"to\": \"approved\", \"event\": \"approve\", \"action\": \"notify_submitter\"}, {\"from\": \"waiting_approval\", \"to\": \"rejected\", \"event\": \"reject\", \"action\": \"notify_submitter\"}, {\"from\": \"approved\", \"to\": \"completed\", \"event\": \"complete\", \"action\": \"finalize\"}, {\"from\": \"rejected\", \"to\": \"idle\", \"event\": \"revise\", \"action\": \"reset\"}, {\"from\": \"error\", \"to\": \"idle\", \"event\": \"retry\", \"action\": \"reset\"}, {\"from\": \"completed\", \"to\": \"archived\", \"event\": \"archive\", \"action\": \"move_to_archive\"}]}",
+      "scenarios.json": "[{\"name\": \"Happy Path\", \"events\": [\"submit\", \"processed\", \"approve\", \"complete\", \"archive\"]}, {\"name\": \"Rejection Flow\", \"events\": [\"submit\", \"processed\", \"reject\", \"revise\", \"submit\", \"processed\", \"approve\", \"complete\"]}, {\"name\": \"Error Recovery\", \"events\": [\"submit\", \"error\", \"retry\", \"submit\", \"processed\", \"approve\", \"complete\"]}, {\"name\": \"Invalid Event\", \"events\": [\"submit\", \"approve\"]}, {\"name\": \"Double Submit\", \"events\": [\"submit\", \"submit\"]}]"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python statemachine.py", "exit": 0},
+      {"type": "json_valid", "path": "output/validation.json", "min_length": 3},
+      {"type": "json_valid", "path": "output/simulations.json", "min_length": 5},
+      {"type": "json_valid", "path": "output/coverage.json", "min_length": 3}
+    ],
+    "tags": ["python", "state-machine", "simulation", "validation"]
+  },
+  {
+    "id": "mb-500",
+    "cat": "multi_step",
+    "diff": "hard",
+    "title": "Full CI/CD Pipeline Generator",
+    "src": "m/automation",
+    "prompt": "Read project.json (project metadata: language, test framework, deployment targets, required checks) and codebase.json (file manifest with sizes and types). Generate a complete CI/CD pipeline: output/pipeline.json (multi-stage pipeline config: lint, test, build, deploy stages with parallel jobs), output/scripts/lint.sh (linting script), output/scripts/test.sh (test execution with coverage), output/scripts/build.sh (build script), output/scripts/deploy.sh (deployment script with rollback capability), output/scripts/notify.sh (notification script for success/failure), output/env_matrix.json (test matrix for multiple environments), output/secrets_template.json (required secrets/env vars with descriptions, no actual values), output/pipeline_docs.md (documentation for the pipeline with stage descriptions, trigger rules, and troubleshooting guide). Write the generator as cicd_gen.py.",
+    "input": {
+      "project.json": "{\"name\": \"webapp\", \"language\": \"python\", \"version\": \"3.10\", \"test_framework\": \"pytest\", \"lint_tools\": [\"flake8\", \"mypy\"], \"deploy_targets\": [\"staging\", \"production\"], \"required_checks\": [\"lint\", \"unit_tests\", \"integration_tests\", \"security_scan\"], \"branches\": {\"main\": \"production\", \"develop\": \"staging\"}, \"notifications\": [\"slack\", \"email\"]}",
+      "codebase.json": "{\"files\": [{\"path\": \"src/app.py\", \"type\": \"python\", \"size\": 5200}, {\"path\": \"src/models.py\", \"type\": \"python\", \"size\": 3100}, {\"path\": \"src/routes.py\", \"type\": \"python\", \"size\": 4800}, {\"path\": \"src/utils.py\", \"type\": \"python\", \"size\": 2200}, {\"path\": \"tests/test_app.py\", \"type\": \"python\", \"size\": 6100}, {\"path\": \"tests/test_models.py\", \"type\": \"python\", \"size\": 3400}, {\"path\": \"tests/conftest.py\", \"type\": \"python\", \"size\": 1500}, {\"path\": \"requirements.txt\", \"type\": \"config\", \"size\": 200}, {\"path\": \"Dockerfile\", \"type\": \"docker\", \"size\": 800}]}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python cicd_gen.py", "exit": 0},
+      {"type": "json_valid", "path": "output/pipeline.json", "min_length": 4},
+      {"type": "file_exists", "path": "output/scripts/test.sh"},
+      {"type": "file_match", "path": "output/pipeline_docs.md", "pattern": "[Ss]tag|[Dd]eploy|[Rr]ollback"}
+    ],
+    "tags": ["python", "cicd", "pipeline", "devops", "automation"]
+  }
+]

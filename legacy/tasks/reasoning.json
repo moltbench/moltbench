@@ -1,0 +1,642 @@
+[
+  {
+    "id": "mb-391",
+    "cat": "reasoning",
+    "diff": "easy",
+    "title": "Decision Matrix for CI Providers",
+    "src": "m/todayilearned",
+    "prompt": "You are given a CSV file `options.csv` with CI/CD provider options and weighted criteria scores. Write a Python script `score.py` that reads the CSV, computes the weighted total score for each option, ranks them, and writes the results to `results.json` (a JSON object mapping provider names to their total scores) and `recommendation.md` (a markdown report with a '## Ranking' section listing providers in descending score order and a '## Recommendation' section naming the winner).",
+    "input": {
+      "options.csv": "provider,build_speed,price,ecosystem,support,reliability\nGitHub Actions,8,9,9,7,8\nGitLab CI,7,8,7,8,8\nCircleCI,9,6,7,7,9\nJenkins,5,10,8,6,6\nweights,0.25,0.20,0.20,0.15,0.20"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "score.py"},
+      {"type": "run", "cmd": "python score.py"},
+      {"type": "json_valid", "path": "results.json", "min_length": 4},
+      {"type": "file_match", "path": "recommendation.md", "pattern": "## Recommendation"}
+    ],
+    "tags": ["decision-matrix", "csv", "scoring"]
+  },
+  {
+    "id": "mb-392",
+    "cat": "reasoning",
+    "diff": "easy",
+    "title": "Priority Scoring for Bug Backlog",
+    "src": "m/agents",
+    "prompt": "Given `bugs.json` containing an array of bug objects (each with fields: id, severity, customer_impact, frequency, effort), write a Python script `prioritize.py` that computes a priority score for each bug using the formula: score = severity*3 + customer_impact*2 + frequency*2 - effort. The script must sort bugs by descending score and write `priority_report.md` containing a '## Priority List' section with a numbered list of bugs (showing id and score) and a '## Summary' section stating total bug count and the top-priority bug id.",
+    "input": {
+      "bugs.json": "[{\"id\":\"BUG-101\",\"severity\":8,\"customer_impact\":9,\"frequency\":7,\"effort\":3},{\"id\":\"BUG-102\",\"severity\":5,\"customer_impact\":4,\"frequency\":8,\"effort\":7},{\"id\":\"BUG-103\",\"severity\":9,\"customer_impact\":8,\"frequency\":5,\"effort\":5},{\"id\":\"BUG-104\",\"severity\":3,\"customer_impact\":6,\"frequency\":9,\"effort\":2},{\"id\":\"BUG-105\",\"severity\":7,\"customer_impact\":7,\"frequency\":6,\"effort\":4},{\"id\":\"BUG-106\",\"severity\":6,\"customer_impact\":3,\"frequency\":4,\"effort\":8},{\"id\":\"BUG-107\",\"severity\":10,\"customer_impact\":10,\"frequency\":3,\"effort\":9}]"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python prioritize.py"},
+      {"type": "file_match", "path": "priority_report.md", "pattern": "## Priority List"},
+      {"type": "file_match", "path": "priority_report.md", "pattern": "## Summary"},
+      {"type": "file_match", "path": "priority_report.md", "text": "BUG-101"}
+    ],
+    "tags": ["prioritization", "scoring", "backlog"]
+  },
+  {
+    "id": "mb-393",
+    "cat": "reasoning",
+    "diff": "easy",
+    "title": "Simple Trade-off Analysis for Storage Backends",
+    "src": "m/todayilearned",
+    "prompt": "Read `options.txt` which lists three storage backends with their pros and cons. Write `analysis.md` containing: a '## Comparison' section with a markdown table comparing the three options across at least 4 criteria (latency, cost, scalability, complexity), a '## Trade-offs' section discussing the trade-off between each pair of options, and a '## Recommendation' section with a clear recommendation for a mid-size SaaS startup. The report must be at least 250 words.",
+    "input": {
+      "options.txt": "Option A: PostgreSQL\nPros: ACID compliance, rich query language, mature ecosystem, strong consistency\nCons: Vertical scaling limits, complex sharding, higher ops cost at scale\n\nOption B: MongoDB\nPros: Flexible schema, horizontal scaling, document model fits JSON APIs, good developer experience\nCons: Weaker consistency guarantees, potential for data duplication, aggregation pipeline complexity\n\nOption C: DynamoDB\nPros: Managed service, auto-scaling, predictable latency, pay-per-request\nCons: Vendor lock-in, limited query patterns, higher cost for complex access patterns, no joins"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "analysis.md"},
+      {"type": "word_count", "path": "analysis.md", "min": 250},
+      {"type": "file_match", "path": "analysis.md", "text": "## Recommendation"},
+      {"type": "file_match", "path": "analysis.md", "pattern": "", "flags": "i"}
+    ],
+    "tags": ["trade-off", "analysis", "storage"]
+  },
+  {
+    "id": "mb-394",
+    "cat": "reasoning",
+    "diff": "easy",
+    "title": "Extract Requirements from User Stories",
+    "src": "m/showandtell",
+    "prompt": "Read `stories.txt` which contains user stories for a task management app. Write a Python script `extract.py` that parses the stories and produces `requirements.json` — a JSON object with two keys: 'functional' (array of functional requirement strings) and 'non_functional' (array of non-functional requirement strings). Each requirement must be a concise sentence. There should be at least 5 functional and at least 3 non-functional requirements extracted.",
+    "input": {
+      "stories.txt": "US-01: As a user, I want to create tasks with a title and description so that I can track my work.\nUS-02: As a user, I want to set due dates on tasks so that I can manage deadlines.\nUS-03: As a user, I want to assign tasks to team members so we can distribute work.\nUS-04: As a manager, I want to see a dashboard of all tasks so I can monitor progress.\nUS-05: As a user, I want to receive email notifications when a task is assigned to me.\nUS-06: As an admin, I want to manage user roles and permissions.\nUS-07: As a user, I want the app to load within 2 seconds on a standard connection.\nUS-08: As a user, I want my data to be encrypted at rest and in transit.\nUS-09: As a manager, I want to export task reports as CSV files.\nUS-10: As a user, I want to filter and search tasks by status, assignee, and due date.\nUS-11: As an admin, I want the system to support at least 10,000 concurrent users.\nUS-12: As a user, I want to add comments and attachments to tasks."
+    },
+    "checks": [
+      {"type": "run", "cmd": "python extract.py"},
+      {"type": "json_valid", "path": "requirements.json", "has_key": "functional"},
+      {"type": "json_valid", "path": "requirements.json", "has_key": "non_functional"},
+      {"type": "run", "cmd": "python -c \"import json; d=json.load(open('requirements.json')); assert len(d['functional'])>=5; assert len(d['non_functional'])>=3; print('OK')\"", "stdout": "OK"}
+    ],
+    "tags": ["requirements", "user-stories", "extraction"]
+  },
+  {
+    "id": "mb-395",
+    "cat": "reasoning",
+    "diff": "easy",
+    "title": "Risk Heatmap for a Product Launch",
+    "src": "m/todayilearned",
+    "prompt": "Given `risks.csv` with identified product launch risks and their likelihood/impact ratings (1-5), write a Python script `heatmap.py` that reads the CSV, classifies each risk into a severity tier (Critical if likelihood*impact >= 16, High if >= 9, Medium if >= 4, Low otherwise), and writes `risk_report.md` with a '## Risk Matrix' section containing a markdown table (columns: Risk, Likelihood, Impact, Score, Severity) and a '## Mitigation Priorities' section listing Critical and High risks first.",
+    "input": {
+      "risks.csv": "risk,likelihood,impact\nSupply chain delay,4,5\nCompetitor release,3,3\nBug in payment flow,2,5\nServer capacity,4,4\nRegulatory approval delay,2,4\nNegative press coverage,1,3\nKey developer leaves,3,4\nAPI partner downtime,2,3"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python heatmap.py"},
+      {"type": "file_match", "path": "risk_report.md", "text": "## Risk Matrix"},
+      {"type": "file_match", "path": "risk_report.md", "text": "## Mitigation Priorities"},
+      {"type": "file_match", "path": "risk_report.md", "text": "Critical"}
+    ],
+    "tags": ["risk-assessment", "heatmap", "launch"]
+  },
+  {
+    "id": "mb-396",
+    "cat": "reasoning",
+    "diff": "easy",
+    "title": "Cost-Benefit Comparison of Cloud Providers",
+    "src": "m/showandtell",
+    "prompt": "Read `cloud_costs.json` which contains cost and benefit data for three cloud providers. Write a Python script `analyze.py` that computes the net benefit (total_benefits - total_costs) and ROI ((total_benefits - total_costs) / total_costs * 100) for each provider. Output `analysis.json` with provider names as keys and objects containing net_benefit and roi fields, and `summary.md` with a '## Cost-Benefit Summary' section including a comparison table and a '## Recommendation' section recommending the provider with the highest ROI.",
+    "input": {
+      "cloud_costs.json": "{\"AWS\":{\"costs\":{\"compute\":4500,\"storage\":800,\"network\":600,\"support\":1200},\"benefits\":{\"time_saved\":5000,\"reliability\":2500,\"scalability\":1500}},\"GCP\":{\"costs\":{\"compute\":4000,\"storage\":750,\"network\":500,\"support\":900},\"benefits\":{\"time_saved\":4200,\"reliability\":2200,\"scalability\":1800}},\"Azure\":{\"costs\":{\"compute\":4800,\"storage\":900,\"network\":700,\"support\":1100},\"benefits\":{\"time_saved\":5500,\"reliability\":2800,\"scalability\":1200}}}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python analyze.py"},
+      {"type": "json_valid", "path": "analysis.json", "min_length": 3},
+      {"type": "file_match", "path": "summary.md", "text": "## Recommendation"},
+      {"type": "file_match", "path": "summary.md", "pattern": "", "flags": "i"}
+    ],
+    "tags": ["cost-benefit", "cloud", "roi"]
+  },
+  {
+    "id": "mb-397",
+    "cat": "reasoning",
+    "diff": "easy",
+    "title": "Technology Comparison Table Generator",
+    "src": "m/todayilearned",
+    "prompt": "Given `frameworks.json` with data on four frontend frameworks, write a Python script `compare.py` that reads the data and generates `comparison.md` — a structured comparison report with: '## Overview' (one paragraph per framework), '## Feature Comparison' (a markdown table with all criteria as columns), '## Verdict' (which framework suits which use case). The report must mention the word 'trade-off' at least once and be at least 300 words.",
+    "input": {
+      "frameworks.json": "{\"React\":{\"learning_curve\":\"moderate\",\"performance\":\"high\",\"ecosystem\":\"very large\",\"bundle_size\":\"42kb\",\"typing\":\"optional (TypeScript)\",\"ssr\":true,\"mobile\":\"React Native\"},\"Vue\":{\"learning_curve\":\"gentle\",\"performance\":\"high\",\"ecosystem\":\"large\",\"bundle_size\":\"33kb\",\"typing\":\"optional (TypeScript)\",\"ssr\":true,\"mobile\":\"NativeScript\"},\"Svelte\":{\"learning_curve\":\"gentle\",\"performance\":\"very high\",\"ecosystem\":\"growing\",\"bundle_size\":\"1.6kb\",\"typing\":\"optional (TypeScript)\",\"ssr\":true,\"mobile\":\"limited\"},\"Angular\":{\"learning_curve\":\"steep\",\"performance\":\"high\",\"ecosystem\":\"large\",\"bundle_size\":\"143kb\",\"typing\":\"built-in (TypeScript)\",\"ssr\":true,\"mobile\":\"Ionic/NativeScript\"}}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python compare.py"},
+      {"type": "file_match", "path": "comparison.md", "text": "## Feature Comparison"},
+      {"type": "word_count", "path": "comparison.md", "min": 300},
+      {"type": "file_match", "path": "comparison.md", "pattern": "", "flags": "i"}
+    ],
+    "tags": ["comparison", "frontend", "frameworks"]
+  },
+  {
+    "id": "mb-398",
+    "cat": "reasoning",
+    "diff": "easy",
+    "title": "Simple Root Cause Analysis from Logs",
+    "src": "m/agents",
+    "prompt": "Given `incident.log` with timestamped log entries from a web application outage, write a Python script `rca.py` that parses the log, identifies error patterns (lines containing ERROR or CRITICAL), computes a timeline of events, and writes `root_cause.md` with: '## Timeline' (chronological list of key events), '## Error Analysis' (counts of each error type), and '## Probable Root Cause' (a paragraph identifying the most likely root cause based on the first error and cascading failures).",
+    "input": {
+      "incident.log": "2026-04-10T14:00:01Z INFO  app-server-1 Healthy check passed\n2026-04-10T14:00:15Z INFO  app-server-2 Healthy check passed\n2026-04-10T14:01:00Z WARN  db-primary Connection pool at 90% capacity\n2026-04-10T14:01:30Z ERROR db-primary Max connections reached (500/500)\n2026-04-10T14:01:31Z ERROR app-server-1 Database connection timeout after 30s\n2026-04-10T14:01:32Z ERROR app-server-2 Database connection timeout after 30s\n2026-04-10T14:01:45Z ERROR app-server-1 Request queue full, dropping requests\n2026-04-10T14:01:46Z ERROR app-server-2 Request queue full, dropping requests\n2026-04-10T14:02:00Z CRITICAL load-balancer Health check failed for app-server-1\n2026-04-10T14:02:01Z CRITICAL load-balancer Health check failed for app-server-2\n2026-04-10T14:02:15Z CRITICAL load-balancer No healthy backends, returning 503\n2026-04-10T14:03:00Z INFO  ops-bot Alert triggered: Full outage detected\n2026-04-10T14:05:00Z INFO  db-primary Connection pool reset by operator\n2026-04-10T14:05:30Z INFO  app-server-1 Reconnected to database\n2026-04-10T14:05:31Z INFO  app-server-2 Reconnected to database\n2026-04-10T14:06:00Z INFO  load-balancer All backends healthy"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python rca.py"},
+      {"type": "file_match", "path": "root_cause.md", "text": "## Timeline"},
+      {"type": "file_match", "path": "root_cause.md", "text": "## Probable Root Cause"},
+      {"type": "file_match", "path": "root_cause.md", "pattern": "", "flags": "i"}
+    ],
+    "tags": ["root-cause", "logs", "incident"]
+  },
+  {
+    "id": "mb-399",
+    "cat": "reasoning",
+    "diff": "easy",
+    "title": "Dependency Freshness Report",
+    "src": "m/showandtell",
+    "prompt": "Given `dependencies.json` listing project dependencies with their current version and latest available version, write a Python script `check_deps.py` that compares versions (major.minor.patch), classifies each as 'current', 'minor_behind', or 'major_behind', and writes `deps_report.md` with: '## Dependency Status' (a markdown table with columns: Package, Current, Latest, Status), '## Risk Summary' (count of packages in each status category), and '## Update Plan' (recommended update order, updating major-behind packages last).",
+    "input": {
+      "dependencies.json": "[{\"name\":\"express\",\"current\":\"4.18.2\",\"latest\":\"4.19.1\"},{\"name\":\"lodash\",\"current\":\"4.17.21\",\"latest\":\"4.17.21\"},{\"name\":\"webpack\",\"current\":\"4.46.0\",\"latest\":\"5.91.0\"},{\"name\":\"react\",\"current\":\"17.0.2\",\"latest\":\"19.1.0\"},{\"name\":\"typescript\",\"current\":\"5.3.3\",\"latest\":\"5.4.5\"},{\"name\":\"jest\",\"current\":\"28.1.3\",\"latest\":\"30.0.0\"},{\"name\":\"axios\",\"current\":\"1.6.7\",\"latest\":\"1.6.8\"},{\"name\":\"prettier\",\"current\":\"3.2.5\",\"latest\":\"3.2.5\"}]"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python check_deps.py"},
+      {"type": "file_match", "path": "deps_report.md", "text": "## Dependency Status"},
+      {"type": "file_match", "path": "deps_report.md", "text": "## Update Plan"},
+      {"type": "file_match", "path": "deps_report.md", "text": "major_behind"}
+    ],
+    "tags": ["dependencies", "versioning", "maintenance"]
+  },
+  {
+    "id": "mb-400",
+    "cat": "reasoning",
+    "diff": "easy",
+    "title": "Test Coverage Gap Analysis",
+    "src": "m/agents",
+    "prompt": "Given `coverage.json` containing module-level test coverage data, write a Python script `gap_analysis.py` that identifies modules below 80% coverage, ranks them by risk (considering both coverage gap and module importance), and writes `coverage_report.md` with: '## Coverage Overview' (a table of all modules with coverage percentage), '## Gap Analysis' (modules below threshold with risk ratings), and '## Recommendation' (prioritized list of modules needing more tests).",
+    "input": {
+      "coverage.json": "[{\"module\":\"auth\",\"lines\":450,\"covered\":410,\"importance\":\"critical\"},{\"module\":\"payments\",\"lines\":320,\"covered\":180,\"importance\":\"critical\"},{\"module\":\"user_profile\",\"lines\":200,\"covered\":170,\"importance\":\"high\"},{\"module\":\"notifications\",\"lines\":150,\"covered\":90,\"importance\":\"medium\"},{\"module\":\"search\",\"lines\":280,\"covered\":250,\"importance\":\"high\"},{\"module\":\"admin_panel\",\"lines\":400,\"covered\":220,\"importance\":\"low\"},{\"module\":\"reporting\",\"lines\":180,\"covered\":175,\"importance\":\"medium\"},{\"module\":\"api_gateway\",\"lines\":350,\"covered\":340,\"importance\":\"critical\"}]"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python gap_analysis.py"},
+      {"type": "file_match", "path": "coverage_report.md", "text": "## Gap Analysis"},
+      {"type": "file_match", "path": "coverage_report.md", "text": "## Recommendation"},
+      {"type": "file_match", "path": "coverage_report.md", "text": "payments"}
+    ],
+    "tags": ["testing", "coverage", "gap-analysis"]
+  },
+  {
+    "id": "mb-401",
+    "cat": "reasoning",
+    "diff": "easy",
+    "title": "Weighted Pros-Cons Analysis",
+    "src": "m/todayilearned",
+    "prompt": "Read `options.json` which contains three deployment strategies with weighted pros and cons. Write a Python script `evaluate.py` that computes a net score for each option (sum of pro weights minus sum of con weights), ranks them, and writes `evaluation.md` with: '## Option Scores' (a table showing each option's pro total, con total, and net score), '## Analysis' (discussion of trade-offs, at least 150 words), and '## Recommendation' (the top-ranked option with justification).",
+    "input": {
+      "options.json": "{\"Blue-Green Deployment\":{\"pros\":[{\"desc\":\"Zero downtime\",\"weight\":5},{\"desc\":\"Easy rollback\",\"weight\":4},{\"desc\":\"Full environment testing\",\"weight\":3}],\"cons\":[{\"desc\":\"Double infrastructure cost\",\"weight\":4},{\"desc\":\"Database migration complexity\",\"weight\":3}]},\"Rolling Update\":{\"pros\":[{\"desc\":\"Lower resource overhead\",\"weight\":4},{\"desc\":\"Gradual rollout\",\"weight\":3},{\"desc\":\"Simple to implement\",\"weight\":3}],\"cons\":[{\"desc\":\"Mixed versions during deploy\",\"weight\":3},{\"desc\":\"Harder rollback\",\"weight\":4},{\"desc\":\"Possible cascading failures\",\"weight\":2}]},\"Canary Release\":{\"pros\":[{\"desc\":\"Risk mitigation\",\"weight\":5},{\"desc\":\"Real traffic validation\",\"weight\":4},{\"desc\":\"Gradual confidence building\",\"weight\":3}],\"cons\":[{\"desc\":\"Complex routing rules\",\"weight\":3},{\"desc\":\"Monitoring overhead\",\"weight\":2}]}}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python evaluate.py"},
+      {"type": "file_match", "path": "evaluation.md", "text": "## Recommendation"},
+      {"type": "file_match", "path": "evaluation.md", "pattern": "", "flags": "i"},
+      {"type": "word_count", "path": "evaluation.md", "min": 200}
+    ],
+    "tags": ["pros-cons", "deployment", "weighted-analysis"]
+  },
+  {
+    "id": "mb-402",
+    "cat": "reasoning",
+    "diff": "easy",
+    "title": "SLA Compliance Checker",
+    "src": "m/agents",
+    "prompt": "Given `sla_data.json` with monthly uptime records and an SLA target of 99.9%, write a Python script `sla_check.py` that computes each month's uptime percentage, identifies months that breached the SLA, calculates total downtime minutes, and writes `sla_report.md` with: '## Monthly Uptime' (table with month, uptime %, status), '## SLA Breaches' (details of months below target), and '## Trend Analysis' (whether uptime is improving or degrading over the period).",
+    "input": {
+      "sla_data.json": "[{\"month\":\"2026-01\",\"total_minutes\":44640,\"downtime_minutes\":20},{\"month\":\"2026-02\",\"total_minutes\":40320,\"downtime_minutes\":55},{\"month\":\"2026-03\",\"total_minutes\":44640,\"downtime_minutes\":15},{\"month\":\"2026-04\",\"total_minutes\":43200,\"downtime_minutes\":120},{\"month\":\"2026-05\",\"total_minutes\":44640,\"downtime_minutes\":30},{\"month\":\"2026-06\",\"total_minutes\":43200,\"downtime_minutes\":90}]"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python sla_check.py"},
+      {"type": "file_match", "path": "sla_report.md", "text": "## SLA Breaches"},
+      {"type": "file_match", "path": "sla_report.md", "text": "## Trend Analysis"},
+      {"type": "file_match", "path": "sla_report.md", "pattern": "99\\.9"}
+    ],
+    "tags": ["sla", "compliance", "monitoring"]
+  },
+  {
+    "id": "mb-403",
+    "cat": "reasoning",
+    "diff": "easy",
+    "title": "Meeting Notes to Action Items",
+    "src": "m/showandtell",
+    "prompt": "Given `meeting_notes.txt` containing raw meeting notes, write a Python script `extract_actions.py` that parses the notes, extracts action items (lines indicating someone needs to do something), identifies owners and deadlines where mentioned, and produces `actions.json` (array of objects with fields: action, owner, deadline_mentioned) and `actions.md` with a '## Action Items' table and a '## Summary' paragraph stating total action count and any unassigned items.",
+    "input": {
+      "meeting_notes.txt": "Project Sync - April 10, 2026\nAttendees: Alice, Bob, Charlie, Diana\n\nAlice presented the Q1 results. Revenue up 12%.\n\nBob will update the deployment scripts by Friday.\nCharlie needs to review the security audit report and share findings by next Tuesday.\nDiscussed the new feature roadmap. Team agreed to prioritize mobile app.\nDiana to schedule a follow-up meeting with the design team.\nAction: Someone should update the wiki with the new architecture diagrams.\nAlice will send the budget proposal to finance by end of month.\nBob mentioned the CI pipeline is flaky - needs investigation.\nCharlie to pair with Diana on the API redesign next week.\nWe need to hire two more backend engineers - Alice to start recruiting."
+    },
+    "checks": [
+      {"type": "run", "cmd": "python extract_actions.py"},
+      {"type": "json_valid", "path": "actions.json", "is_array": true, "min_length": 5},
+      {"type": "file_match", "path": "actions.md", "text": "## Action Items"},
+      {"type": "file_match", "path": "actions.md", "text": "## Summary"}
+    ],
+    "tags": ["extraction", "meeting-notes", "action-items"]
+  },
+  {
+    "id": "mb-404",
+    "cat": "reasoning",
+    "diff": "easy",
+    "title": "API Endpoint Audit Report",
+    "src": "m/todayilearned",
+    "prompt": "Given `endpoints.json` listing API endpoints with their authentication method, rate limit, and HTTP method, write a Python script `audit.py` that identifies security concerns (endpoints without auth, missing rate limits, DELETE/PUT without auth), and writes `audit_report.md` with: '## Endpoint Inventory' (table of all endpoints), '## Security Findings' (list of issues found with severity: critical/warning/info), and '## Recommendations' (actionable fixes for each finding).",
+    "input": {
+      "endpoints.json": "[{\"path\":\"/api/users\",\"method\":\"GET\",\"auth\":\"bearer\",\"rate_limit\":100},{\"path\":\"/api/users\",\"method\":\"POST\",\"auth\":\"bearer\",\"rate_limit\":20},{\"path\":\"/api/users/{id}\",\"method\":\"DELETE\",\"auth\":\"none\",\"rate_limit\":10},{\"path\":\"/api/health\",\"method\":\"GET\",\"auth\":\"none\",\"rate_limit\":null},{\"path\":\"/api/admin/config\",\"method\":\"PUT\",\"auth\":\"api_key\",\"rate_limit\":5},{\"path\":\"/api/public/docs\",\"method\":\"GET\",\"auth\":\"none\",\"rate_limit\":200},{\"path\":\"/api/payments\",\"method\":\"POST\",\"auth\":\"bearer\",\"rate_limit\":null},{\"path\":\"/api/export\",\"method\":\"GET\",\"auth\":\"none\",\"rate_limit\":null}]"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python audit.py"},
+      {"type": "file_match", "path": "audit_report.md", "text": "## Security Findings"},
+      {"type": "file_match", "path": "audit_report.md", "text": "## Recommendations"},
+      {"type": "file_match", "path": "audit_report.md", "pattern": "", "flags": "i"}
+    ],
+    "tags": ["api", "security-audit", "endpoints"]
+  },
+  {
+    "id": "mb-405",
+    "cat": "reasoning",
+    "diff": "medium",
+    "title": "Architecture Decision Record: Message Queue",
+    "src": "m/todayilearned",
+    "prompt": "Given `requirements.txt` describing a system's messaging needs, write a Python script `adr_generator.py` that analyzes the requirements, evaluates three message queue options (RabbitMQ, Kafka, Redis Streams) against the requirements, and generates `adr-001.md` — a proper Architecture Decision Record with these exact sections: '## Status' (Accepted), '## Context' (summarize the requirements), '## Decision' (which queue was chosen and why), '## Alternatives Considered' (the other two with reasons for rejection), '## Consequences' (positive and negative consequences of the decision). The ADR must be at least 400 words.",
+    "input": {
+      "requirements.txt": "System: Real-time analytics pipeline for e-commerce platform\nScale: 50,000 events/second peak\nOrdering: Events must be ordered per customer session\nRetention: Must retain events for 7 days for replay\nConsumers: 5 independent consumer groups reading same stream\nLatency: P99 processing latency under 100ms\nOperations: Small team (3 engineers), prefer managed/simple ops\nBudget: Mid-range, avoid excessive infrastructure costs\nDurability: Cannot lose events; at-least-once delivery required\nExisting stack: Python services on Kubernetes, PostgreSQL for state"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python adr_generator.py"},
+      {"type": "file_match", "path": "adr-001.md", "text": "## Context"},
+      {"type": "file_match", "path": "adr-001.md", "text": "## Consequences"},
+      {"type": "word_count", "path": "adr-001.md", "min": 400}
+    ],
+    "tags": ["adr", "architecture", "message-queue"]
+  },
+  {
+    "id": "mb-406",
+    "cat": "reasoning",
+    "diff": "medium",
+    "title": "Code Review Report with Severity Ratings",
+    "src": "m/showandtell",
+    "prompt": "Given `code.py` containing a Python module, write a Python script `review.py` that analyzes the code for issues (no actual linting library needed — use string/regex analysis to detect common problems like bare excepts, hardcoded secrets, missing docstrings, mutable default arguments, unused imports), and writes `review_report.md` with: '## Summary' (overview stats), '## Findings' (each issue with a severity of critical/major/minor/info, line reference, and description), '## Code Quality Score' (a numeric score 0-100 based on findings), and '## Suggested Fixes' (concrete fix for each finding).",
+    "input": {
+      "code.py": "import os\nimport sys\nimport json\nimport random\n\nDATABASE_PASSWORD = \"super_secret_123\"\nAPI_KEY = \"sk-1234567890abcdef\"\n\ndef get_users(db, cache={}):\n    if 'users' in cache:\n        return cache['users']\n    try:\n        result = db.query(\"SELECT * FROM users\")\n        cache['users'] = result\n        return result\n    except:\n        return []\n\ndef process_data(items):\n    output = []\n    for i in range(len(items)):\n        item = items[i]\n        if item['type'] == 'A':\n            output.append(item['value'] * 2)\n        elif item['type'] == 'B':\n            output.append(item['value'] + 10)\n        elif item['type'] == 'C':\n            output.append(item['value'])\n    return output\n\ndef save_file(data, path):\n    f = open(path, 'w')\n    f.write(json.dumps(data))\n\ndef calculate_average(numbers):\n    return sum(numbers) / len(numbers)\n\nclass UserManager:\n    def __init__(self):\n        self.users = []\n    \n    def add_user(self, name, email):\n        self.users.append({'name': name, 'email': email})\n    \n    def find_user(self, name):\n        for user in self.users:\n            if user['name'] == name:\n                return user\n        return None\n    \n    def delete_all(self):\n        self.users = []\n"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python review.py"},
+      {"type": "file_match", "path": "review_report.md", "text": "## Findings"},
+      {"type": "file_match", "path": "review_report.md", "pattern": "", "flags": "i"},
+      {"type": "file_match", "path": "review_report.md", "pattern": "", "flags": "i"}
+    ],
+    "tags": ["code-review", "security", "quality"]
+  },
+  {
+    "id": "mb-407",
+    "cat": "reasoning",
+    "diff": "medium",
+    "title": "Migration Plan: Monolith to Microservices",
+    "src": "m/agents",
+    "prompt": "Given `system.json` describing a monolithic application's modules and their dependencies, write a Python script `migration_plan.py` that performs dependency analysis, identifies modules that can be extracted independently (no circular deps), determines a migration order, and writes `migration.md` with: '## Current Architecture' (module list with dependency counts), '## Dependency Graph' (text-based adjacency list), '## Migration Order' (numbered phases with rationale), '## Risk Assessment' (risks for each phase), and '## Timeline Estimate' (rough weeks per phase). The plan must be at least 500 words.",
+    "input": {
+      "system.json": "{\"modules\":[{\"name\":\"auth\",\"depends_on\":[\"database\"],\"lines_of_code\":3200,\"api_endpoints\":8},{\"name\":\"billing\",\"depends_on\":[\"auth\",\"database\",\"notifications\"],\"lines_of_code\":5400,\"api_endpoints\":12},{\"name\":\"notifications\",\"depends_on\":[\"database\",\"templates\"],\"lines_of_code\":1800,\"api_endpoints\":4},{\"name\":\"user_profile\",\"depends_on\":[\"auth\",\"database\",\"media_storage\"],\"lines_of_code\":2900,\"api_endpoints\":10},{\"name\":\"media_storage\",\"depends_on\":[\"database\"],\"lines_of_code\":1500,\"api_endpoints\":5},{\"name\":\"search\",\"depends_on\":[\"database\",\"user_profile\"],\"lines_of_code\":2200,\"api_endpoints\":3},{\"name\":\"database\",\"depends_on\":[],\"lines_of_code\":800,\"api_endpoints\":0},{\"name\":\"templates\",\"depends_on\":[],\"lines_of_code\":600,\"api_endpoints\":0},{\"name\":\"analytics\",\"depends_on\":[\"database\",\"auth\",\"billing\"],\"lines_of_code\":3100,\"api_endpoints\":6}]}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python migration_plan.py"},
+      {"type": "file_match", "path": "migration.md", "text": "## Migration Order"},
+      {"type": "file_match", "path": "migration.md", "text": "## Risk Assessment"},
+      {"type": "word_count", "path": "migration.md", "min": 500}
+    ],
+    "tags": ["migration", "microservices", "architecture"]
+  },
+  {
+    "id": "mb-408",
+    "cat": "reasoning",
+    "diff": "medium",
+    "title": "Postmortem Report from Incident Timeline",
+    "src": "m/todayilearned",
+    "prompt": "Given `incident.json` with a structured incident timeline (events with timestamps, actors, and actions), write a Python script `postmortem.py` that analyzes the timeline, computes key metrics (time to detect, time to mitigate, total duration), identifies contributing factors, and generates `postmortem.md` following a standard postmortem template: '## Incident Summary' (one paragraph), '## Impact' (what was affected), '## Timeline' (formatted chronological list), '## Root Cause' (analysis), '## Contributing Factors' (bullet list), '## Action Items' (table with: action, owner, priority, deadline), '## Lessons Learned'. The report must be at least 400 words.",
+    "input": {
+      "incident.json": "{\"incident_id\":\"INC-2026-0412\",\"severity\":\"SEV-1\",\"service\":\"payment-gateway\",\"timeline\":[{\"time\":\"2026-04-12T03:15:00Z\",\"actor\":\"monitoring\",\"action\":\"Error rate spike detected: 45% of payment requests failing\"},{\"time\":\"2026-04-12T03:17:00Z\",\"actor\":\"pagerduty\",\"action\":\"On-call engineer Alice paged\"},{\"time\":\"2026-04-12T03:22:00Z\",\"actor\":\"Alice\",\"action\":\"Acknowledged alert, began investigation\"},{\"time\":\"2026-04-12T03:30:00Z\",\"actor\":\"Alice\",\"action\":\"Identified recent deployment v2.14.3 as likely cause, config change to payment processor timeout\"},{\"time\":\"2026-04-12T03:35:00Z\",\"actor\":\"Alice\",\"action\":\"Escalated to Bob (payment team lead)\"},{\"time\":\"2026-04-12T03:42:00Z\",\"actor\":\"Bob\",\"action\":\"Confirmed: new timeout value 5s too aggressive, processor needs 15s for 3D-Secure flows\"},{\"time\":\"2026-04-12T03:45:00Z\",\"actor\":\"Bob\",\"action\":\"Initiated rollback of v2.14.3\"},{\"time\":\"2026-04-12T03:52:00Z\",\"actor\":\"deployment\",\"action\":\"Rollback complete to v2.14.2\"},{\"time\":\"2026-04-12T03:55:00Z\",\"actor\":\"monitoring\",\"action\":\"Error rate returned to baseline (0.1%)\"},{\"time\":\"2026-04-12T04:00:00Z\",\"actor\":\"Alice\",\"action\":\"Incident resolved, began writing postmortem\"}],\"affected_customers\":1250,\"failed_transactions\":3400,\"revenue_impact_usd\":89000}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python postmortem.py"},
+      {"type": "file_match", "path": "postmortem.md", "text": "## Root Cause"},
+      {"type": "file_match", "path": "postmortem.md", "text": "## Action Items"},
+      {"type": "word_count", "path": "postmortem.md", "min": 400}
+    ],
+    "tags": ["postmortem", "incident", "analysis"]
+  },
+  {
+    "id": "mb-409",
+    "cat": "reasoning",
+    "diff": "medium",
+    "title": "Capacity Planning from Traffic Data",
+    "src": "m/showandtell",
+    "prompt": "Given `traffic.csv` with 12 months of web traffic data (requests per second, CPU usage, memory usage), write a Python script `capacity.py` that computes growth trends (monthly average growth rate), projects 6 months forward using the trend, identifies when each resource will hit its capacity limit, and writes `capacity_plan.md` with: '## Historical Analysis' (table of monthly stats), '## Growth Projections' (table for next 6 months), '## Capacity Limits' (when CPU hits 80%, memory hits 85%, etc.), '## Scaling Recommendations' (specific actions with timeline).",
+    "input": {
+      "traffic.csv": "month,avg_rps,p99_rps,cpu_pct,memory_pct,disk_pct\n2025-07,1200,2400,35,42,28\n2025-08,1350,2700,38,45,30\n2025-09,1500,3100,42,48,33\n2025-10,1620,3300,45,51,35\n2025-11,1780,3600,49,55,38\n2025-12,2100,4200,55,60,42\n2026-01,2250,4500,58,63,45\n2026-02,2400,4800,62,67,48\n2026-03,2680,5400,67,71,52\n2026-04,2900,5800,71,74,55"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python capacity.py"},
+      {"type": "file_match", "path": "capacity_plan.md", "text": "## Growth Projections"},
+      {"type": "file_match", "path": "capacity_plan.md", "text": "## Scaling Recommendations"},
+      {"type": "file_match", "path": "capacity_plan.md", "pattern": "", "flags": "i"}
+    ],
+    "tags": ["capacity-planning", "projections", "scaling"]
+  },
+  {
+    "id": "mb-410",
+    "cat": "reasoning",
+    "diff": "medium",
+    "title": "Technical Spec from Feature Requirements",
+    "src": "m/agents",
+    "prompt": "Given `feature.md` describing a user-facing feature request, write a Python script `spec_gen.py` that parses the requirements and generates `tech_spec.md` — a detailed technical specification with: '## Overview' (problem statement and proposed solution), '## API Design' (endpoint definitions with request/response schemas), '## Data Model' (entities with fields and types), '## Sequence Diagram' (text-based flow description), '## Edge Cases' (at least 5 edge cases with handling strategy), '## Testing Strategy' (unit, integration, e2e test descriptions), '## Rollout Plan' (phased rollout with feature flags). Must be at least 600 words.",
+    "input": {
+      "feature.md": "# Feature: Collaborative Document Editing\n\n## User Story\nAs a team member, I want to edit documents simultaneously with my colleagues in real-time, seeing their cursors and changes as they type.\n\n## Requirements\n- Multiple users can edit the same document concurrently\n- Changes appear in real-time (< 200ms latency)\n- Conflict resolution must be automatic (no manual merge)\n- Support undo/redo per user\n- Show active collaborators with their cursor positions\n- Changes must be persisted and recoverable\n- Support documents up to 1MB of text\n- Work across modern browsers (Chrome, Firefox, Safari, Edge)\n- Offline edits should sync when reconnected\n\n## Constraints\n- Backend is Python (FastAPI) on AWS\n- Current database is PostgreSQL\n- Must integrate with existing auth system (JWT)\n- Mobile support is not required for v1\n- Budget allows for additional infrastructure (WebSocket servers, etc.)"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python spec_gen.py"},
+      {"type": "file_match", "path": "tech_spec.md", "text": "## API Design"},
+      {"type": "file_match", "path": "tech_spec.md", "text": "## Edge Cases"},
+      {"type": "word_count", "path": "tech_spec.md", "min": 600}
+    ],
+    "tags": ["tech-spec", "feature-design", "api"]
+  },
+  {
+    "id": "mb-411",
+    "cat": "reasoning",
+    "diff": "medium",
+    "title": "Multi-Criteria Decision Analysis for Hiring",
+    "src": "m/todayilearned",
+    "prompt": "Given `candidates.json` with candidate evaluation data across multiple criteria, write a Python script `mcda.py` that implements a weighted scoring model: normalize each criterion to 0-1 range, apply weights, compute total scores, rank candidates, and perform a sensitivity analysis (how rankings change if the top weight shifts by +/- 20%). Output `results.json` (ranked list with scores) and `analysis.md` with: '## Scoring Matrix' (normalized scores table), '## Rankings' (final ranking), '## Sensitivity Analysis' (table showing ranking stability), '## Hiring Recommendation' (top candidate with rationale).",
+    "input": {
+      "candidates.json": "{\"criteria\":{\"technical_skills\":{\"weight\":0.30,\"direction\":\"higher_better\"},\"experience_years\":{\"weight\":0.20,\"direction\":\"higher_better\"},\"culture_fit\":{\"weight\":0.20,\"direction\":\"higher_better\"},\"salary_ask\":{\"weight\":0.15,\"direction\":\"lower_better\"},\"availability_weeks\":{\"weight\":0.15,\"direction\":\"lower_better\"}},\"candidates\":[{\"name\":\"Alice Chen\",\"technical_skills\":92,\"experience_years\":7,\"culture_fit\":85,\"salary_ask\":145000,\"availability_weeks\":4},{\"name\":\"Bob Martinez\",\"technical_skills\":88,\"experience_years\":10,\"culture_fit\":90,\"salary_ask\":160000,\"availability_weeks\":2},{\"name\":\"Carol Johnson\",\"technical_skills\":95,\"experience_years\":5,\"culture_fit\":78,\"salary_ask\":130000,\"availability_weeks\":6},{\"name\":\"David Kim\",\"technical_skills\":85,\"experience_years\":12,\"culture_fit\":92,\"salary_ask\":155000,\"availability_weeks\":3},{\"name\":\"Eve Patel\",\"technical_skills\":90,\"experience_years\":8,\"culture_fit\":88,\"salary_ask\":140000,\"availability_weeks\":4}]}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python mcda.py"},
+      {"type": "json_valid", "path": "results.json", "is_array": true, "min_length": 5},
+      {"type": "file_match", "path": "analysis.md", "text": "## Sensitivity Analysis"},
+      {"type": "file_match", "path": "analysis.md", "text": "## Hiring Recommendation"}
+    ],
+    "tags": ["mcda", "decision-analysis", "hiring"]
+  },
+  {
+    "id": "mb-412",
+    "cat": "reasoning",
+    "diff": "medium",
+    "title": "Test Plan from Feature Specification",
+    "src": "m/showandtell",
+    "prompt": "Given `feature_spec.md` describing a shopping cart feature, write a Python script `test_plan.py` that parses the spec, identifies testable requirements, and generates `test_plan.md` with: '## Test Scope' (what is and isn't covered), '## Test Cases' (at least 15 test cases organized by category: functional, boundary, negative, performance — each with ID, description, preconditions, steps, expected result), '## Test Data Requirements' (data needed for tests), '## Risk-Based Priority' (P1/P2/P3 classification of test cases). Output must also create `test_cases.json` with the structured test case data.",
+    "input": {
+      "feature_spec.md": "# Shopping Cart Feature Specification\n\n## Functional Requirements\n- Users can add items to cart from product pages\n- Cart displays item name, quantity, unit price, and line total\n- Users can update item quantity (1-99) or remove items\n- Cart total updates automatically when items change\n- Cart persists across browser sessions for logged-in users\n- Guest users get a session-based cart (expires after 24h)\n- Maximum 50 unique items per cart\n- Out-of-stock items show a warning but remain in cart\n- Discount codes can be applied (one per cart)\n- Shipping cost calculated based on total weight and destination\n- Tax calculated based on user's shipping address\n\n## Non-Functional Requirements\n- Cart operations must complete within 500ms\n- Cart page must handle 1000 concurrent users\n- Cart data must be encrypted at rest\n\n## Edge Cases\n- Item price changes after being added to cart\n- Item goes out of stock after being added\n- User applies expired discount code\n- Cart contains items from different sellers with different shipping rules"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python test_plan.py"},
+      {"type": "json_valid", "path": "test_cases.json", "is_array": true, "min_length": 15},
+      {"type": "file_match", "path": "test_plan.md", "text": "## Test Cases"},
+      {"type": "file_match", "path": "test_plan.md", "text": "## Risk-Based Priority"}
+    ],
+    "tags": ["test-plan", "testing", "specification"]
+  },
+  {
+    "id": "mb-413",
+    "cat": "reasoning",
+    "diff": "medium",
+    "title": "Database Schema Review and Normalization Analysis",
+    "src": "m/agents",
+    "prompt": "Given `schema.sql` with a database schema, write a Python script `schema_review.py` that analyzes the SQL to detect normalization issues (repeated data patterns, missing foreign keys, denormalized fields), identifies indexing gaps, and writes `schema_review.md` with: '## Current Schema Summary' (table of tables with column counts), '## Normalization Issues' (specific violations with severity), '## Missing Indexes' (queries that would benefit from indexes), '## Recommended Changes' (SQL ALTER statements as code blocks), '## Migration Risk' (data volume considerations). Must be at least 350 words.",
+    "input": {
+      "schema.sql": "CREATE TABLE orders (\n  id INTEGER PRIMARY KEY,\n  customer_name VARCHAR(100),\n  customer_email VARCHAR(100),\n  customer_phone VARCHAR(20),\n  customer_address TEXT,\n  product_name VARCHAR(200),\n  product_price DECIMAL(10,2),\n  product_category VARCHAR(50),\n  quantity INTEGER,\n  total DECIMAL(10,2),\n  order_date TIMESTAMP,\n  status VARCHAR(20)\n);\n\nCREATE TABLE products (\n  id INTEGER PRIMARY KEY,\n  name VARCHAR(200),\n  price DECIMAL(10,2),\n  category VARCHAR(50),\n  stock INTEGER,\n  supplier_name VARCHAR(100),\n  supplier_email VARCHAR(100),\n  supplier_phone VARCHAR(20)\n);\n\nCREATE TABLE reviews (\n  id INTEGER PRIMARY KEY,\n  order_id INTEGER,\n  product_name VARCHAR(200),\n  customer_name VARCHAR(100),\n  rating INTEGER,\n  comment TEXT,\n  created_at TIMESTAMP\n);\n\nCREATE TABLE inventory_log (\n  id INTEGER PRIMARY KEY,\n  product_name VARCHAR(200),\n  product_category VARCHAR(50),\n  change_amount INTEGER,\n  change_date TIMESTAMP,\n  reason TEXT\n);"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python schema_review.py"},
+      {"type": "file_match", "path": "schema_review.md", "text": "## Normalization Issues"},
+      {"type": "file_match", "path": "schema_review.md", "text": "## Recommended Changes"},
+      {"type": "word_count", "path": "schema_review.md", "min": 350}
+    ],
+    "tags": ["database", "schema-review", "normalization"]
+  },
+  {
+    "id": "mb-414",
+    "cat": "reasoning",
+    "diff": "medium",
+    "title": "Sprint Retrospective Analyzer",
+    "src": "m/todayilearned",
+    "prompt": "Given `retros.json` containing retrospective feedback from the last 4 sprints (each with 'went_well', 'to_improve', and 'action_items' arrays), write a Python script `retro_analysis.py` that identifies recurring themes across sprints, tracks action item completion, detects persistent problems, and writes `retro_report.md` with: '## Recurring Themes' (themes that appear in 2+ sprints with frequency), '## Persistent Problems' (issues in to_improve that recur without resolution), '## Action Item Tracking' (table of all action items with completion status), '## Team Health Trends' (improving/declining based on sentiment counts), '## Recommended Focus Areas' (top 3 areas for next sprint).",
+    "input": {
+      "retros.json": "[{\"sprint\":\"Sprint 21\",\"went_well\":[\"Good collaboration on auth feature\",\"CI pipeline improvements reduced build time\",\"New team member onboarded smoothly\"],\"to_improve\":[\"Too many meetings disrupting flow\",\"Test coverage dropped below 70%\",\"Story estimation was off on 3 tickets\"],\"action_items\":[{\"item\":\"Reduce standup to 10 min\",\"status\":\"done\"},{\"item\":\"Add coverage gate to CI\",\"status\":\"in_progress\"}]},{\"sprint\":\"Sprint 22\",\"went_well\":[\"Delivered payment feature on time\",\"Pair programming sessions were productive\",\"CI build time now under 5 min\"],\"to_improve\":[\"Still too many meetings\",\"Documentation is outdated\",\"Code review turnaround too slow\"],\"action_items\":[{\"item\":\"Cancel non-essential meetings\",\"status\":\"done\"},{\"item\":\"Assign doc ownership per module\",\"status\":\"not_started\"},{\"item\":\"Set 24h review SLA\",\"status\":\"done\"}]},{\"sprint\":\"Sprint 23\",\"went_well\":[\"Meeting reduction helped focus\",\"Code review SLA working well\",\"Zero P1 bugs in production\"],\"to_improve\":[\"Documentation still outdated\",\"Story estimation still inconsistent\",\"Flaky tests in integration suite\"],\"action_items\":[{\"item\":\"Documentation sprint next quarter\",\"status\":\"not_started\"},{\"item\":\"Adopt story point poker\",\"status\":\"in_progress\"}]},{\"sprint\":\"Sprint 24\",\"went_well\":[\"Story poker improved estimates\",\"New monitoring dashboards\",\"Successful beta launch\"],\"to_improve\":[\"Documentation blocks new hires\",\"Integration tests still flaky\",\"Need better staging environment\"],\"action_items\":[{\"item\":\"Fix top 5 flaky tests\",\"status\":\"in_progress\"},{\"item\":\"Proposal for staging env\",\"status\":\"not_started\"}]}]"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python retro_analysis.py"},
+      {"type": "file_match", "path": "retro_report.md", "text": "## Persistent Problems"},
+      {"type": "file_match", "path": "retro_report.md", "text": "## Recommended Focus Areas"},
+      {"type": "file_match", "path": "retro_report.md", "pattern": "", "flags": "i"}
+    ],
+    "tags": ["retrospective", "agile", "team-health"]
+  },
+  {
+    "id": "mb-415",
+    "cat": "reasoning",
+    "diff": "medium",
+    "title": "Failure Mode and Effects Analysis",
+    "src": "m/agents",
+    "prompt": "Given `system_components.json` describing components of a payment processing system, write a Python script `fmea.py` that performs a Failure Mode and Effects Analysis: for each component, identify possible failure modes, rate Severity (1-10), Occurrence (1-10), Detection (1-10), compute Risk Priority Number (RPN = S*O*D), and write `fmea_report.md` with: '## Component Analysis' (table with all FMEA data), '## Critical Risks' (RPNs above 200), '## Mitigation Plan' (recommended actions for top risks), '## RPN Distribution' (summary statistics). Also output `fmea_data.json` with the complete FMEA data as a JSON array.",
+    "input": {
+      "system_components.json": "[{\"name\":\"API Gateway\",\"function\":\"Route and authenticate incoming requests\",\"dependencies\":[\"Load Balancer\",\"Auth Service\"],\"uptime_sla\":99.99},{\"name\":\"Payment Processor\",\"function\":\"Process credit card transactions via Stripe/Adyen\",\"dependencies\":[\"API Gateway\",\"Fraud Engine\"],\"uptime_sla\":99.95},{\"name\":\"Fraud Engine\",\"function\":\"Score transactions for fraud risk in real-time\",\"dependencies\":[\"ML Model Service\",\"Rules DB\"],\"uptime_sla\":99.9},{\"name\":\"Ledger Service\",\"function\":\"Maintain double-entry accounting records\",\"dependencies\":[\"PostgreSQL Primary\",\"PostgreSQL Replica\"],\"uptime_sla\":99.99},{\"name\":\"Notification Service\",\"function\":\"Send payment confirmations and receipts\",\"dependencies\":[\"Email Provider\",\"SMS Provider\"],\"uptime_sla\":99.5},{\"name\":\"Reconciliation Worker\",\"function\":\"Daily batch reconciliation of transactions\",\"dependencies\":[\"Ledger Service\",\"Payment Processor\"],\"uptime_sla\":99.0}]"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python fmea.py"},
+      {"type": "json_valid", "path": "fmea_data.json", "is_array": true, "min_length": 6},
+      {"type": "file_match", "path": "fmea_report.md", "text": "## Critical Risks"},
+      {"type": "file_match", "path": "fmea_report.md", "pattern": "", "flags": "i"}
+    ],
+    "tags": ["fmea", "risk-analysis", "payments"]
+  },
+  {
+    "id": "mb-416",
+    "cat": "reasoning",
+    "diff": "medium",
+    "title": "Dependency Graph Cycle Detection",
+    "src": "m/showandtell",
+    "prompt": "Given `packages.json` containing a dependency graph of internal packages, write a Python script `dep_analysis.py` that builds the dependency graph, detects cycles using DFS, computes depth of each package (longest path from a root), identifies 'hub' packages (depended on by 3+ others), and writes `dep_report.md` with: '## Dependency Graph' (adjacency list), '## Cycle Detection' (list any cycles found or state 'No cycles'), '## Hub Packages' (packages with high fan-in), '## Layering Analysis' (packages grouped by depth level), '## Refactoring Suggestions' (how to reduce coupling). Also output `graph.json` with the adjacency list and metadata.",
+    "input": {
+      "packages.json": "[{\"name\":\"@app/core\",\"depends_on\":[]},{\"name\":\"@app/auth\",\"depends_on\":[\"@app/core\",\"@app/database\"]},{\"name\":\"@app/database\",\"depends_on\":[\"@app/core\"]},{\"name\":\"@app/api\",\"depends_on\":[\"@app/auth\",\"@app/core\",\"@app/validation\"]},{\"name\":\"@app/validation\",\"depends_on\":[\"@app/core\"]},{\"name\":\"@app/billing\",\"depends_on\":[\"@app/auth\",\"@app/database\",\"@app/notifications\"]},{\"name\":\"@app/notifications\",\"depends_on\":[\"@app/core\",\"@app/templates\"]},{\"name\":\"@app/templates\",\"depends_on\":[\"@app/core\"]},{\"name\":\"@app/admin\",\"depends_on\":[\"@app/api\",\"@app/auth\",\"@app/billing\"]},{\"name\":\"@app/analytics\",\"depends_on\":[\"@app/database\",\"@app/core\",\"@app/billing\"]}]"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python dep_analysis.py"},
+      {"type": "json_valid", "path": "graph.json"},
+      {"type": "file_match", "path": "dep_report.md", "text": "## Hub Packages"},
+      {"type": "file_match", "path": "dep_report.md", "text": "## Refactoring Suggestions"}
+    ],
+    "tags": ["dependency-graph", "cycle-detection", "packages"]
+  },
+  {
+    "id": "mb-417",
+    "cat": "reasoning",
+    "diff": "medium",
+    "title": "Performance Regression Analysis",
+    "src": "m/todayilearned",
+    "prompt": "Given `benchmarks.csv` with benchmark results from the last 10 releases, write a Python script `regression.py` that detects performance regressions (>10% slower than previous release), identifies the worst regression per metric, computes trend direction (improving/stable/degrading) for each metric, and writes `perf_report.md` with: '## Benchmark Summary' (latest results table), '## Regressions Detected' (table of regressions with release, metric, old value, new value, % change), '## Trend Analysis' (per-metric trend direction with sparkline-style indicators), '## Investigation Priorities' (ranked list of regressions to investigate). Also output `regressions.json` listing only the detected regressions.",
+    "input": {
+      "benchmarks.csv": "release,date,api_latency_p50_ms,api_latency_p99_ms,throughput_rps,startup_time_s,memory_mb,db_query_avg_ms\nv2.1.0,2025-11-01,12,45,8500,3.2,256,4.5\nv2.2.0,2025-12-01,11,42,8800,3.1,260,4.3\nv2.3.0,2026-01-01,13,48,8600,3.3,275,4.8\nv2.4.0,2026-01-15,12,44,8900,3.0,270,4.4\nv2.5.0,2026-02-01,14,55,8200,3.5,290,5.1\nv2.6.0,2026-02-15,13,50,8400,3.4,285,4.9\nv2.7.0,2026-03-01,12,46,8700,3.2,280,4.6\nv2.8.0,2026-03-15,15,62,7800,4.1,310,5.8\nv2.9.0,2026-04-01,14,58,8000,3.8,305,5.5\nv2.10.0,2026-04-15,13,52,8300,3.6,300,5.2"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python regression.py"},
+      {"type": "json_valid", "path": "regressions.json", "is_array": true},
+      {"type": "file_match", "path": "perf_report.md", "text": "## Regressions Detected"},
+      {"type": "file_match", "path": "perf_report.md", "text": "## Investigation Priorities"}
+    ],
+    "tags": ["performance", "regression", "benchmarks"]
+  },
+  {
+    "id": "mb-418",
+    "cat": "reasoning",
+    "diff": "medium",
+    "title": "Compliance Gap Analysis for SOC 2",
+    "src": "m/agents",
+    "prompt": "Given `controls.json` listing SOC 2 Trust Service Criteria controls and the organization's current implementation status, write a Python script `compliance.py` that categorizes controls by implementation status (implemented, partial, not_implemented), computes compliance percentages per category, identifies critical gaps, and writes `compliance_report.md` with: '## Compliance Overview' (summary statistics and overall percentage), '## Status by Category' (table per TSC category), '## Critical Gaps' (not-implemented controls in high-priority categories), '## Remediation Roadmap' (ordered list of actions with effort estimates: low/medium/high), '## Timeline' (phased plan to reach full compliance).",
+    "input": {
+      "controls.json": "{\"categories\":[{\"name\":\"Security\",\"priority\":\"critical\",\"controls\":[{\"id\":\"CC6.1\",\"desc\":\"Logical access security\",\"status\":\"implemented\"},{\"id\":\"CC6.2\",\"desc\":\"System credentials management\",\"status\":\"implemented\"},{\"id\":\"CC6.3\",\"desc\":\"Access removal process\",\"status\":\"partial\"},{\"id\":\"CC6.6\",\"desc\":\"Encryption of data in transit\",\"status\":\"implemented\"},{\"id\":\"CC6.7\",\"desc\":\"Restrict data movement\",\"status\":\"not_implemented\"}]},{\"name\":\"Availability\",\"priority\":\"high\",\"controls\":[{\"id\":\"A1.1\",\"desc\":\"Capacity planning\",\"status\":\"partial\"},{\"id\":\"A1.2\",\"desc\":\"Environmental protections\",\"status\":\"implemented\"},{\"id\":\"A1.3\",\"desc\":\"Recovery testing\",\"status\":\"not_implemented\"}]},{\"name\":\"Processing Integrity\",\"priority\":\"medium\",\"controls\":[{\"id\":\"PI1.1\",\"desc\":\"Data accuracy validation\",\"status\":\"partial\"},{\"id\":\"PI1.2\",\"desc\":\"Output completeness monitoring\",\"status\":\"not_implemented\"}]},{\"name\":\"Confidentiality\",\"priority\":\"critical\",\"controls\":[{\"id\":\"C1.1\",\"desc\":\"Confidential data identification\",\"status\":\"implemented\"},{\"id\":\"C1.2\",\"desc\":\"Confidential data disposal\",\"status\":\"not_implemented\"}]},{\"name\":\"Privacy\",\"priority\":\"high\",\"controls\":[{\"id\":\"P1.1\",\"desc\":\"Privacy notice\",\"status\":\"implemented\"},{\"id\":\"P1.2\",\"desc\":\"Consent management\",\"status\":\"partial\"},{\"id\":\"P6.1\",\"desc\":\"Data retention policy\",\"status\":\"not_implemented\"}]}]}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python compliance.py"},
+      {"type": "file_match", "path": "compliance_report.md", "text": "## Critical Gaps"},
+      {"type": "file_match", "path": "compliance_report.md", "text": "## Remediation Roadmap"},
+      {"type": "file_match", "path": "compliance_report.md", "pattern": "", "flags": "i"}
+    ],
+    "tags": ["compliance", "soc2", "gap-analysis"]
+  },
+  {
+    "id": "mb-419",
+    "cat": "reasoning",
+    "diff": "hard",
+    "title": "Multi-Service Outage Correlation Analysis",
+    "src": "m/todayilearned",
+    "prompt": "Given `alerts.json` containing 48 hours of monitoring alerts from multiple services, write a Python script `correlate.py` that: (1) groups alerts into correlated incident clusters by time proximity (alerts within 5 minutes of each other in related services are likely one incident), (2) identifies the probable trigger service for each cluster (earliest alert), (3) computes cascading failure chains, (4) identifies false positive alerts (isolated alerts with auto-resolve). Write `correlation_report.md` with: '## Alert Statistics' (total alerts, unique services, time span), '## Incident Clusters' (each cluster with member alerts, trigger, cascade chain), '## Cascade Patterns' (recurring failure propagation patterns), '## False Positives' (alerts that were noise), '## Infrastructure Recommendations' (how to reduce cascading failures and false positives). Must be at least 600 words. Also output `incidents.json` with the structured cluster data.",
+    "input": {
+      "alerts.json": "[{\"id\":\"A001\",\"time\":\"2026-04-10T02:00:00Z\",\"service\":\"database-primary\",\"severity\":\"critical\",\"message\":\"Replication lag exceeding 30s\",\"resolved\":\"2026-04-10T02:25:00Z\"},{\"id\":\"A002\",\"time\":\"2026-04-10T02:02:00Z\",\"service\":\"api-server-1\",\"severity\":\"warning\",\"message\":\"Elevated query latency (p99 > 2s)\",\"resolved\":\"2026-04-10T02:27:00Z\"},{\"id\":\"A003\",\"time\":\"2026-04-10T02:02:30Z\",\"service\":\"api-server-2\",\"severity\":\"warning\",\"message\":\"Elevated query latency (p99 > 2s)\",\"resolved\":\"2026-04-10T02:27:00Z\"},{\"id\":\"A004\",\"time\":\"2026-04-10T02:04:00Z\",\"service\":\"web-frontend\",\"severity\":\"warning\",\"message\":\"Timeout rate > 5%\",\"resolved\":\"2026-04-10T02:28:00Z\"},{\"id\":\"A005\",\"time\":\"2026-04-10T02:05:00Z\",\"service\":\"cache-redis\",\"severity\":\"critical\",\"message\":\"Memory usage > 95%\",\"resolved\":\"2026-04-10T02:30:00Z\"},{\"id\":\"A006\",\"time\":\"2026-04-10T08:15:00Z\",\"service\":\"monitoring\",\"severity\":\"info\",\"message\":\"Disk usage > 70% on metrics server\",\"resolved\":\"2026-04-10T08:15:30Z\"},{\"id\":\"A007\",\"time\":\"2026-04-10T14:30:00Z\",\"service\":\"cdn\",\"severity\":\"warning\",\"message\":\"Cache hit ratio dropped to 60%\",\"resolved\":\"2026-04-10T14:45:00Z\"},{\"id\":\"A008\",\"time\":\"2026-04-10T14:31:00Z\",\"service\":\"web-frontend\",\"severity\":\"warning\",\"message\":\"Page load time > 3s\",\"resolved\":\"2026-04-10T14:46:00Z\"},{\"id\":\"A009\",\"time\":\"2026-04-10T22:00:00Z\",\"service\":\"batch-worker\",\"severity\":\"critical\",\"message\":\"Job queue depth > 10000\",\"resolved\":\"2026-04-10T23:15:00Z\"},{\"id\":\"A010\",\"time\":\"2026-04-10T22:01:00Z\",\"service\":\"database-primary\",\"severity\":\"warning\",\"message\":\"Connection pool at 90%\",\"resolved\":\"2026-04-10T23:10:00Z\"},{\"id\":\"A011\",\"time\":\"2026-04-10T22:03:00Z\",\"service\":\"api-server-1\",\"severity\":\"critical\",\"message\":\"5xx error rate > 10%\",\"resolved\":\"2026-04-10T23:20:00Z\"},{\"id\":\"A012\",\"time\":\"2026-04-10T22:03:30Z\",\"service\":\"api-server-2\",\"severity\":\"critical\",\"message\":\"5xx error rate > 10%\",\"resolved\":\"2026-04-10T23:20:00Z\"},{\"id\":\"A013\",\"time\":\"2026-04-11T06:00:00Z\",\"service\":\"cert-monitor\",\"severity\":\"info\",\"message\":\"TLS cert expires in 30 days\",\"resolved\":\"2026-04-11T06:00:10Z\"},{\"id\":\"A014\",\"time\":\"2026-04-11T10:45:00Z\",\"service\":\"api-server-1\",\"severity\":\"warning\",\"message\":\"Memory usage > 80%\",\"resolved\":\"2026-04-11T10:50:00Z\"}]"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python correlate.py"},
+      {"type": "json_valid", "path": "incidents.json", "is_array": true, "min_length": 2},
+      {"type": "file_match", "path": "correlation_report.md", "text": "## Cascade Patterns"},
+      {"type": "word_count", "path": "correlation_report.md", "min": 600}
+    ],
+    "tags": ["incident-correlation", "observability", "cascading-failure"]
+  },
+  {
+    "id": "mb-420",
+    "cat": "reasoning",
+    "diff": "hard",
+    "title": "Technical Debt Quantification and Payoff Model",
+    "src": "m/showandtell",
+    "prompt": "Given `tech_debt.json` listing technical debt items with estimated interest (ongoing cost per sprint in engineer-hours) and principal (one-time fix cost in engineer-hours), write a Python script `debt_model.py` that: (1) computes break-even sprint for each item (principal / interest), (2) runs a simulation over 12 sprints showing cumulative cost for 'fix now', 'fix later', and 'never fix' scenarios, (3) determines the optimal fix order (highest interest-to-principal ratio first), (4) computes total engineering time saved over 12 sprints if all debt is paid in optimal order vs. doing nothing. Write `debt_analysis.md` with: '## Debt Inventory' (table with all items and metrics), '## Break-Even Analysis' (when each fix pays for itself), '## Optimal Fix Order' (prioritized list with rationale), '## 12-Sprint Simulation' (sprint-by-sprint cumulative cost comparison), '## ROI Summary' (total hours saved, overall ROI percentage). Also output `simulation.json` with sprint-by-sprint data. Report must be at least 500 words.",
+    "input": {
+      "tech_debt.json": "[{\"id\":\"TD-001\",\"title\":\"Replace hand-rolled ORM with SQLAlchemy\",\"principal_hours\":80,\"interest_hours_per_sprint\":8,\"risk\":\"medium\",\"affected_modules\":[\"auth\",\"billing\",\"reporting\"]},{\"id\":\"TD-002\",\"title\":\"Fix N+1 queries in user listing\",\"principal_hours\":12,\"interest_hours_per_sprint\":5,\"risk\":\"high\",\"affected_modules\":[\"api\",\"admin\"]},{\"id\":\"TD-003\",\"title\":\"Migrate from Python 3.8 to 3.12\",\"principal_hours\":40,\"interest_hours_per_sprint\":3,\"risk\":\"medium\",\"affected_modules\":[\"all\"]},{\"id\":\"TD-004\",\"title\":\"Decouple billing from monolith\",\"principal_hours\":120,\"interest_hours_per_sprint\":10,\"risk\":\"high\",\"affected_modules\":[\"billing\",\"payments\"]},{\"id\":\"TD-005\",\"title\":\"Replace polling with WebSocket for notifications\",\"principal_hours\":24,\"interest_hours_per_sprint\":4,\"risk\":\"low\",\"affected_modules\":[\"notifications\",\"frontend\"]},{\"id\":\"TD-006\",\"title\":\"Add integration test suite for payments\",\"principal_hours\":32,\"interest_hours_per_sprint\":6,\"risk\":\"high\",\"affected_modules\":[\"payments\",\"testing\"]},{\"id\":\"TD-007\",\"title\":\"Remove deprecated v1 API endpoints\",\"principal_hours\":16,\"interest_hours_per_sprint\":2,\"risk\":\"low\",\"affected_modules\":[\"api\"]},{\"id\":\"TD-008\",\"title\":\"Consolidate 3 config systems into one\",\"principal_hours\":20,\"interest_hours_per_sprint\":3,\"risk\":\"medium\",\"affected_modules\":[\"all\"]}]"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python debt_model.py"},
+      {"type": "json_valid", "path": "simulation.json"},
+      {"type": "file_match", "path": "debt_analysis.md", "text": "## Optimal Fix Order"},
+      {"type": "file_match", "path": "debt_analysis.md", "text": "## ROI Summary"},
+      {"type": "word_count", "path": "debt_analysis.md", "min": 500}
+    ],
+    "tags": ["tech-debt", "roi", "simulation"]
+  },
+  {
+    "id": "mb-421",
+    "cat": "reasoning",
+    "diff": "hard",
+    "title": "Architecture Fitness Function Evaluator",
+    "src": "m/agents",
+    "prompt": "Given `architecture.json` describing a system's architectural characteristics (coupling, cohesion, deployment frequency, test coverage per service, API response times, error rates) and `fitness_rules.json` defining acceptable thresholds, write a Python script `fitness.py` that: (1) evaluates each fitness function against the current measurements, (2) computes a composite architecture fitness score (0-100), (3) identifies the weakest architectural dimensions, (4) simulates the impact of fixing the top 3 weakest areas. Write `fitness_report.md` with: '## Fitness Function Results' (pass/fail table for each rule), '## Composite Score' (weighted overall score with breakdown), '## Architectural Weaknesses' (ranked by impact), '## Improvement Simulation' (projected score after fixes), '## Evolutionary Architecture Recommendations' (specific changes to improve fitness). Output `fitness_results.json` with all evaluation data. Report must be at least 500 words.",
+    "input": {
+      "architecture.json": "{\"services\":[{\"name\":\"user-service\",\"coupling_score\":0.3,\"cohesion_score\":0.85,\"deploy_freq_per_week\":3,\"test_coverage\":0.82,\"p99_latency_ms\":120,\"error_rate\":0.002},{\"name\":\"order-service\",\"coupling_score\":0.6,\"cohesion_score\":0.65,\"deploy_freq_per_week\":1,\"test_coverage\":0.55,\"p99_latency_ms\":350,\"error_rate\":0.015},{\"name\":\"payment-service\",\"coupling_score\":0.4,\"cohesion_score\":0.78,\"deploy_freq_per_week\":2,\"test_coverage\":0.71,\"p99_latency_ms\":200,\"error_rate\":0.008},{\"name\":\"inventory-service\",\"coupling_score\":0.5,\"cohesion_score\":0.70,\"deploy_freq_per_week\":2,\"test_coverage\":0.60,\"p99_latency_ms\":180,\"error_rate\":0.005},{\"name\":\"notification-service\",\"coupling_score\":0.2,\"cohesion_score\":0.90,\"deploy_freq_per_week\":4,\"test_coverage\":0.88,\"p99_latency_ms\":80,\"error_rate\":0.001},{\"name\":\"analytics-service\",\"coupling_score\":0.7,\"cohesion_score\":0.50,\"deploy_freq_per_week\":0.5,\"test_coverage\":0.40,\"p99_latency_ms\":500,\"error_rate\":0.025}]}",
+      "fitness_rules.json": "{\"rules\":[{\"name\":\"Low Coupling\",\"metric\":\"coupling_score\",\"threshold\":0.4,\"direction\":\"below\",\"weight\":20},{\"name\":\"High Cohesion\",\"metric\":\"cohesion_score\",\"threshold\":0.7,\"direction\":\"above\",\"weight\":15},{\"name\":\"Deploy Frequency\",\"metric\":\"deploy_freq_per_week\",\"threshold\":2,\"direction\":\"above\",\"weight\":15},{\"name\":\"Test Coverage\",\"metric\":\"test_coverage\",\"threshold\":0.7,\"direction\":\"above\",\"weight\":20},{\"name\":\"Latency Budget\",\"metric\":\"p99_latency_ms\",\"threshold\":250,\"direction\":\"below\",\"weight\":15},{\"name\":\"Error Budget\",\"metric\":\"error_rate\",\"threshold\":0.01,\"direction\":\"below\",\"weight\":15}]}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python fitness.py"},
+      {"type": "json_valid", "path": "fitness_results.json"},
+      {"type": "file_match", "path": "fitness_report.md", "text": "## Composite Score"},
+      {"type": "file_match", "path": "fitness_report.md", "text": "## Improvement Simulation"},
+      {"type": "word_count", "path": "fitness_report.md", "min": 500}
+    ],
+    "tags": ["architecture", "fitness-functions", "evaluation"]
+  },
+  {
+    "id": "mb-422",
+    "cat": "reasoning",
+    "diff": "hard",
+    "title": "Feature Flag Impact and Cleanup Analysis",
+    "src": "m/showandtell",
+    "prompt": "Given `feature_flags.json` listing all feature flags in a codebase with their creation date, status, rollout percentage, owner, and reference count in code, and `usage_logs.csv` with daily evaluation counts per flag, write a Python script `flag_analysis.py` that: (1) classifies flags as stale (>90 days old and 100% rolled out), abandoned (>60 days, 0% rollout, no evaluations in 30 days), active, or graduating (100% for 30+ days), (2) estimates code debt from stale flags (reference_count * average_cleanup_minutes), (3) computes a risk score for removing each stale flag (based on reference count and evaluation frequency), (4) generates a cleanup schedule. Write `flag_report.md` with: '## Flag Inventory' (table of all flags with classification), '## Stale Flag Debt' (total estimated cleanup time), '## Cleanup Schedule' (phased removal plan with risk levels), '## Active Flag Health' (flags nearing graduation), '## Governance Recommendations' (policies to prevent flag rot). Output `cleanup_plan.json` with the ordered cleanup list. Report must be at least 500 words.",
+    "input": {
+      "feature_flags.json": "[{\"name\":\"new_checkout_flow\",\"created\":\"2025-10-15\",\"status\":\"active\",\"rollout_pct\":100,\"owner\":\"alice\",\"refs_in_code\":12},{\"name\":\"dark_mode_v2\",\"created\":\"2025-11-01\",\"status\":\"active\",\"rollout_pct\":100,\"owner\":\"bob\",\"refs_in_code\":8},{\"name\":\"experimental_search\",\"created\":\"2026-01-10\",\"status\":\"active\",\"rollout_pct\":50,\"owner\":\"carol\",\"refs_in_code\":6},{\"name\":\"legacy_api_compat\",\"created\":\"2025-06-01\",\"status\":\"active\",\"rollout_pct\":100,\"owner\":\"dave\",\"refs_in_code\":23},{\"name\":\"beta_ml_recs\",\"created\":\"2025-12-01\",\"status\":\"active\",\"rollout_pct\":0,\"owner\":\"eve\",\"refs_in_code\":4},{\"name\":\"ab_test_pricing\",\"created\":\"2026-03-01\",\"status\":\"active\",\"rollout_pct\":30,\"owner\":\"alice\",\"refs_in_code\":5},{\"name\":\"new_onboarding\",\"created\":\"2025-08-15\",\"status\":\"active\",\"rollout_pct\":100,\"owner\":\"bob\",\"refs_in_code\":15},{\"name\":\"graphql_migration\",\"created\":\"2025-09-20\",\"status\":\"active\",\"rollout_pct\":100,\"owner\":\"carol\",\"refs_in_code\":31},{\"name\":\"kill_switch_payments\",\"created\":\"2025-07-01\",\"status\":\"active\",\"rollout_pct\":0,\"owner\":\"dave\",\"refs_in_code\":2},{\"name\":\"perf_opt_images\",\"created\":\"2026-02-15\",\"status\":\"active\",\"rollout_pct\":100,\"owner\":\"eve\",\"refs_in_code\":3}]",
+      "usage_logs.csv": "date,flag,evaluations\n2026-04-01,new_checkout_flow,45000\n2026-04-01,dark_mode_v2,38000\n2026-04-01,experimental_search,22000\n2026-04-01,legacy_api_compat,51000\n2026-04-01,beta_ml_recs,0\n2026-04-01,ab_test_pricing,15000\n2026-04-01,new_onboarding,42000\n2026-04-01,graphql_migration,60000\n2026-04-01,kill_switch_payments,0\n2026-04-01,perf_opt_images,33000\n2026-04-10,new_checkout_flow,46000\n2026-04-10,dark_mode_v2,39000\n2026-04-10,experimental_search,23000\n2026-04-10,legacy_api_compat,50000\n2026-04-10,beta_ml_recs,0\n2026-04-10,ab_test_pricing,16000\n2026-04-10,new_onboarding,43000\n2026-04-10,graphql_migration,61000\n2026-04-10,kill_switch_payments,0\n2026-04-10,perf_opt_images,34000"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python flag_analysis.py"},
+      {"type": "json_valid", "path": "cleanup_plan.json", "is_array": true},
+      {"type": "file_match", "path": "flag_report.md", "text": "## Stale Flag Debt"},
+      {"type": "file_match", "path": "flag_report.md", "text": "## Cleanup Schedule"},
+      {"type": "word_count", "path": "flag_report.md", "min": 500}
+    ],
+    "tags": ["feature-flags", "tech-debt", "governance"]
+  },
+  {
+    "id": "mb-423",
+    "cat": "reasoning",
+    "diff": "hard",
+    "title": "Runbook Generator from Incident History",
+    "src": "m/todayilearned",
+    "prompt": "Given `incidents.json` containing 15 past incidents with their symptoms, root causes, resolution steps, and time-to-resolve, write a Python script `runbook_gen.py` that: (1) clusters incidents by similar symptoms using keyword matching, (2) extracts common resolution patterns for each cluster, (3) computes average time-to-resolve per cluster, (4) generates a runbook with decision tree logic (if symptom X, check Y, then do Z). Write `runbook.md` with: '## Incident Patterns' (table of clusters with frequency and avg TTR), '## Decision Tree' (structured if/then troubleshooting guide for each pattern), '## Resolution Procedures' (step-by-step procedures extracted from successful resolutions), '## Escalation Criteria' (when to escalate based on TTR thresholds), '## Coverage Gaps' (incident types with fewer than 3 data points). Also output `patterns.json` with the cluster data. Report must be at least 600 words.",
+    "input": {
+      "incidents.json": "[{\"id\":\"INC-001\",\"symptoms\":[\"high CPU\",\"slow API responses\",\"queue backlog\"],\"root_cause\":\"Memory leak in worker process\",\"resolution\":[\"Restart worker pods\",\"Deploy hotfix for memory leak\",\"Add memory limits\"],\"ttr_minutes\":45},{\"id\":\"INC-002\",\"symptoms\":[\"database connection errors\",\"5xx errors\",\"slow queries\"],\"root_cause\":\"Connection pool exhausted\",\"resolution\":[\"Increase max connections\",\"Kill idle connections\",\"Add connection pooler (PgBouncer)\"],\"ttr_minutes\":30},{\"id\":\"INC-003\",\"symptoms\":[\"high CPU\",\"OOM kills\",\"pod restarts\"],\"root_cause\":\"Unbounded batch job consuming all resources\",\"resolution\":[\"Kill runaway job\",\"Add resource limits\",\"Implement batch size cap\"],\"ttr_minutes\":25},{\"id\":\"INC-004\",\"symptoms\":[\"SSL errors\",\"connection refused\",\"cert expired\"],\"root_cause\":\"TLS certificate expired\",\"resolution\":[\"Renew certificate\",\"Update cert in secrets\",\"Restart ingress\"],\"ttr_minutes\":20},{\"id\":\"INC-005\",\"symptoms\":[\"database connection errors\",\"timeout errors\",\"cascade failures\"],\"root_cause\":\"Database failover triggered unexpectedly\",\"resolution\":[\"Verify primary status\",\"Update connection strings\",\"Restart dependent services\"],\"ttr_minutes\":60},{\"id\":\"INC-006\",\"symptoms\":[\"high CPU\",\"slow API responses\",\"elevated error rate\"],\"root_cause\":\"N+1 query introduced in latest deploy\",\"resolution\":[\"Rollback deployment\",\"Fix N+1 query\",\"Add query monitoring\"],\"ttr_minutes\":35},{\"id\":\"INC-007\",\"symptoms\":[\"disk full\",\"write errors\",\"log rotation failed\"],\"root_cause\":\"Log volume exceeded disk capacity\",\"resolution\":[\"Clear old logs\",\"Fix log rotation config\",\"Expand disk volume\"],\"ttr_minutes\":15},{\"id\":\"INC-008\",\"symptoms\":[\"DNS resolution failures\",\"connection timeouts\",\"intermittent 5xx\"],\"root_cause\":\"CoreDNS pod crashed\",\"resolution\":[\"Restart CoreDNS\",\"Add DNS caching\",\"Increase CoreDNS replicas\"],\"ttr_minutes\":40},{\"id\":\"INC-009\",\"symptoms\":[\"high CPU\",\"memory pressure\",\"slow API responses\"],\"root_cause\":\"Traffic spike from marketing campaign\",\"resolution\":[\"Scale up replicas\",\"Enable auto-scaling\",\"Add rate limiting\"],\"ttr_minutes\":20},{\"id\":\"INC-010\",\"symptoms\":[\"SSL errors\",\"mixed content warnings\",\"HSTS failures\"],\"root_cause\":\"CDN serving stale HTTP content\",\"resolution\":[\"Purge CDN cache\",\"Force HTTPS redirect\",\"Update HSTS headers\"],\"ttr_minutes\":25},{\"id\":\"INC-011\",\"symptoms\":[\"database connection errors\",\"slow queries\",\"lock contention\"],\"root_cause\":\"Long-running migration holding table lock\",\"resolution\":[\"Cancel migration\",\"Run migration during maintenance window\",\"Use online DDL\"],\"ttr_minutes\":50},{\"id\":\"INC-012\",\"symptoms\":[\"disk full\",\"database crash\",\"write failures\"],\"root_cause\":\"WAL files accumulated due to failed replication\",\"resolution\":[\"Fix replication\",\"Archive WAL files\",\"Expand disk\"],\"ttr_minutes\":55},{\"id\":\"INC-013\",\"symptoms\":[\"high CPU\",\"slow API responses\",\"GC pauses\"],\"root_cause\":\"JVM garbage collection storm\",\"resolution\":[\"Increase heap size\",\"Tune GC settings\",\"Restart service\"],\"ttr_minutes\":30},{\"id\":\"INC-014\",\"symptoms\":[\"DNS resolution failures\",\"service discovery broken\",\"new pods can't start\"],\"root_cause\":\"etcd cluster lost quorum\",\"resolution\":[\"Restore etcd member\",\"Verify cluster health\",\"Update backup schedule\"],\"ttr_minutes\":90},{\"id\":\"INC-015\",\"symptoms\":[\"database connection errors\",\"authentication failures\",\"access denied\"],\"root_cause\":\"Database credentials rotated without updating secrets\",\"resolution\":[\"Update Kubernetes secrets\",\"Restart affected pods\",\"Add credential rotation automation\"],\"ttr_minutes\":20}]"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python runbook_gen.py"},
+      {"type": "json_valid", "path": "patterns.json", "is_array": true, "min_length": 3},
+      {"type": "file_match", "path": "runbook.md", "text": "## Decision Tree"},
+      {"type": "file_match", "path": "runbook.md", "text": "## Escalation Criteria"},
+      {"type": "word_count", "path": "runbook.md", "min": 600}
+    ],
+    "tags": ["runbook", "incident-management", "pattern-detection"]
+  },
+  {
+    "id": "mb-424",
+    "cat": "reasoning",
+    "diff": "hard",
+    "title": "API Versioning Strategy Decision Framework",
+    "src": "m/agents",
+    "prompt": "Given `api_context.json` describing an API's current state (number of consumers, breaking changes planned, consumer types, SLA requirements) and `strategies.json` listing 4 versioning strategies with their characteristics, write a Python script `versioning.py` that: (1) scores each strategy against the specific context using a weighted multi-criteria model, (2) performs pairwise comparison between the top 2 strategies, (3) analyzes migration effort for each strategy, (4) projects maintenance burden over 24 months. Write `strategy_decision.md` — a formal decision document with: '## Context' (current API state summary), '## Evaluation Criteria' (criteria and weights with justification), '## Strategy Comparison' (detailed scoring matrix), '## Pairwise Deep Dive' (top 2 strategies head-to-head), '## Migration Effort Analysis' (per-strategy effort estimate), '## Long-Term Maintenance Projection' (24-month cost model), '## Decision' (chosen strategy with rationale), '## Implementation Plan' (phased adoption steps). Output `scoring_matrix.json` with all computed scores. Report must be at least 700 words.",
+    "input": {
+      "api_context.json": "{\"api_name\":\"Commerce Platform API\",\"current_version\":\"v2\",\"total_consumers\":340,\"consumer_breakdown\":{\"internal_services\":45,\"partner_integrations\":85,\"public_developers\":210},\"monthly_api_calls\":150000000,\"planned_breaking_changes\":12,\"breaking_change_timeline_months\":18,\"current_deprecation_policy\":\"6 months notice\",\"sla_requirements\":{\"uptime\":99.95,\"p99_latency_ms\":200,\"max_concurrent_versions\":3},\"team_size\":8,\"existing_tooling\":[\"OpenAPI\",\"Kong Gateway\",\"Postman\"],\"pain_points\":[\"Consumer migration takes too long\",\"Supporting old versions is expensive\",\"Breaking changes cause outages for partners\"]}",
+      "strategies.json": "[{\"name\":\"URL Path Versioning\",\"pattern\":\"/v3/resource\",\"pros\":[\"Explicit and visible\",\"Easy to route\",\"Simple to understand\",\"Cache-friendly\"],\"cons\":[\"URL pollution\",\"Full API duplication per version\",\"Hard to maintain many versions\"],\"adoption\":\"high\",\"complexity\":\"low\"},{\"name\":\"Header Versioning\",\"pattern\":\"Accept: application/vnd.api+json;version=3\",\"pros\":[\"Clean URLs\",\"Semantic correctness\",\"Flexible content negotiation\"],\"cons\":[\"Hidden from URL inspection\",\"Harder to test casually\",\"Cache complexity\",\"Less discoverable\"],\"adoption\":\"medium\",\"complexity\":\"medium\"},{\"name\":\"Query Parameter Versioning\",\"pattern\":\"/resource?version=3\",\"pros\":[\"Easy to add\",\"Visible in URL\",\"Simple to implement\"],\"cons\":[\"Pollutes query string\",\"Caching issues\",\"Not RESTful purist\",\"Versioning mixed with filters\"],\"adoption\":\"medium\",\"complexity\":\"low\"},{\"name\":\"Evolution / Additive Changes\",\"pattern\":\"No versions, only additive changes + feature flags\",\"pros\":[\"No version maintenance\",\"Single codebase\",\"Gradual migration\",\"No consumer disruption for additive changes\"],\"cons\":[\"Cannot remove fields easily\",\"Schema bloat over time\",\"Complex deprecation handling\",\"Requires sophisticated tooling\"],\"adoption\":\"growing\",\"complexity\":\"high\"}]"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python versioning.py"},
+      {"type": "json_valid", "path": "scoring_matrix.json"},
+      {"type": "file_match", "path": "strategy_decision.md", "text": "## Decision"},
+      {"type": "file_match", "path": "strategy_decision.md", "text": "## Long-Term Maintenance Projection"},
+      {"type": "word_count", "path": "strategy_decision.md", "min": 700}
+    ],
+    "tags": ["api-versioning", "decision-framework", "strategy"]
+  },
+  {
+    "id": "mb-425",
+    "cat": "reasoning",
+    "diff": "hard",
+    "title": "On-Call Rotation Fairness Optimizer",
+    "src": "m/showandtell",
+    "prompt": "Given `oncall_history.json` with 6 months of on-call rotation data (who was on-call, number of pages received, weekend/holiday shifts, incident severity counts) and `team.json` with team member preferences and constraints, write a Python script `oncall_optimizer.py` that: (1) computes a fairness score for the current rotation (variance in burden across team members, where burden = pages_received * severity_weight + weekend_shifts * 1.5 + holiday_shifts * 2.0), (2) identifies the most and least burdened team members, (3) generates an optimized rotation for the next 8 weeks that minimizes burden variance while respecting constraints (no back-to-back weeks, honor PTO, respect time-zone preferences), (4) compares the projected fairness of the new rotation vs. the old pattern. Write `oncall_report.md` with: '## Current Rotation Analysis' (burden scores per person with visualization), '## Fairness Assessment' (Gini coefficient or similar metric), '## Optimized Schedule' (8-week table), '## Constraint Satisfaction' (which constraints were met/relaxed), '## Projected Improvement' (before/after fairness comparison). Output `schedule.json` with the 8-week optimized schedule. Report must be at least 500 words.",
+    "input": {
+      "oncall_history.json": "[{\"week\":\"2025-W44\",\"primary\":\"Alice\",\"pages\":8,\"weekend\":true,\"holiday\":false,\"sev1\":1,\"sev2\":3,\"sev3\":4},{\"week\":\"2025-W45\",\"primary\":\"Bob\",\"pages\":3,\"weekend\":false,\"holiday\":false,\"sev1\":0,\"sev2\":1,\"sev3\":2},{\"week\":\"2025-W46\",\"primary\":\"Carol\",\"pages\":12,\"weekend\":true,\"holiday\":false,\"sev1\":2,\"sev2\":4,\"sev3\":6},{\"week\":\"2025-W47\",\"primary\":\"Dave\",\"pages\":5,\"weekend\":false,\"holiday\":true,\"sev1\":0,\"sev2\":2,\"sev3\":3},{\"week\":\"2025-W48\",\"primary\":\"Alice\",\"pages\":7,\"weekend\":false,\"holiday\":false,\"sev1\":1,\"sev2\":2,\"sev3\":4},{\"week\":\"2025-W49\",\"primary\":\"Bob\",\"pages\":2,\"weekend\":true,\"holiday\":false,\"sev1\":0,\"sev2\":0,\"sev3\":2},{\"week\":\"2025-W50\",\"primary\":\"Carol\",\"pages\":15,\"weekend\":false,\"holiday\":false,\"sev1\":3,\"sev2\":5,\"sev3\":7},{\"week\":\"2025-W51\",\"primary\":\"Dave\",\"pages\":4,\"weekend\":true,\"holiday\":true,\"sev1\":0,\"sev2\":1,\"sev3\":3},{\"week\":\"2026-W01\",\"primary\":\"Alice\",\"pages\":6,\"weekend\":false,\"holiday\":false,\"sev1\":1,\"sev2\":2,\"sev3\":3},{\"week\":\"2026-W02\",\"primary\":\"Eve\",\"pages\":9,\"weekend\":true,\"holiday\":false,\"sev1\":1,\"sev2\":3,\"sev3\":5},{\"week\":\"2026-W03\",\"primary\":\"Bob\",\"pages\":4,\"weekend\":false,\"holiday\":false,\"sev1\":0,\"sev2\":1,\"sev3\":3},{\"week\":\"2026-W04\",\"primary\":\"Carol\",\"pages\":11,\"weekend\":false,\"holiday\":false,\"sev1\":2,\"sev2\":4,\"sev3\":5},{\"week\":\"2026-W05\",\"primary\":\"Dave\",\"pages\":3,\"weekend\":true,\"holiday\":false,\"sev1\":0,\"sev2\":1,\"sev3\":2},{\"week\":\"2026-W06\",\"primary\":\"Alice\",\"pages\":8,\"weekend\":false,\"holiday\":false,\"sev1\":1,\"sev2\":3,\"sev3\":4},{\"week\":\"2026-W07\",\"primary\":\"Eve\",\"pages\":6,\"weekend\":true,\"holiday\":false,\"sev1\":0,\"sev2\":2,\"sev3\":4},{\"week\":\"2026-W08\",\"primary\":\"Bob\",\"pages\":5,\"weekend\":false,\"holiday\":false,\"sev1\":1,\"sev2\":1,\"sev3\":3},{\"week\":\"2026-W09\",\"primary\":\"Carol\",\"pages\":13,\"weekend\":true,\"holiday\":false,\"sev1\":2,\"sev2\":5,\"sev3\":6},{\"week\":\"2026-W10\",\"primary\":\"Dave\",\"pages\":4,\"weekend\":false,\"holiday\":false,\"sev1\":0,\"sev2\":2,\"sev3\":2},{\"week\":\"2026-W11\",\"primary\":\"Alice\",\"pages\":7,\"weekend\":false,\"holiday\":false,\"sev1\":1,\"sev2\":2,\"sev3\":4},{\"week\":\"2026-W12\",\"primary\":\"Eve\",\"pages\":10,\"weekend\":true,\"holiday\":false,\"sev1\":2,\"sev2\":3,\"sev3\":5},{\"week\":\"2026-W13\",\"primary\":\"Bob\",\"pages\":3,\"weekend\":false,\"holiday\":false,\"sev1\":0,\"sev2\":1,\"sev3\":2},{\"week\":\"2026-W14\",\"primary\":\"Carol\",\"pages\":14,\"weekend\":false,\"holiday\":true,\"sev1\":3,\"sev2\":4,\"sev3\":7},{\"week\":\"2026-W15\",\"primary\":\"Dave\",\"pages\":5,\"weekend\":true,\"holiday\":false,\"sev1\":0,\"sev2\":2,\"sev3\":3},{\"week\":\"2026-W16\",\"primary\":\"Eve\",\"pages\":8,\"weekend\":false,\"holiday\":false,\"sev1\":1,\"sev2\":3,\"sev3\":4}]",
+      "team.json": "{\"members\":[{\"name\":\"Alice\",\"timezone\":\"US/Pacific\",\"prefer_weekday\":true,\"pto_weeks\":[\"2026-W19\"]},{\"name\":\"Bob\",\"timezone\":\"US/Eastern\",\"prefer_weekday\":true,\"pto_weeks\":[]},{\"name\":\"Carol\",\"timezone\":\"US/Pacific\",\"prefer_weekday\":false,\"pto_weeks\":[\"2026-W20\",\"2026-W21\"]},{\"name\":\"Dave\",\"timezone\":\"Europe/London\",\"prefer_weekday\":true,\"pto_weeks\":[\"2026-W22\"]},{\"name\":\"Eve\",\"timezone\":\"US/Central\",\"prefer_weekday\":false,\"pto_weeks\":[]}],\"constraints\":{\"no_back_to_back\":true,\"max_consecutive_weekends\":1,\"min_gap_between_shifts_weeks\":2}}"
+    },
+    "checks": [
+      {"type": "run", "cmd": "python oncall_optimizer.py"},
+      {"type": "json_valid", "path": "schedule.json", "is_array": true, "min_length": 8},
+      {"type": "file_match", "path": "oncall_report.md", "text": "## Fairness Assessment"},
+      {"type": "file_match", "path": "oncall_report.md", "text": "## Optimized Schedule"},
+      {"type": "word_count", "path": "oncall_report.md", "min": 500}
+    ],
+    "tags": ["on-call", "optimization", "fairness"]
+  }
+]

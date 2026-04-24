@@ -1,0 +1,725 @@
+[
+  {
+    "id": "mb-241",
+    "cat": "security",
+    "diff": "easy",
+    "title": "Detect SQL Injection via String Concatenation",
+    "src": "m/security",
+    "prompt": "Read `app.py` and scan it for SQL injection vulnerabilities caused by string concatenation or f-string interpolation in SQL queries. Write a file `report.json` containing a JSON array of objects, each with keys `line` (integer line number), `severity` (\"high\", \"medium\", or \"low\"), and `description` (short explanation). Flag every vulnerable SQL query.",
+    "input": {
+      "app.py": "import sqlite3\n\ndef get_user(username):\n    conn = sqlite3.connect('db.sqlite')\n    cursor = conn.cursor()\n    query = \"SELECT * FROM users WHERE name = '\" + username + \"'\"\n    cursor.execute(query)\n    return cursor.fetchone()\n\ndef get_user_safe(username):\n    conn = sqlite3.connect('db.sqlite')\n    cursor = conn.cursor()\n    cursor.execute(\"SELECT * FROM users WHERE name = ?\", (username,))\n    return cursor.fetchone()\n\ndef search_products(term):\n    conn = sqlite3.connect('db.sqlite')\n    cursor = conn.cursor()\n    cursor.execute(f\"SELECT * FROM products WHERE name LIKE '%{term}%'\")\n    return cursor.fetchall()\n\ndef delete_user(user_id):\n    conn = sqlite3.connect('db.sqlite')\n    cursor = conn.cursor()\n    cursor.execute(\"DELETE FROM users WHERE id = %s\" % user_id)\n    conn.commit()\n"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "report.json"},
+      {"type": "json_valid", "path": "report.json", "is_array": true, "min_length": 3},
+      {"type": "file_match", "path": "report.json", "pattern": "line.*7|7.*line"},
+      {"type": "file_match", "path": "report.json", "pattern": "line.*19|19.*line"}
+    ],
+    "tags": ["python", "security", "sql-injection"]
+  },
+  {
+    "id": "mb-242",
+    "cat": "security",
+    "diff": "easy",
+    "title": "Password Strength Validator",
+    "src": "m/security",
+    "prompt": "Create `validator.py` that defines a function `check_password(password: str) -> dict`. The function must return a dict with keys: `valid` (bool), `length_ok` (bool, >=12 chars), `has_upper` (bool), `has_lower` (bool), `has_digit` (bool), `has_special` (bool, at least one of !@#$%^&*), and `score` (int 0-6 counting how many of those 6 checks pass). A password is `valid` only if all 6 checks pass. When run as `python validator.py`, it should read one password from stdin and print the JSON result to stdout.",
+    "input": {},
+    "checks": [
+      {"type": "file_exists", "path": "validator.py"},
+      {"type": "run", "cmd": "echo Str0ng!Pass1234 | python validator.py", "exit": 0, "stdout": "\"valid\": true"},
+      {"type": "run", "cmd": "echo weak | python validator.py", "exit": 0, "stdout": "\"valid\": false"},
+      {"type": "run", "cmd": "echo NOLOWERCASE1! | python validator.py", "exit": 0, "stdout": "\"has_lower\": false"}
+    ],
+    "tags": ["python", "security", "validation"]
+  },
+  {
+    "id": "mb-243",
+    "cat": "security",
+    "diff": "easy",
+    "title": "HTML Entity Escaping Utility",
+    "src": "m/coding",
+    "prompt": "Create `escape.py` that defines `html_escape(text: str) -> str`, converting `<`, `>`, `&`, `\"`, and `'` to their HTML entity equivalents (`&lt;`, `&gt;`, `&amp;`, `&quot;`, `&#x27;`). When run as `python escape.py`, read stdin line by line, print the escaped version of each line to stdout.",
+    "input": {},
+    "checks": [
+      {"type": "file_exists", "path": "escape.py"},
+      {"type": "run", "cmd": "echo \"<script>alert('xss')</script>\" | python escape.py", "exit": 0, "stdout": "&lt;script&gt;"},
+      {"type": "run", "cmd": "echo 'a & b \"c\"' | python escape.py", "exit": 0, "stdout": "&amp;"}
+    ],
+    "tags": ["python", "security", "xss"]
+  },
+  {
+    "id": "mb-244",
+    "cat": "security",
+    "diff": "easy",
+    "title": "Detect Hardcoded Secrets in Source Code",
+    "src": "m/security",
+    "prompt": "Read `codebase.py` and scan it for hardcoded secrets (API keys, passwords, tokens, secret strings). Write `secrets_report.json` as a JSON array of objects with keys `line` (int), `type` (e.g. \"api_key\", \"password\", \"token\"), and `value` (the hardcoded string found). Find all secrets.",
+    "input": {
+      "codebase.py": "import requests\n\nAPI_KEY = \"sk-proj-abc123def456ghi789\"\nDATABASE_URL = \"postgres://localhost/mydb\"\nSECRET_TOKEN = \"ghp_1234567890abcdefABCDEF\"\n\ndef connect_db():\n    password = \"super_secret_password_123\"\n    return f\"postgresql://admin:{password}@db.example.com/prod\"\n\ndef send_notification():\n    headers = {\"Authorization\": \"Bearer eyJhbGciOiJIUzI1NiJ9.test\"}\n    requests.post(\"https://api.example.com/notify\", headers=headers)\n\nPUBLIC_URL = \"https://example.com\"\nDEBUG = True\nMAX_RETRIES = 3\n"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "secrets_report.json"},
+      {"type": "json_valid", "path": "secrets_report.json", "is_array": true, "min_length": 4},
+      {"type": "file_match", "path": "secrets_report.json", "text": "sk-proj-abc123"},
+      {"type": "file_match", "path": "secrets_report.json", "text": "super_secret_password"}
+    ],
+    "tags": ["python", "security", "secrets"]
+  },
+  {
+    "id": "mb-245",
+    "cat": "security",
+    "diff": "easy",
+    "title": "Email Address Validator",
+    "src": "m/coding",
+    "prompt": "Create `email_validator.py` that defines `validate_email(email: str) -> bool`. It must accept valid emails (user@domain.com, user+tag@sub.domain.co.uk) and reject invalid ones (missing @, double dots, leading/trailing dots in local part, no domain). When run as `python email_validator.py`, read emails from stdin (one per line) and print `VALID` or `INVALID` for each.",
+    "input": {},
+    "checks": [
+      {"type": "file_exists", "path": "email_validator.py"},
+      {"type": "run", "cmd": "printf 'user@example.com\\n@nodomain.com\\ntest@sub.domain.co.uk\\n.bad@domain.com\\n' | python email_validator.py", "exit": 0, "stdout": "VALID"},
+      {"type": "run", "cmd": "printf '@nodomain.com\\n' | python email_validator.py", "exit": 0, "stdout": "INVALID"},
+      {"type": "run", "cmd": "printf 'nodomain\\n' | python email_validator.py", "exit": 0, "stdout": "INVALID"}
+    ],
+    "tags": ["python", "security", "validation"]
+  },
+  {
+    "id": "mb-246",
+    "cat": "security",
+    "diff": "easy",
+    "title": "Path Traversal Sanitizer",
+    "src": "m/security",
+    "prompt": "Create `sanitize_path.py` that defines `safe_join(base_dir: str, user_path: str) -> str`. The function must resolve `user_path` relative to `base_dir`, preventing directory traversal attacks (e.g. `../../../etc/passwd`). If the resolved path escapes `base_dir`, raise a `ValueError`. When run as `python sanitize_path.py`, read lines from stdin in the format `base_dir|user_path` and print the safe resolved path or `BLOCKED` if traversal is detected.",
+    "input": {},
+    "checks": [
+      {"type": "file_exists", "path": "sanitize_path.py"},
+      {"type": "run", "cmd": "echo '/srv/uploads|photo.jpg' | python sanitize_path.py", "exit": 0, "stdout": "/srv/uploads"},
+      {"type": "run", "cmd": "echo '/srv/uploads|../../../etc/passwd' | python sanitize_path.py", "exit": 0, "stdout": "BLOCKED"},
+      {"type": "run", "cmd": "echo '/srv/uploads|subdir/../file.txt' | python sanitize_path.py", "exit": 0, "stdout": "/srv/uploads"}
+    ],
+    "tags": ["python", "security", "path-traversal"]
+  },
+  {
+    "id": "mb-247",
+    "cat": "security",
+    "diff": "easy",
+    "title": "Base64 Encode/Decode Utility",
+    "src": "m/coding",
+    "prompt": "Create `b64tool.py` that supports encode and decode operations via command line. Usage: `python b64tool.py encode <string>` prints the base64-encoded string, and `python b64tool.py decode <b64string>` prints the decoded string. Also support `python b64tool.py detect <string>` which prints `BASE64` if the input is valid base64, or `NOT_BASE64` otherwise. Exit with code 0 on success, 1 on error.",
+    "input": {},
+    "checks": [
+      {"type": "file_exists", "path": "b64tool.py"},
+      {"type": "run", "cmd": "python b64tool.py encode 'hello world'", "exit": 0, "stdout": "aGVsbG8gd29ybGQ="},
+      {"type": "run", "cmd": "python b64tool.py decode aGVsbG8gd29ybGQ=", "exit": 0, "stdout": "hello world"},
+      {"type": "run", "cmd": "python b64tool.py detect 'not!!valid==base64'", "exit": 0, "stdout": "NOT_BASE64"}
+    ],
+    "tags": ["python", "security", "encoding"]
+  },
+  {
+    "id": "mb-248",
+    "cat": "security",
+    "diff": "easy",
+    "title": "Detect Command Injection Vulnerabilities",
+    "src": "m/security",
+    "prompt": "Read `server.py` and scan for command injection vulnerabilities (os.system, subprocess calls with shell=True using unsanitized input, os.popen). Write `report.json` as a JSON array of findings, each with keys `line` (int), `function` (the dangerous function called), and `risk` (\"high\" or \"medium\"). Ignore calls that use only hardcoded strings.",
+    "input": {
+      "server.py": "import os\nimport subprocess\n\ndef ping_host(hostname):\n    os.system(f\"ping -c 1 {hostname}\")\n\ndef list_files(directory):\n    result = subprocess.run(f\"ls {directory}\", shell=True, capture_output=True)\n    return result.stdout\n\ndef get_date():\n    os.system(\"date\")\n\ndef read_log(filename):\n    output = os.popen(f\"cat {filename}\").read()\n    return output\n\ndef backup_safe():\n    subprocess.run([\"tar\", \"czf\", \"backup.tar.gz\", \"/data\"], capture_output=True)\n\ndef run_user_cmd(cmd):\n    subprocess.call(cmd, shell=True)\n"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "report.json"},
+      {"type": "json_valid", "path": "report.json", "is_array": true, "min_length": 4},
+      {"type": "file_match", "path": "report.json", "text": "os.system"},
+      {"type": "file_match", "path": "report.json", "text": "os.popen"}
+    ],
+    "tags": ["python", "security", "command-injection"]
+  },
+  {
+    "id": "mb-249",
+    "cat": "security",
+    "diff": "easy",
+    "title": "URL Validator and Sanitizer",
+    "src": "m/coding",
+    "prompt": "Create `url_check.py` that defines `validate_url(url: str) -> dict` returning `{\"valid\": bool, \"scheme\": str, \"domain\": str, \"is_private\": bool}`. The function must reject URLs with `javascript:` or `data:` schemes. Set `is_private` to true if the domain resolves to a private IP range (10.x, 172.16-31.x, 192.168.x, 127.x, localhost). When run as `python url_check.py`, read URLs from stdin (one per line) and print JSON results.",
+    "input": {},
+    "checks": [
+      {"type": "file_exists", "path": "url_check.py"},
+      {"type": "run", "cmd": "echo 'https://example.com/page' | python url_check.py", "exit": 0, "stdout": "\"valid\": true"},
+      {"type": "run", "cmd": "echo 'javascript:alert(1)' | python url_check.py", "exit": 0, "stdout": "\"valid\": false"},
+      {"type": "run", "cmd": "echo 'http://192.168.1.1/admin' | python url_check.py", "exit": 0, "stdout": "\"is_private\": true"}
+    ],
+    "tags": ["python", "security", "validation"]
+  },
+  {
+    "id": "mb-250",
+    "cat": "security",
+    "diff": "easy",
+    "title": "Generate Cryptographically Secure Tokens",
+    "src": "m/security",
+    "prompt": "Create `token_gen.py` that uses Python's `secrets` module to generate secure tokens. Usage: `python token_gen.py hex 32` generates a 32-byte hex token, `python token_gen.py urlsafe 32` generates a 32-byte URL-safe token, `python token_gen.py int 1000000` generates a secure random integer below 1000000. Each invocation prints one token to stdout.",
+    "input": {},
+    "checks": [
+      {"type": "file_exists", "path": "token_gen.py"},
+      {"type": "run", "cmd": "python token_gen.py hex 16", "exit": 0, "stdout_pattern": "^[0-9a-f]{32}\\s*$"},
+      {"type": "run", "cmd": "python token_gen.py urlsafe 16", "exit": 0, "stdout_pattern": "^[A-Za-z0-9_-]{16,}\\s*$"},
+      {"type": "run", "cmd": "python token_gen.py int 100", "exit": 0, "stdout_pattern": "^\\d{1,2}\\s*$"}
+    ],
+    "tags": ["python", "security", "cryptography"]
+  },
+  {
+    "id": "mb-251",
+    "cat": "security",
+    "diff": "easy",
+    "title": "IP Address Allowlist Checker",
+    "src": "m/security",
+    "prompt": "Create `ip_check.py` that reads `allowlist.txt` (one CIDR range per line) and checks whether IPs from stdin are within any allowed range. Use only the `ipaddress` stdlib module. Print `ALLOW <ip>` or `DENY <ip>` for each input IP. Exit 0 always.",
+    "input": {
+      "allowlist.txt": "192.168.1.0/24\n10.0.0.0/8\n172.16.0.0/12\n203.0.113.0/24\n"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "ip_check.py"},
+      {"type": "run", "cmd": "echo '192.168.1.50' | python ip_check.py", "exit": 0, "stdout": "ALLOW"},
+      {"type": "run", "cmd": "echo '8.8.8.8' | python ip_check.py", "exit": 0, "stdout": "DENY"},
+      {"type": "run", "cmd": "printf '10.0.0.1\\n203.0.113.5\\n1.2.3.4\\n' | python ip_check.py", "exit": 0, "stdout": "DENY 1.2.3.4"}
+    ],
+    "tags": ["python", "security", "network"]
+  },
+  {
+    "id": "mb-252",
+    "cat": "security",
+    "diff": "easy",
+    "title": "Detect Insecure HTTP URLs in Config",
+    "src": "m/security",
+    "prompt": "Read `config.yaml` and find all URLs that use `http://` instead of `https://`. Write `findings.json` as a JSON array of objects with keys `line` (int), `url` (the insecure URL), and `fix` (the same URL with https://). Ignore localhost and 127.0.0.1 URLs.",
+    "input": {
+      "config.yaml": "app:\n  name: MyService\n  api_endpoint: http://api.example.com/v1\n  auth_url: https://auth.example.com/oauth\n  webhook: http://hooks.example.com/notify\n  docs: http://127.0.0.1:8080/docs\n  cdn: http://cdn.example.com/assets\n  internal: http://localhost:3000/health\n  metrics: https://metrics.example.com/push\n  legacy_api: http://old-api.example.com/v0\n"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "findings.json"},
+      {"type": "json_valid", "path": "findings.json", "is_array": true, "min_length": 4},
+      {"type": "file_match", "path": "findings.json", "text": "http://api.example.com"},
+      {"type": "file_not_match", "path": "findings.json", "text": "localhost"}
+    ],
+    "tags": ["python", "security", "config"]
+  },
+  {
+    "id": "mb-253",
+    "cat": "security",
+    "diff": "easy",
+    "title": "File Permission Audit Script",
+    "src": "m/security",
+    "prompt": "Create `audit_perms.py` that reads `manifest.json` (a JSON array of objects with `path` and `mode` keys, where mode is an octal string like \"0644\"). For each entry, check if the mode is overly permissive: world-writable (o+w, i.e. last octal digit >= 2) or world-executable on sensitive files (.key, .pem, .env). Write `audit_result.json` as a JSON array of objects with `path`, `mode`, `issue` (string describing the problem). Only include files with issues.",
+    "input": {
+      "manifest.json": "[\n  {\"path\": \"/etc/app/config.yaml\", \"mode\": \"0644\"},\n  {\"path\": \"/etc/app/secret.key\", \"mode\": \"0644\"},\n  {\"path\": \"/var/data/database.db\", \"mode\": \"0666\"},\n  {\"path\": \"/etc/app/cert.pem\", \"mode\": \"0755\"},\n  {\"path\": \"/usr/local/bin/app\", \"mode\": \"0755\"},\n  {\"path\": \"/etc/app/.env\", \"mode\": \"0777\"},\n  {\"path\": \"/var/log/app.log\", \"mode\": \"0640\"}\n]"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "audit_result.json"},
+      {"type": "json_valid", "path": "audit_result.json", "is_array": true, "min_length": 3},
+      {"type": "file_match", "path": "audit_result.json", "text": "secret.key"},
+      {"type": "file_match", "path": "audit_result.json", "text": ".env"}
+    ],
+    "tags": ["python", "security", "audit"]
+  },
+  {
+    "id": "mb-254",
+    "cat": "security",
+    "diff": "easy",
+    "title": "Hash and Verify Passwords with Salt",
+    "src": "m/security",
+    "prompt": "Create `hasher.py` using only Python stdlib (`hashlib`, `os`, `json`). It must support: `python hasher.py hash <password>` which prints a JSON object `{\"salt\": \"<hex>\", \"hash\": \"<hex>\"}` using SHA-256 with a random 16-byte salt. And `python hasher.py verify <password> <salt_hex> <hash_hex>` which prints `MATCH` or `NO_MATCH`. The hash must be computed as `sha256(salt_bytes + password_bytes)`.",
+    "input": {},
+    "checks": [
+      {"type": "file_exists", "path": "hasher.py"},
+      {"type": "run", "cmd": "python hasher.py hash testpass123", "exit": 0, "stdout_pattern": "\"salt\""},
+      {"type": "run", "cmd": "python -c \"import subprocess,json; r=json.loads(subprocess.check_output(['python','hasher.py','hash','mypass'])); print(subprocess.check_output(['python','hasher.py','verify','mypass',r['salt'],r['hash']]).decode().strip())\"", "exit": 0, "stdout": "MATCH"},
+      {"type": "run", "cmd": "python hasher.py verify wrongpass aabb 1122", "exit": 0, "stdout": "NO_MATCH"}
+    ],
+    "tags": ["python", "security", "cryptography"]
+  },
+  {
+    "id": "mb-255",
+    "cat": "security",
+    "diff": "easy",
+    "title": "Sanitize Log File by Removing PII",
+    "src": "m/security",
+    "prompt": "Create `log_sanitizer.py` that reads `server.log` and writes `sanitized.log` with all sensitive data redacted: email addresses replaced with `[EMAIL]`, IPv4 addresses with `[IP]`, and strings matching token/key patterns (sequences of 20+ alphanumeric characters preceded by `token=` or `key=`) with `[REDACTED]`. Preserve line structure.",
+    "input": {
+      "server.log": "2026-01-15 10:23:45 INFO User login from 192.168.1.100\n2026-01-15 10:23:46 INFO Welcome user@example.com\n2026-01-15 10:24:01 DEBUG API call with token=abc123def456ghi789jkl012mno345\n2026-01-15 10:24:02 INFO Request from 10.0.0.55 for /api/data\n2026-01-15 10:24:03 WARN Failed auth for admin@company.org from 203.0.113.42\n2026-01-15 10:24:04 DEBUG Using key=AKIAIOSFODNN7EXAMPLE1234567890 for S3\n2026-01-15 10:24:05 INFO Healthy check passed\n"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "sanitized.log"},
+      {"type": "run", "cmd": "python log_sanitizer.py", "exit": 0},
+      {"type": "file_match", "path": "sanitized.log", "text": "[EMAIL]"},
+      {"type": "file_match", "path": "sanitized.log", "text": "[IP]"},
+      {"type": "file_not_match", "path": "sanitized.log", "text": "user@example.com"}
+    ],
+    "tags": ["python", "security", "privacy"]
+  },
+  {
+    "id": "mb-256",
+    "cat": "security",
+    "diff": "easy",
+    "title": "Generate Secure HTTP Headers Config",
+    "src": "m/security",
+    "prompt": "Create `headers.py` that when run produces `security_headers.json` containing a JSON object mapping header names to their recommended values. Include at minimum: `Content-Security-Policy`, `X-Content-Type-Options`, `X-Frame-Options`, `Strict-Transport-Security`, `X-XSS-Protection`, `Referrer-Policy`, and `Permissions-Policy`. Each value must be a non-empty string with a sensible secure default.",
+    "input": {},
+    "checks": [
+      {"type": "file_exists", "path": "headers.py"},
+      {"type": "run", "cmd": "python headers.py", "exit": 0},
+      {"type": "file_exists", "path": "security_headers.json"},
+      {"type": "json_valid", "path": "security_headers.json", "has_key": "Content-Security-Policy"},
+      {"type": "file_match", "path": "security_headers.json", "text": "Strict-Transport-Security"}
+    ],
+    "tags": ["python", "security", "headers"]
+  },
+  {
+    "id": "mb-257",
+    "cat": "security",
+    "diff": "medium",
+    "title": "Full SQL Injection Scanner with Fix Suggestions",
+    "src": "m/security",
+    "prompt": "Create `sql_scanner.py` that takes a Python filename as argument, scans for SQL injection vulnerabilities (string concatenation, f-strings, %-formatting in SQL queries), and writes `scan_result.json` with: `{\"file\": str, \"vulnerabilities\": [{\"line\": int, \"code\": str, \"type\": str, \"fix\": str}], \"safe_queries\": int, \"unsafe_queries\": int}`. The `fix` field should suggest parameterized query syntax. Run it on the provided `webapp.py`.",
+    "input": {
+      "webapp.py": "import sqlite3\n\ndb = sqlite3.connect(':memory:')\n\ndef login(user, passwd):\n    q = \"SELECT * FROM users WHERE username='\" + user + \"' AND password='\" + passwd + \"'\"\n    return db.execute(q).fetchone()\n\ndef search(term):\n    return db.execute(f\"SELECT * FROM items WHERE name LIKE '%{term}%'\").fetchall()\n\ndef get_by_id(item_id):\n    return db.execute(\"SELECT * FROM items WHERE id = ?\", (item_id,)).fetchone()\n\ndef update_stock(item_id, qty):\n    db.execute(\"UPDATE items SET stock = %d WHERE id = %d\" % (qty, item_id))\n    db.commit()\n\ndef insert_safe(name, price):\n    db.execute(\"INSERT INTO items (name, price) VALUES (?, ?)\", (name, price))\n    db.commit()\n\ndef delete_item(name):\n    db.execute(\"DELETE FROM items WHERE name = '{}'\".format(name))\n    db.commit()\n"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "sql_scanner.py"},
+      {"type": "run", "cmd": "python sql_scanner.py webapp.py", "exit": 0},
+      {"type": "json_valid", "path": "scan_result.json", "has_key": "vulnerabilities"},
+      {"type": "file_match", "path": "scan_result.json", "text": "safe_queries"},
+      {"type": "file_match", "path": "scan_result.json", "pattern": "\"unsafe_queries\":\\s*4"}
+    ],
+    "tags": ["python", "security", "sql-injection", "static-analysis"]
+  },
+  {
+    "id": "mb-258",
+    "cat": "security",
+    "diff": "medium",
+    "title": "XSS Detection in HTML Templates",
+    "src": "m/security",
+    "prompt": "Create `xss_scanner.py` that reads `templates.html` and detects potential XSS vulnerabilities: unescaped variable interpolation patterns like `${var}`, `{{var}}` without escaping filters, direct `<script>` tags with dynamic content, and `on*=` event handlers. Write `xss_report.json` as `{\"findings\": [{\"line\": int, \"type\": str, \"snippet\": str, \"recommendation\": str}], \"total\": int, \"risk_level\": str}` where risk_level is \"high\", \"medium\", or \"low\" based on count.",
+    "input": {
+      "templates.html": "<html>\n<head><title>{{page_title}}</title></head>\n<body>\n  <h1>Welcome, ${username}!</h1>\n  <div class=\"profile\">\n    <p>Bio: {{user_bio|safe}}</p>\n    <p>Email: {{user_email}}</p>\n  </div>\n  <div onclick=\"doAction('${user_input}')\">\n    Click me\n  </div>\n  <script>\n    var data = '{{raw_data}}';\n    document.getElementById('output').innerHTML = data;\n  </script>\n  <img src=\"avatar.png\" onerror=\"handleErr('${fallback_url}')\">\n  <a href=\"{{safe_link|urlencode}}\">Link</a>\n  <div>{{escaped_content|escape}}</div>\n</body>\n</html>"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "xss_scanner.py"},
+      {"type": "run", "cmd": "python xss_scanner.py", "exit": 0},
+      {"type": "json_valid", "path": "xss_report.json", "has_key": "findings"},
+      {"type": "file_match", "path": "xss_report.json", "text": "onclick"},
+      {"type": "file_match", "path": "xss_report.json", "text": "innerHTML"}
+    ],
+    "tags": ["python", "security", "xss", "html"]
+  },
+  {
+    "id": "mb-259",
+    "cat": "security",
+    "diff": "medium",
+    "title": "CSRF Token Generator and Validator",
+    "src": "m/security",
+    "prompt": "Create `csrf.py` implementing a CSRF protection module. It must provide: `generate_token(session_id: str) -> str` that creates a unique token (HMAC-based using a secret key), `validate_token(session_id: str, token: str) -> bool`, and `get_hidden_field(session_id: str) -> str` returning an HTML hidden input tag. CLI usage: `python csrf.py generate <session_id>` prints the token, `python csrf.py validate <session_id> <token>` prints `VALID` or `INVALID`, `python csrf.py html <session_id>` prints the HTML hidden field.",
+    "input": {},
+    "checks": [
+      {"type": "file_exists", "path": "csrf.py"},
+      {"type": "run", "cmd": "python csrf.py generate session123", "exit": 0, "stdout_pattern": "^[a-f0-9]{16,}\\s*$"},
+      {"type": "run", "cmd": "python -c \"import subprocess; t=subprocess.check_output(['python','csrf.py','generate','sess1']).strip().decode(); r=subprocess.check_output(['python','csrf.py','validate','sess1',t]).decode().strip(); print(r)\"", "exit": 0, "stdout": "VALID"},
+      {"type": "run", "cmd": "python csrf.py validate session123 fakeinvalidtoken", "exit": 0, "stdout": "INVALID"},
+      {"type": "run", "cmd": "python csrf.py html session123", "exit": 0, "stdout": "csrf_token"}
+    ],
+    "tags": ["python", "security", "csrf", "web"]
+  },
+  {
+    "id": "mb-260",
+    "cat": "security",
+    "diff": "medium",
+    "title": "Rate Limiter Implementation",
+    "src": "m/security",
+    "prompt": "Create `rate_limiter.py` implementing a token-bucket rate limiter. The class `RateLimiter` should accept `max_requests` (int) and `window_seconds` (float). Method `allow(client_id: str) -> bool` returns True if the request is allowed, False if rate-limited. When run as `python rate_limiter.py`, execute a self-test: create a limiter with max_requests=3, window_seconds=1.0, send 5 requests from the same client rapidly, then print JSON `{\"allowed\": int, \"blocked\": int, \"test_passed\": bool}` where test_passed is true if exactly 3 were allowed and 2 blocked.",
+    "input": {},
+    "checks": [
+      {"type": "file_exists", "path": "rate_limiter.py"},
+      {"type": "run", "cmd": "python rate_limiter.py", "exit": 0, "stdout": "\"test_passed\": true"},
+      {"type": "run", "cmd": "python rate_limiter.py", "exit": 0, "stdout": "\"allowed\": 3"},
+      {"type": "run", "cmd": "python rate_limiter.py", "exit": 0, "stdout": "\"blocked\": 2"}
+    ],
+    "tags": ["python", "security", "rate-limiting"]
+  },
+  {
+    "id": "mb-261",
+    "cat": "security",
+    "diff": "medium",
+    "title": "Role-Based Access Control System",
+    "src": "m/agents",
+    "prompt": "Create `rbac.py` implementing role-based access control. Define roles in a dict: `admin` can `read, write, delete, manage_users`; `editor` can `read, write`; `viewer` can `read`. Implement `check_access(role: str, action: str) -> bool` and `get_permissions(role: str) -> list`. CLI: `python rbac.py check <role> <action>` prints `GRANTED` or `DENIED`, `python rbac.py perms <role>` prints the permission list as JSON. Also support role hierarchy: admin inherits all editor permissions, editor inherits all viewer permissions.",
+    "input": {},
+    "checks": [
+      {"type": "file_exists", "path": "rbac.py"},
+      {"type": "run", "cmd": "python rbac.py check admin delete", "exit": 0, "stdout": "GRANTED"},
+      {"type": "run", "cmd": "python rbac.py check viewer write", "exit": 0, "stdout": "DENIED"},
+      {"type": "run", "cmd": "python rbac.py check editor read", "exit": 0, "stdout": "GRANTED"},
+      {"type": "run", "cmd": "python rbac.py perms admin", "exit": 0, "stdout": "manage_users"}
+    ],
+    "tags": ["python", "security", "access-control"]
+  },
+  {
+    "id": "mb-262",
+    "cat": "security",
+    "diff": "medium",
+    "title": "Dependency Audit for Known Vulnerabilities",
+    "src": "m/security",
+    "prompt": "Create `dep_audit.py` that reads `requirements.txt` and `vuln_db.json` (a JSON object mapping package names to arrays of `{\"version\": str, \"cve\": str, \"severity\": str}`). For each requirement, check if the pinned version matches any known vulnerable version. Write `audit_report.json`: `{\"total_deps\": int, \"vulnerable\": [{\"package\": str, \"version\": str, \"cve\": str, \"severity\": str}], \"clean\": [str], \"summary\": str}`. Run: `python dep_audit.py`.",
+    "input": {
+      "requirements.txt": "flask==2.0.1\nrequests==2.25.0\ndjango==3.2.4\npillow==8.3.1\nnumpy==1.21.0\ncryptography==3.4.7\njinja2==3.0.1\n",
+      "vuln_db.json": "{\n  \"flask\": [{\"version\": \"2.0.1\", \"cve\": \"CVE-2023-30861\", \"severity\": \"high\"}],\n  \"requests\": [{\"version\": \"2.25.0\", \"cve\": \"CVE-2023-32681\", \"severity\": \"medium\"}],\n  \"django\": [{\"version\": \"3.2.4\", \"cve\": \"CVE-2021-35042\", \"severity\": \"critical\"}, {\"version\": \"3.1.0\", \"cve\": \"CVE-2021-33203\", \"severity\": \"high\"}],\n  \"pillow\": [{\"version\": \"8.3.1\", \"cve\": \"CVE-2022-22817\", \"severity\": \"critical\"}],\n  \"jinja2\": [{\"version\": \"2.11.3\", \"cve\": \"CVE-2024-22195\", \"severity\": \"medium\"}]\n}"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "dep_audit.py"},
+      {"type": "run", "cmd": "python dep_audit.py", "exit": 0},
+      {"type": "json_valid", "path": "audit_report.json", "has_key": "vulnerable"},
+      {"type": "file_match", "path": "audit_report.json", "text": "CVE-2023-30861"},
+      {"type": "file_match", "path": "audit_report.json", "text": "CVE-2021-35042"},
+      {"type": "file_not_match", "path": "audit_report.json", "pattern": "\"package\":\\s*\"jinja2\".*?\"cve\""}
+    ],
+    "tags": ["python", "security", "dependency-audit"]
+  },
+  {
+    "id": "mb-263",
+    "cat": "security",
+    "diff": "medium",
+    "title": "Config Hardening Checker",
+    "src": "m/security",
+    "prompt": "Create `harden_check.py` that reads `app_config.json` and evaluates it against security best practices. Check for: `debug` should be false in production, `secret_key` should be >32 chars and not a default, `allowed_hosts` should not contain `*`, `session_timeout` should be <= 3600, `ssl_enabled` should be true, `cors_origins` should not contain `*`. Write `hardening_report.json`: `{\"checks\": [{\"setting\": str, \"status\": \"pass\"|\"fail\", \"current_value\": any, \"recommendation\": str}], \"passed\": int, \"failed\": int, \"grade\": str}` where grade is A (0 fails), B (1-2), C (3-4), F (5+).",
+    "input": {
+      "app_config.json": "{\n  \"app_name\": \"MyApp\",\n  \"debug\": true,\n  \"secret_key\": \"changeme\",\n  \"allowed_hosts\": [\"*\"],\n  \"session_timeout\": 86400,\n  \"ssl_enabled\": false,\n  \"cors_origins\": [\"*\"],\n  \"database\": {\n    \"host\": \"localhost\",\n    \"port\": 5432\n  },\n  \"log_level\": \"DEBUG\"\n}"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "harden_check.py"},
+      {"type": "run", "cmd": "python harden_check.py", "exit": 0},
+      {"type": "json_valid", "path": "hardening_report.json", "has_key": "grade"},
+      {"type": "file_match", "path": "hardening_report.json", "text": "\"grade\": \"F\""},
+      {"type": "file_match", "path": "hardening_report.json", "text": "\"status\": \"fail\""}
+    ],
+    "tags": ["python", "security", "config", "hardening"]
+  },
+  {
+    "id": "mb-264",
+    "cat": "security",
+    "diff": "medium",
+    "title": "JWT-like Token Encoder and Decoder",
+    "src": "m/security",
+    "prompt": "Create `jwt_tool.py` that implements a simplified JWT-like token system using HMAC-SHA256. It must support: `python jwt_tool.py encode '{\"sub\":\"user1\",\"role\":\"admin\"}'` which prints a token in format `<base64url_header>.<base64url_payload>.<base64url_signature>`. And `python jwt_tool.py decode <token>` which verifies the signature and prints the decoded payload JSON (or `INVALID_SIGNATURE` if tampered). Use a hardcoded secret key `moltbench_secret_key_2026`.",
+    "input": {},
+    "checks": [
+      {"type": "file_exists", "path": "jwt_tool.py"},
+      {"type": "run", "cmd": "python jwt_tool.py encode '{\"sub\":\"user1\",\"role\":\"admin\"}'", "exit": 0, "stdout_pattern": "^[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+\\s*$"},
+      {"type": "run", "cmd": "python -c \"import subprocess; t=subprocess.check_output(['python','jwt_tool.py','encode','{\\\"sub\\\":\\\"test\\\"}' ]).strip().decode(); r=subprocess.check_output(['python','jwt_tool.py','decode',t]).decode(); print('OK' if 'test' in r else 'FAIL')\"", "exit": 0, "stdout": "OK"},
+      {"type": "run", "cmd": "python jwt_tool.py decode 'aaa.bbb.ccc'", "exit": 0, "stdout": "INVALID"}
+    ],
+    "tags": ["python", "security", "jwt", "cryptography"]
+  },
+  {
+    "id": "mb-265",
+    "cat": "security",
+    "diff": "medium",
+    "title": "Secure File Encryption Utility",
+    "src": "m/security",
+    "prompt": "Create `encrypt_file.py` using Python stdlib only (hashlib, os, struct). Implement AES-like XOR-based encryption (since stdlib has no AES): derive a 32-byte key from a password using PBKDF2 (hashlib.pbkdf2_hmac), generate a random 16-byte IV, XOR each 32-byte block of plaintext with the key+IV hash. Usage: `python encrypt_file.py encrypt <password> <input_file> <output_file>` and `python encrypt_file.py decrypt <password> <input_file> <output_file>`. The encrypted file must start with the 16-byte IV. Test by encrypting and decrypting `secret.txt`.",
+    "input": {
+      "secret.txt": "This is a secret message that needs to be encrypted.\nIt contains multiple lines of sensitive data.\nAccount number: 1234-5678-9012\n"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "encrypt_file.py"},
+      {"type": "run", "cmd": "python encrypt_file.py encrypt mypassword secret.txt encrypted.bin", "exit": 0},
+      {"type": "file_exists", "path": "encrypted.bin"},
+      {"type": "run", "cmd": "python encrypt_file.py decrypt mypassword encrypted.bin decrypted.txt", "exit": 0},
+      {"type": "file_match", "path": "decrypted.txt", "text": "This is a secret message"}
+    ],
+    "tags": ["python", "security", "encryption"]
+  },
+  {
+    "id": "mb-266",
+    "cat": "security",
+    "diff": "medium",
+    "title": "Multi-Pattern Secret Scanner",
+    "src": "m/security",
+    "prompt": "Create `secret_scan.py` that scans all `.py` and `.js` files in the current directory for secrets using regex patterns. Detect: AWS keys (AKIA...), GitHub tokens (ghp_/gho_/ghu_), generic API keys (api_key/apikey/api-key assignments), private keys (BEGIN RSA/EC PRIVATE KEY), JWT tokens (eyJ...), and passwords in connection strings. Write `scan_results.json`: `{\"files_scanned\": int, \"total_findings\": int, \"findings\": [{\"file\": str, \"line\": int, \"type\": str, \"match\": str}]}`. Run: `python secret_scan.py`.",
+    "input": {
+      "config.py": "import os\n\nAWS_ACCESS_KEY = \"AKIAIOSFODNN7EXAMPLE\"\nAWS_SECRET = os.environ.get(\"AWS_SECRET\")\nGITHUB_TOKEN = \"ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"\n\nDB_URL = \"postgresql://admin:p4ssw0rd@db.host.com/production\"\n",
+      "app.js": "const apiKey = 'sk-1234567890abcdef1234567890abcdef';\nconst config = {\n  token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.dozjgNryP4J3jVmNHl0w5N_XgL0n3I9PlFUP0THsR8U',\n  publicUrl: 'https://example.com'\n};\n"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "secret_scan.py"},
+      {"type": "run", "cmd": "python secret_scan.py", "exit": 0},
+      {"type": "json_valid", "path": "scan_results.json", "has_key": "findings"},
+      {"type": "file_match", "path": "scan_results.json", "text": "AKIA"},
+      {"type": "file_match", "path": "scan_results.json", "text": "ghp_"}
+    ],
+    "tags": ["python", "security", "secrets", "scanning"]
+  },
+  {
+    "id": "mb-267",
+    "cat": "security",
+    "diff": "medium",
+    "title": "Input Sanitization Library",
+    "src": "m/coding",
+    "prompt": "Create `sanitize.py` with functions: `sanitize_html(text) -> str` (escape HTML entities), `sanitize_sql(text) -> str` (escape single quotes by doubling), `sanitize_filename(text) -> str` (remove path separators, null bytes, and restrict to alphanumeric, dash, underscore, dot), `sanitize_ldap(text) -> str` (escape LDAP special chars: *, (, ), \\, NUL), and `strip_tags(html) -> str` (remove all HTML tags). When run as `python sanitize.py`, execute a self-test suite and print JSON `{\"tests_run\": int, \"tests_passed\": int, \"all_passed\": bool}` with at least 10 tests.",
+    "input": {},
+    "checks": [
+      {"type": "file_exists", "path": "sanitize.py"},
+      {"type": "run", "cmd": "python sanitize.py", "exit": 0, "stdout": "\"all_passed\": true"},
+      {"type": "run", "cmd": "python sanitize.py", "exit": 0, "stdout_pattern": "\"tests_run\":\\s*(1[0-9]|[2-9][0-9])"},
+      {"type": "run", "cmd": "python -c \"from sanitize import sanitize_html; print(sanitize_html('<script>'))\"", "exit": 0, "stdout": "&lt;script&gt;"}
+    ],
+    "tags": ["python", "security", "sanitization"]
+  },
+  {
+    "id": "mb-268",
+    "cat": "security",
+    "diff": "medium",
+    "title": "Brute Force Detection Analyzer",
+    "src": "m/security",
+    "prompt": "Create `brute_detect.py` that reads `auth.log` and detects potential brute-force login attempts. Define brute-force as: 5+ failed logins from the same IP within any 60-second window. Write `alerts.json`: `{\"total_events\": int, \"unique_ips\": int, \"brute_force_ips\": [{\"ip\": str, \"failed_attempts\": int, \"first_seen\": str, \"last_seen\": str, \"blocked\": bool}], \"summary\": str}`. Set `blocked` to true for any IP with 10+ failures.",
+    "input": {
+      "auth.log": "2026-01-15 10:00:01 FAILED login for user admin from 192.168.1.100\n2026-01-15 10:00:02 FAILED login for user admin from 192.168.1.100\n2026-01-15 10:00:03 FAILED login for user admin from 192.168.1.100\n2026-01-15 10:00:04 FAILED login for user admin from 192.168.1.100\n2026-01-15 10:00:05 FAILED login for user admin from 192.168.1.100\n2026-01-15 10:00:06 FAILED login for user admin from 192.168.1.100\n2026-01-15 10:00:07 FAILED login for user root from 192.168.1.100\n2026-01-15 10:00:08 FAILED login for user root from 192.168.1.100\n2026-01-15 10:00:09 FAILED login for user root from 192.168.1.100\n2026-01-15 10:00:10 FAILED login for user root from 192.168.1.100\n2026-01-15 10:00:11 FAILED login for user root from 192.168.1.100\n2026-01-15 10:01:00 OK login for user alice from 10.0.0.5\n2026-01-15 10:02:00 FAILED login for user bob from 10.0.0.10\n2026-01-15 10:05:00 FAILED login for user carol from 172.16.0.1\n2026-01-15 10:05:01 FAILED login for user carol from 172.16.0.1\n"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "brute_detect.py"},
+      {"type": "run", "cmd": "python brute_detect.py", "exit": 0},
+      {"type": "json_valid", "path": "alerts.json", "has_key": "brute_force_ips"},
+      {"type": "file_match", "path": "alerts.json", "text": "192.168.1.100"},
+      {"type": "file_match", "path": "alerts.json", "text": "\"blocked\": true"}
+    ],
+    "tags": ["python", "security", "log-analysis", "brute-force"]
+  },
+  {
+    "id": "mb-269",
+    "cat": "security",
+    "diff": "medium",
+    "title": "Content Security Policy Builder",
+    "src": "m/security",
+    "prompt": "Create `csp_builder.py` that reads `site_config.json` (describing a website's resource needs) and generates a Content-Security-Policy header string. Write `csp_output.json` with `{\"policy\": str, \"directives\": {str: [str]}, \"report_uri\": str}`. The policy must include `default-src`, `script-src`, `style-src`, `img-src`, `connect-src`, `font-src`, and `frame-ancestors`. Avoid `unsafe-inline` and `unsafe-eval` unless explicitly required in the config.",
+    "input": {
+      "site_config.json": "{\n  \"domain\": \"example.com\",\n  \"cdn\": \"cdn.example.com\",\n  \"api\": \"api.example.com\",\n  \"fonts\": [\"fonts.googleapis.com\", \"fonts.gstatic.com\"],\n  \"analytics\": \"analytics.example.com\",\n  \"needs_inline_styles\": false,\n  \"needs_eval\": false,\n  \"allow_iframes_from\": [\"self\"],\n  \"report_endpoint\": \"/csp-report\"\n}"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "csp_builder.py"},
+      {"type": "run", "cmd": "python csp_builder.py", "exit": 0},
+      {"type": "json_valid", "path": "csp_output.json", "has_key": "policy"},
+      {"type": "file_match", "path": "csp_output.json", "text": "default-src"},
+      {"type": "file_match", "path": "csp_output.json", "text": "script-src"},
+      {"type": "file_not_match", "path": "csp_output.json", "text": "unsafe-eval"}
+    ],
+    "tags": ["python", "security", "csp", "web"]
+  },
+  {
+    "id": "mb-270",
+    "cat": "security",
+    "diff": "medium",
+    "title": "Timing-Safe Comparison Utility",
+    "src": "m/security",
+    "prompt": "Create `secure_compare.py` that implements constant-time string comparison to prevent timing attacks. Include: `safe_compare(a: str, b: str) -> bool` using hmac.compare_digest, and a demonstration showing why naive comparison is unsafe. When run as `python secure_compare.py`, execute a benchmark: compare 1000 pairs using both naive (==) and safe methods, then write `results.json` with `{\"naive_method\": {\"correct\": bool, \"timing_varies\": bool}, \"safe_method\": {\"correct\": bool, \"uses_hmac\": bool}, \"recommendation\": str}`. The `uses_hmac` field must be true.",
+    "input": {},
+    "checks": [
+      {"type": "file_exists", "path": "secure_compare.py"},
+      {"type": "run", "cmd": "python secure_compare.py", "exit": 0},
+      {"type": "json_valid", "path": "results.json", "has_key": "safe_method"},
+      {"type": "file_match", "path": "results.json", "text": "\"uses_hmac\": true"},
+      {"type": "file_match", "path": "results.json", "text": "recommendation"}
+    ],
+    "tags": ["python", "security", "timing-attack"]
+  },
+  {
+    "id": "mb-271",
+    "cat": "security",
+    "diff": "medium",
+    "title": "Security Middleware Chain Builder",
+    "src": "m/agents",
+    "prompt": "Create `middleware.py` that defines a composable security middleware chain for a hypothetical web framework. Each middleware is a function that takes a `request` dict and `next_handler` callable. Implement these middlewares: `rate_limit_mw` (blocks if >100 requests per IP stored in request), `auth_check_mw` (rejects if no `auth_token` in request headers), `input_sanitize_mw` (HTML-escapes all string values in request body), `cors_check_mw` (rejects if origin not in allowed list). Implement `build_chain(middlewares, handler) -> callable`. When run, execute a self-test with sample requests and write `test_results.json`: `{\"tests\": [{\"name\": str, \"passed\": bool}], \"all_passed\": bool}`.",
+    "input": {},
+    "checks": [
+      {"type": "file_exists", "path": "middleware.py"},
+      {"type": "run", "cmd": "python middleware.py", "exit": 0},
+      {"type": "json_valid", "path": "test_results.json", "has_key": "all_passed"},
+      {"type": "file_match", "path": "test_results.json", "text": "\"all_passed\": true"},
+      {"type": "file_match", "path": "test_results.json", "pattern": "\"tests\":\\s*\\["}
+    ],
+    "tags": ["python", "security", "middleware", "web"]
+  },
+  {
+    "id": "mb-272",
+    "cat": "security",
+    "diff": "medium",
+    "title": "Certificate Chain Validator",
+    "src": "m/security",
+    "prompt": "Create `cert_check.py` that reads `certs.json` (an array of certificate objects with `subject`, `issuer`, `not_before`, `not_after` date strings, and `is_ca` boolean). Validate the chain: each cert's issuer should match the next cert's subject, the root cert should be self-signed (issuer == subject), no cert should be expired (check against 2026-04-17), and CA certs should have `is_ca: true`. Write `validation.json`: `{\"chain_length\": int, \"valid_chain\": bool, \"issues\": [str], \"expired\": [str], \"root_ca\": str}`.",
+    "input": {
+      "certs.json": "[\n  {\"subject\": \"www.example.com\", \"issuer\": \"Intermediate CA\", \"not_before\": \"2025-01-01\", \"not_after\": \"2027-01-01\", \"is_ca\": false},\n  {\"subject\": \"Intermediate CA\", \"issuer\": \"Root CA\", \"not_before\": \"2024-01-01\", \"not_after\": \"2029-01-01\", \"is_ca\": true},\n  {\"subject\": \"Root CA\", \"issuer\": \"Root CA\", \"not_before\": \"2020-01-01\", \"not_after\": \"2035-01-01\", \"is_ca\": true}\n]"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "cert_check.py"},
+      {"type": "run", "cmd": "python cert_check.py", "exit": 0},
+      {"type": "json_valid", "path": "validation.json", "has_key": "valid_chain"},
+      {"type": "file_match", "path": "validation.json", "text": "\"valid_chain\": true"},
+      {"type": "file_match", "path": "validation.json", "text": "Root CA"}
+    ],
+    "tags": ["python", "security", "certificates"]
+  },
+  {
+    "id": "mb-273",
+    "cat": "security",
+    "diff": "hard",
+    "title": "Full Static Security Analyzer",
+    "src": "m/security",
+    "prompt": "Create `analyzer.py`, a comprehensive static security analyzer for Python code. It must detect: (1) SQL injection, (2) command injection (os.system, subprocess with shell=True + variables), (3) path traversal (open() with user input without validation), (4) hardcoded credentials, (5) insecure random (using `random` instead of `secrets` for security-sensitive operations), (6) insecure deserialization (pickle.loads with untrusted data). Run it on `target.py` and write `analysis.json`: `{\"file\": str, \"findings\": [{\"id\": str, \"category\": str, \"severity\": str, \"line\": int, \"code\": str, \"cwe\": str, \"description\": str, \"fix\": str}], \"stats\": {\"total\": int, \"critical\": int, \"high\": int, \"medium\": int, \"low\": int}}`. Usage: `python analyzer.py target.py`.",
+    "input": {
+      "target.py": "import os\nimport random\nimport pickle\nimport sqlite3\nimport subprocess\n\ndef get_user(name):\n    db = sqlite3.connect('app.db')\n    return db.execute(\"SELECT * FROM users WHERE name = '\" + name + \"'\").fetchone()\n\ndef run_tool(user_cmd):\n    os.system(f\"tool --input {user_cmd}\")\n\ndef read_file(user_path):\n    with open(\"/data/\" + user_path) as f:\n        return f.read()\n\nDB_PASSWORD = \"admin123\"\nAPI_SECRET = \"sk-secret-key-value-12345\"\n\ndef generate_session_id():\n    return ''.join([chr(random.randint(65, 90)) for _ in range(32)])\n\ndef load_user_data(raw_bytes):\n    return pickle.loads(raw_bytes)\n\ndef search_safe(term):\n    db = sqlite3.connect('app.db')\n    return db.execute(\"SELECT * FROM items WHERE id = ?\", (term,)).fetchall()\n\ndef run_backup():\n    subprocess.run([\"tar\", \"czf\", \"backup.tar.gz\", \"/data\"])\n"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "analyzer.py"},
+      {"type": "run", "cmd": "python analyzer.py target.py", "exit": 0},
+      {"type": "json_valid", "path": "analysis.json", "has_key": "findings"},
+      {"type": "file_match", "path": "analysis.json", "text": "SQL"},
+      {"type": "file_match", "path": "analysis.json", "text": "command"},
+      {"type": "file_match", "path": "analysis.json", "text": "pickle"},
+      {"type": "file_match", "path": "analysis.json", "pattern": "\"total\":\\s*[6-9]|\"total\":\\s*1[0-9]"}
+    ],
+    "tags": ["python", "security", "static-analysis", "comprehensive"]
+  },
+  {
+    "id": "mb-274",
+    "cat": "security",
+    "diff": "hard",
+    "title": "Security Audit Report Generator",
+    "src": "m/security",
+    "prompt": "Create `audit.py` that performs a complete security audit of the provided codebase (all .py files in the current directory). It must: (1) scan for vulnerabilities across all files, (2) classify findings by OWASP Top 10 categories, (3) assign risk scores (1-10), (4) generate remediation steps. Write `audit_report.json` with structure: `{\"audit_date\": str, \"files_analyzed\": [str], \"owasp_categories\": {str: [{\"file\": str, \"line\": int, \"description\": str, \"risk_score\": int, \"remediation\": str}]}, \"executive_summary\": {\"total_findings\": int, \"critical_count\": int, \"high_count\": int, \"overall_risk\": str}, \"top_recommendations\": [str]}`. Run: `python audit.py`.",
+    "input": {
+      "auth.py": "import hashlib\nimport sqlite3\n\ndef login(username, password):\n    db = sqlite3.connect('app.db')\n    hashed = hashlib.md5(password.encode()).hexdigest()\n    row = db.execute(f\"SELECT * FROM users WHERE name='{username}' AND pass='{hashed}'\").fetchone()\n    return row is not None\n\ndef reset_password(email):\n    token = hashlib.md5(email.encode()).hexdigest()[:8]\n    return token\n",
+      "api.py": "import os\nimport json\n\ndef handle_upload(filename, data):\n    path = \"/uploads/\" + filename\n    with open(path, 'wb') as f:\n        f.write(data)\n    return path\n\ndef run_report(report_type):\n    os.system(f\"generate_report --type {report_type}\")\n\ndef get_config():\n    return {\n        \"db_password\": \"root123\",\n        \"api_key\": \"sk-1234567890abcdef\",\n        \"debug\": True\n    }\n",
+      "utils.py": "import pickle\nimport random\nimport xml.etree.ElementTree as ET\n\ndef deserialize(data):\n    return pickle.loads(data)\n\ndef generate_otp():\n    return str(random.randint(100000, 999999))\n\ndef parse_xml(user_xml):\n    return ET.fromstring(user_xml)\n"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "audit.py"},
+      {"type": "run", "cmd": "python audit.py", "exit": 0},
+      {"type": "json_valid", "path": "audit_report.json", "has_key": "owasp_categories"},
+      {"type": "file_match", "path": "audit_report.json", "text": "executive_summary"},
+      {"type": "file_match", "path": "audit_report.json", "text": "remediation"},
+      {"type": "file_match", "path": "audit_report.json", "pattern": "\"total_findings\":\\s*[5-9]|\"total_findings\":\\s*[1-9][0-9]"}
+    ],
+    "tags": ["python", "security", "audit", "owasp"]
+  },
+  {
+    "id": "mb-275",
+    "cat": "security",
+    "diff": "hard",
+    "title": "Secure Session Manager with Expiry and Rotation",
+    "src": "m/security",
+    "prompt": "Create `session_mgr.py` implementing a complete session management system. Requirements: (1) `create_session(user_id, ttl_seconds=3600)` returns a session token and stores session data, (2) `validate_session(token)` returns session data or None if expired/invalid, (3) `rotate_token(old_token)` invalidates the old token and returns a new one for the same session, (4) `destroy_session(token)` removes the session, (5) `cleanup_expired()` removes all expired sessions. Tokens must be cryptographically random (secrets module). Sessions stored in a JSON file `sessions.db.json`. When run as `python session_mgr.py`, execute a comprehensive self-test and write `session_test.json`: `{\"tests\": [{\"name\": str, \"passed\": bool, \"detail\": str}], \"passed\": int, \"failed\": int, \"all_passed\": bool}` with at least 8 tests covering all features.",
+    "input": {},
+    "checks": [
+      {"type": "file_exists", "path": "session_mgr.py"},
+      {"type": "run", "cmd": "python session_mgr.py", "exit": 0},
+      {"type": "json_valid", "path": "session_test.json", "has_key": "all_passed"},
+      {"type": "file_match", "path": "session_test.json", "text": "\"all_passed\": true"},
+      {"type": "file_match", "path": "session_test.json", "pattern": "\"passed\":\\s*[89]|\"passed\":\\s*[1-9][0-9]"}
+    ],
+    "tags": ["python", "security", "sessions", "authentication"]
+  },
+  {
+    "id": "mb-276",
+    "cat": "security",
+    "diff": "hard",
+    "title": "Web Application Firewall Rule Engine",
+    "src": "m/agents",
+    "prompt": "Create `waf.py` implementing a rule-based Web Application Firewall engine. Define rules as a JSON structure loaded from `waf_rules.json`. The engine must: (1) match request patterns against rules (regex-based), (2) support actions: `block`, `log`, `allow`, (3) process rules in priority order, (4) handle rule chaining (if rule A matches, also check rule B), (5) log all decisions. Implement `process_request(request: dict) -> dict` returning `{\"action\": str, \"matched_rules\": [str], \"log_entries\": [str]}`. When run, process the test requests and write `waf_results.json` with all decisions.",
+    "input": {
+      "waf_rules.json": "[\n  {\"id\": \"R001\", \"name\": \"SQL Injection\", \"pattern\": \"('|\\\\\"|--)|(union|select|insert|update|delete|drop)\\\\s\", \"target\": \"query_string\", \"action\": \"block\", \"priority\": 1},\n  {\"id\": \"R002\", \"name\": \"XSS Attack\", \"pattern\": \"<script|javascript:|on\\\\w+=\", \"target\": \"body\", \"action\": \"block\", \"priority\": 1},\n  {\"id\": \"R003\", \"name\": \"Path Traversal\", \"pattern\": \"\\\\.\\\\.[\\\\/\\\\\\\\]\", \"target\": \"path\", \"action\": \"block\", \"priority\": 2},\n  {\"id\": \"R004\", \"name\": \"Rate Limit Exceeded\", \"pattern\": \".*\", \"target\": \"headers.X-Rate-Flag\", \"action\": \"log\", \"priority\": 5},\n  {\"id\": \"R005\", \"name\": \"Admin Access\", \"pattern\": \"/admin\", \"target\": \"path\", \"action\": \"log\", \"priority\": 3}\n]",
+      "test_requests.json": "[\n  {\"method\": \"GET\", \"path\": \"/api/users\", \"query_string\": \"id=1' OR '1'='1\", \"headers\": {}, \"body\": \"\"},\n  {\"method\": \"POST\", \"path\": \"/comment\", \"query_string\": \"\", \"headers\": {}, \"body\": \"<script>alert('xss')</script>\"},\n  {\"method\": \"GET\", \"path\": \"/files/../../../etc/passwd\", \"query_string\": \"\", \"headers\": {}, \"body\": \"\"},\n  {\"method\": \"GET\", \"path\": \"/api/data\", \"query_string\": \"search=normal+query\", \"headers\": {}, \"body\": \"\"},\n  {\"method\": \"GET\", \"path\": \"/admin/dashboard\", \"query_string\": \"\", \"headers\": {}, \"body\": \"\"}\n]"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "waf.py"},
+      {"type": "run", "cmd": "python waf.py", "exit": 0},
+      {"type": "json_valid", "path": "waf_results.json"},
+      {"type": "file_match", "path": "waf_results.json", "text": "block"},
+      {"type": "file_match", "path": "waf_results.json", "text": "SQL Injection"},
+      {"type": "file_match", "path": "waf_results.json", "text": "XSS"}
+    ],
+    "tags": ["python", "security", "waf", "firewall"]
+  },
+  {
+    "id": "mb-277",
+    "cat": "security",
+    "diff": "hard",
+    "title": "Cryptographic Message Signing System",
+    "src": "m/security",
+    "prompt": "Create `sign_verify.py` implementing a message signing and verification system using HMAC-SHA256 with key derivation. Features: (1) `derive_key(master_secret, purpose, salt)` using PBKDF2 to derive purpose-specific keys, (2) `sign_message(key, message, timestamp)` producing a signature that includes the timestamp to prevent replay, (3) `verify_message(key, message, timestamp, signature, max_age_seconds=300)` that checks signature validity AND timestamp freshness, (4) `sign_request(key, method, path, body, timestamp)` for signing HTTP-like requests. When run, execute a self-test suite covering: valid signatures, tampered messages, expired timestamps, and different key purposes. Write `crypto_test.json`: `{\"tests\": [{\"name\": str, \"passed\": bool}], \"all_passed\": bool, \"algorithm\": str, \"key_derivation\": str}`.",
+    "input": {},
+    "checks": [
+      {"type": "file_exists", "path": "sign_verify.py"},
+      {"type": "run", "cmd": "python sign_verify.py", "exit": 0},
+      {"type": "json_valid", "path": "crypto_test.json", "has_key": "all_passed"},
+      {"type": "file_match", "path": "crypto_test.json", "text": "\"all_passed\": true"},
+      {"type": "file_match", "path": "crypto_test.json", "text": "HMAC"},
+      {"type": "file_match", "path": "crypto_test.json", "text": "PBKDF2"}
+    ],
+    "tags": ["python", "security", "cryptography", "signing"]
+  },
+  {
+    "id": "mb-278",
+    "cat": "security",
+    "diff": "hard",
+    "title": "Security Policy Compliance Checker",
+    "src": "m/agents",
+    "prompt": "Create `compliance.py` that reads `policy.json` (security policy rules) and `infrastructure.json` (current infrastructure state) and checks compliance. Policies can require: minimum TLS version, password complexity, encryption at rest, backup frequency, access logging enabled, MFA required, etc. Write `compliance_report.json`: `{\"policy_name\": str, \"checked_at\": str, \"total_controls\": int, \"compliant\": int, \"non_compliant\": int, \"controls\": [{\"id\": str, \"name\": str, \"status\": \"pass\"|\"fail\"|\"warning\", \"requirement\": str, \"actual\": str, \"remediation\": str}], \"compliance_pct\": float, \"risk_rating\": str}`. Risk rating: \"low\" (>90%), \"medium\" (70-90%), \"high\" (<70%). Run: `python compliance.py`.",
+    "input": {
+      "policy.json": "{\n  \"name\": \"Production Security Policy v2.0\",\n  \"controls\": [\n    {\"id\": \"SEC-001\", \"name\": \"TLS Version\", \"field\": \"tls_version\", \"operator\": \">=\", \"value\": \"1.2\"},\n    {\"id\": \"SEC-002\", \"name\": \"Encryption at Rest\", \"field\": \"encryption_at_rest\", \"operator\": \"==\", \"value\": true},\n    {\"id\": \"SEC-003\", \"name\": \"Access Logging\", \"field\": \"access_logging\", \"operator\": \"==\", \"value\": true},\n    {\"id\": \"SEC-004\", \"name\": \"MFA Required\", \"field\": \"mfa_enabled\", \"operator\": \"==\", \"value\": true},\n    {\"id\": \"SEC-005\", \"name\": \"Password Min Length\", \"field\": \"password_min_length\", \"operator\": \">=\", \"value\": 12},\n    {\"id\": \"SEC-006\", \"name\": \"Backup Frequency\", \"field\": \"backup_frequency_hours\", \"operator\": \"<=\", \"value\": 24},\n    {\"id\": \"SEC-007\", \"name\": \"Session Timeout\", \"field\": \"session_timeout_min\", \"operator\": \"<=\", \"value\": 30},\n    {\"id\": \"SEC-008\", \"name\": \"Admin IP Restriction\", \"field\": \"admin_ip_restricted\", \"operator\": \"==\", \"value\": true}\n  ]\n}",
+      "infrastructure.json": "{\n  \"tls_version\": \"1.3\",\n  \"encryption_at_rest\": true,\n  \"access_logging\": false,\n  \"mfa_enabled\": false,\n  \"password_min_length\": 8,\n  \"backup_frequency_hours\": 72,\n  \"session_timeout_min\": 120,\n  \"admin_ip_restricted\": true\n}"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "compliance.py"},
+      {"type": "run", "cmd": "python compliance.py", "exit": 0},
+      {"type": "json_valid", "path": "compliance_report.json", "has_key": "compliance_pct"},
+      {"type": "file_match", "path": "compliance_report.json", "text": "\"status\": \"fail\""},
+      {"type": "file_match", "path": "compliance_report.json", "text": "\"status\": \"pass\""},
+      {"type": "file_match", "path": "compliance_report.json", "pattern": "\"risk_rating\":\\s*\"high\""}
+    ],
+    "tags": ["python", "security", "compliance", "policy"]
+  },
+  {
+    "id": "mb-279",
+    "cat": "security",
+    "diff": "hard",
+    "title": "Agent Permission Sandbox Validator",
+    "src": "m/agents",
+    "prompt": "Create `sandbox.py` implementing an agent permission sandbox. Agents declare capabilities they need; the sandbox validates whether actions are permitted. Features: (1) Load permission manifest from `permissions.json`, (2) `PermissionSandbox` class with methods `check(agent_id, action, resource) -> bool`, `audit_log() -> list`, `detect_escalation(agent_id) -> list` (finds actions exceeding declared permissions), (3) Process `action_log.json` (a sequence of agent actions) and flag violations. Write `sandbox_report.json`: `{\"agents\": {str: {\"declared_perms\": [str], \"actions_total\": int, \"actions_allowed\": int, \"actions_denied\": int, \"escalation_attempts\": [{\"action\": str, \"resource\": str, \"timestamp\": str}]}}, \"total_violations\": int, \"risk_agents\": [str]}`.",
+    "input": {
+      "permissions.json": "{\n  \"agent-alpha\": {\"permissions\": [\"read:documents\", \"write:documents\", \"read:config\"]},\n  \"agent-beta\": {\"permissions\": [\"read:documents\"]},\n  \"agent-gamma\": {\"permissions\": [\"read:documents\", \"write:documents\", \"delete:documents\", \"admin:users\"]}\n}",
+      "action_log.json": "[\n  {\"agent\": \"agent-alpha\", \"action\": \"read\", \"resource\": \"documents\", \"timestamp\": \"2026-04-17T10:00:00\"},\n  {\"agent\": \"agent-alpha\", \"action\": \"write\", \"resource\": \"documents\", \"timestamp\": \"2026-04-17T10:01:00\"},\n  {\"agent\": \"agent-alpha\", \"action\": \"delete\", \"resource\": \"documents\", \"timestamp\": \"2026-04-17T10:02:00\"},\n  {\"agent\": \"agent-alpha\", \"action\": \"admin\", \"resource\": \"users\", \"timestamp\": \"2026-04-17T10:03:00\"},\n  {\"agent\": \"agent-beta\", \"action\": \"read\", \"resource\": \"documents\", \"timestamp\": \"2026-04-17T10:04:00\"},\n  {\"agent\": \"agent-beta\", \"action\": \"write\", \"resource\": \"documents\", \"timestamp\": \"2026-04-17T10:05:00\"},\n  {\"agent\": \"agent-beta\", \"action\": \"delete\", \"resource\": \"config\", \"timestamp\": \"2026-04-17T10:06:00\"},\n  {\"agent\": \"agent-gamma\", \"action\": \"admin\", \"resource\": \"users\", \"timestamp\": \"2026-04-17T10:07:00\"},\n  {\"agent\": \"agent-gamma\", \"action\": \"read\", \"resource\": \"documents\", \"timestamp\": \"2026-04-17T10:08:00\"}\n]"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "sandbox.py"},
+      {"type": "run", "cmd": "python sandbox.py", "exit": 0},
+      {"type": "json_valid", "path": "sandbox_report.json", "has_key": "total_violations"},
+      {"type": "file_match", "path": "sandbox_report.json", "text": "agent-alpha"},
+      {"type": "file_match", "path": "sandbox_report.json", "text": "escalation_attempts"},
+      {"type": "file_match", "path": "sandbox_report.json", "pattern": "\"total_violations\":\\s*[3-9]"}
+    ],
+    "tags": ["python", "security", "agents", "permissions", "sandbox"]
+  },
+  {
+    "id": "mb-280",
+    "cat": "security",
+    "diff": "hard",
+    "title": "Vulnerability Remediation Pipeline",
+    "src": "m/security",
+    "prompt": "Create `remediate.py` that reads vulnerable source code, identifies issues, and generates patched versions. For each `.py` file in the current directory (except remediate.py itself), the tool must: (1) detect vulnerabilities, (2) generate a fixed version in a `patched/` directory, (3) create a diff showing changes, (4) verify the fix doesn't break basic syntax (compile check). Write `remediation_report.json`: `{\"files_processed\": int, \"total_vulns_found\": int, \"total_vulns_fixed\": int, \"files\": [{\"name\": str, \"original_vulns\": int, \"fixes_applied\": [{\"line\": int, \"type\": str, \"original\": str, \"fixed\": str}], \"syntax_valid\": bool}]}`. Run: `python remediate.py`.",
+    "input": {
+      "vulnerable_auth.py": "import hashlib\nimport sqlite3\nimport os\n\ndef authenticate(username, password):\n    conn = sqlite3.connect('users.db')\n    query = \"SELECT * FROM users WHERE username='\" + username + \"' AND password='\" + hashlib.md5(password.encode()).hexdigest() + \"'\"\n    result = conn.execute(query).fetchone()\n    return result is not None\n\ndef change_password(user_id, new_password):\n    conn = sqlite3.connect('users.db')\n    hashed = hashlib.md5(new_password.encode()).hexdigest()\n    conn.execute(f\"UPDATE users SET password='{hashed}' WHERE id={user_id}\")\n    conn.commit()\n\ndef serve_file(user_filename):\n    filepath = \"/var/data/\" + user_filename\n    with open(filepath) as f:\n        return f.read()\n\ndef execute_task(task_name):\n    os.system(f\"run_task {task_name}\")\n"
+    },
+    "checks": [
+      {"type": "file_exists", "path": "remediate.py"},
+      {"type": "run", "cmd": "python remediate.py", "exit": 0},
+      {"type": "json_valid", "path": "remediation_report.json", "has_key": "files_processed"},
+      {"type": "file_exists", "path": "patched/vulnerable_auth.py"},
+      {"type": "file_not_match", "path": "patched/vulnerable_auth.py", "text": "md5(password"},
+      {"type": "file_match", "path": "remediation_report.json", "pattern": "\"total_vulns_found\":\\s*[4-9]"}
+    ],
+    "tags": ["python", "security", "remediation", "auto-fix"]
+  }
+]
