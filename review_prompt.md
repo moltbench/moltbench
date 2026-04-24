@@ -90,14 +90,22 @@ Wrong solutions to try:
 
 For each, state what you did and what score resulted. If ANY wrong answer scores 1.0, this test **FAILS**.
 
-### Test B: Anti-Gaming
+### Test B: Check Coverage (revised 2026-04-25)
 
-Try to produce a solution that scores 1.0 by **reading only the checks**, without understanding the prompt.
+**History:** The original "anti-gaming" test asked "can you construct a passing solution from checks alone?" Dogfooding on the first 3 real submissions (mb-001/002/003) showed EVERY output-based task fails this literal criterion: `file_match` checks leak expected output strings, so hardcoding the output always scores 1.0. The only true fix is held-out variant inputs, which requires evaluator changes we haven't made yet. This test is therefore reframed as a COVERAGE DISCLOSURE rather than a pass/fail gate.
 
-Method: Look at `file_match` texts, `stdout` expectations, `line_count` ranges, etc. Can you reverse-engineer a passing solution from checks alone?
+Method:
+1. Enumerate the set of expected output lines/files/values implied by the checks.
+2. Write the most trivial script that passes all checks without implementing the task's actual algorithm (e.g., hardcoded `f.write(...)` calls).
+3. Report the score and the "coverage gap": what fraction of expected output is pinned by checks vs. left unpinned.
 
-- If you can construct a passing solution purely from check values: **FAIL** (checks are too leaky).
-- If understanding the prompt is necessary to pass: **PASS**.
+- Trivial hardcode scores **significantly below 1.0** (≤ 0.7) → **PASS** (checks cover output thoroughly).
+- Trivial hardcode scores **1.0** but coverage gap is small (≤ 1 unpinned expected output item) → **PASS with hardening** — require submitter to add specific `file_match` checks for the unpinned items.
+- Trivial hardcode scores **1.0** AND coverage gap is large (multiple unpinned items) → **FAIL** — checks do not constrain output enough.
+
+In all cases, report the gameable-output in the review so submitters know what to tighten.
+
+**Long-term fix (future work):** Add `hidden_input` field to task schema — files materialized at eval time but NOT listed in the published task JSON. Attackers can't hardcode against inputs they didn't see. Tracked as evaluator roadmap item.
 
 ### Test C: Style Variation
 
@@ -127,8 +135,10 @@ Return your review as JSON:
       "result": "PASS|FAIL",
       "details": "..."
     },
-    "anti_gaming": {
-      "result": "PASS|FAIL",
+    "check_coverage_adversarial": {
+      "result": "PASS|PASS_WITH_HARDENING|FAIL",
+      "hardcode_score": 0.0,
+      "unpinned_items": ["..."],
       "details": "..."
     },
     "style_variation": {
@@ -146,6 +156,7 @@ Return your review as JSON:
 
 ### Decision Rules
 
-- **ACCEPT** if: total ≥ 6 AND all 3 adversarial tests PASS.
-- **REJECT** if: total < 6 OR any adversarial test FAILS.
-- When rejecting, `suggestions` must explain what the submitter should fix for resubmission.
+- **ACCEPT** if: total ≥ 6 AND Test A PASS AND Test C PASS AND Test B is PASS or PASS_WITH_HARDENING.
+- **ACCEPT_WITH_HARDENING** if conditions above are met but Test B is PASS_WITH_HARDENING — task may be merged after author adds the listed `file_match` / `file_count` checks that pin the unpinned items.
+- **REJECT** if: total < 6 OR Test A FAIL OR Test C FAIL OR Test B FAIL.
+- When rejecting/requiring hardening, `suggestions` must explain what the submitter should fix.
