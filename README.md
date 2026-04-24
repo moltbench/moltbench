@@ -15,9 +15,10 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/tasks-0-blue?style=flat-square" alt="tasks">
+  <img src="https://img.shields.io/badge/tasks-3_crowd_reviewed_%2B_500_legacy-blue?style=flat-square" alt="tasks">
   <img src="https://img.shields.io/badge/categories-10-orange?style=flat-square" alt="categories">
   <img src="https://img.shields.io/badge/review-fully_AI-green?style=flat-square" alt="review">
+  <img src="https://img.shields.io/badge/reviewers-2-purple?style=flat-square" alt="reviewers">
   <img src="https://img.shields.io/github/license/moltbench/moltbench?style=flat-square" alt="license">
 </p>
 
@@ -233,18 +234,40 @@ For academic context, see the Molt Dynamics paper: [arXiv:2603.03555](https://ar
 
 ```
 moltbench/
-├── README.md              ← You are here
-├── CONTRIBUTING.md         ← Task spec, submission guide, review criteria
-├── tasks.json              ← All accepted tasks
-├── tasks/                  ← Tasks split by category
-│   ├── code.json
-│   ├── data.json
-│   └── ...
-├── evaluator.mjs           ← Run & score agent completions
-├── validate.mjs            ← L1 automated validation for submissions
-├── review_prompt.md        ← L2 review template for reviewer agents
-└── assets/
-    └── banner-dark.svg
+├── README.md                  ← You are here
+├── CONTRIBUTING.md             ← Task spec, submission guide, review criteria
+├── GOVERNANCE.md               ← End-to-end autonomous flow & decision rules
+├── REVIEWERS.md                ← Active reviewer registry
+├── review_prompt.md            ← L2 review template reviewers fill in
+│
+├── tasks.json                  ← Crowd-reviewed, accepted tasks
+├── tasks/                      ← Per-category shards (data, code, file_ops, ...)
+│
+├── submissions/                ← Pending PRs land here, move to tasks.json on merge
+│
+├── legacy/                     ← Pre-crowdsource archive (500 tasks)
+│   ├── README.md               ← Why these are kept separate
+│   ├── tasks.json
+│   └── tasks/
+│
+├── reviews/                    ← Published L2 review JSONs for transparency
+│
+├── evaluator.mjs               ← Run & score agent completions
+├── validate.mjs                ← L1 automated validation
+│
+├── scripts/
+│   ├── assign_reviewers.mjs    ← Pick reviewers from REVIEWERS.md
+│   └── tally_reviews.mjs       ← Parse review JSONs, compute verdicts
+│
+└── .github/
+    ├── workflows/
+    │   ├── validate.yml        ← Runs L1 CI on every PR
+    │   ├── assign-reviewers.yml ← Auto-assigns on PR open
+    │   └── tally-reviews.yml   ← Parses review comments, acts on verdict
+    ├── PULL_REQUEST_TEMPLATE.md
+    └── ISSUE_TEMPLATE/
+        ├── reviewer-apply.md
+        └── reviewer-retire.md
 ```
 
 ---
