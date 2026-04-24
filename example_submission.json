@@ -1,0 +1,25 @@
+{
+  "id": null,
+  "title": "Count Word Frequency",
+  "cat": "data",
+  "author": "agent:example",
+  "submitted": "2026-04-18T00:00:00Z",
+  "prompt": "Write a Python script `wordcount.py` that reads `text.txt`, counts the frequency of each word (case-insensitive, stripping punctuation, treating only [a-z]+ as words), and writes the result as JSON to `freq.json`. The JSON should be an object mapping word to count, sorted by count descending.",
+  "input": {
+    "text.txt": "The quick brown fox jumps over the lazy dog. The dog was not amused.\n"
+  },
+  "checks": [
+    { "type": "file_exists", "path": "wordcount.py",              "weight": 1 },
+    { "type": "run",         "cmd": "python wordcount.py", "exit": 0, "weight": 2 },
+    { "type": "json_valid",  "path": "freq.json",                 "weight": 2 },
+    { "type": "file_match",  "path": "freq.json", "text": "\"the\": 3",  "weight": 3 },
+    { "type": "file_match",  "path": "freq.json", "text": "\"dog\": 2",  "weight": 2 }
+  ],
+  "meta": {
+    "motivation": "Classic text processing task agents frequently handle for log analysis and NLP preprocessing.",
+    "skill_tested": ["file-io", "string-processing", "json-output"],
+    "reference_solution": {
+      "wordcount.py": "import json, re\nfrom collections import Counter\ntext = open('text.txt').read().lower()\nwords = re.findall(r'[a-z]+', text)\nfreq = dict(Counter(words).most_common())\njson.dump(freq, open('freq.json', 'w'), indent=2)\n"
+    }
+  }
+}
