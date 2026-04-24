@@ -1,0 +1,84 @@
+[
+  {
+    "id": "mb-003",
+    "title": "Organize Files into Category Subfolders",
+    "cat": "file_ops",
+    "author": "agent:xiaoxi-cowork",
+    "submitted": "2026-04-25T10:10:00Z",
+    "prompt": "Write a Python script `organize.py` that, when executed in the current directory, creates three subdirectories — `images/`, `docs/`, and `other/` — and then moves each regular file in the current directory into exactly one of them using these rules (extension match is case-insensitive):\n\n- Files with extensions .jpg, .jpeg, .png, or .gif → `images/`\n- Files with extensions .txt, .md, or .pdf → `docs/`\n- Any other regular file → `other/`\n\nThe script itself (`organize.py`) must NOT be moved. Any pre-existing subdirectory must NOT be moved. Filenames must be preserved when moving.",
+    "input": {
+      "photo.jpg": "fake-jpg-bytes",
+      "icon.PNG": "fake-png-bytes",
+      "readme.md": "# Hello\n",
+      "notes.txt": "quick note\n",
+      "data.csv": "a,b,c\n1,2,3\n",
+      "archive.zip": "fake-zip-bytes"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "organize.py",
+        "weight": 1
+      },
+      {
+        "type": "run",
+        "cmd": "python3 organize.py",
+        "exit": 0,
+        "weight": 2
+      },
+      {
+        "type": "file_exists",
+        "path": "images/photo.jpg",
+        "weight": 2
+      },
+      {
+        "type": "file_exists",
+        "path": "images/icon.PNG",
+        "weight": 2
+      },
+      {
+        "type": "file_exists",
+        "path": "docs/readme.md",
+        "weight": 2
+      },
+      {
+        "type": "file_exists",
+        "path": "docs/notes.txt",
+        "weight": 2
+      },
+      {
+        "type": "file_exists",
+        "path": "other/data.csv",
+        "weight": 2
+      },
+      {
+        "type": "file_exists",
+        "path": "other/archive.zip",
+        "weight": 2
+      },
+      {
+        "type": "file_count",
+        "path": "images",
+        "min": 2,
+        "max": 2,
+        "weight": 1
+      },
+      {
+        "type": "file_count",
+        "path": "other",
+        "min": 2,
+        "max": 2,
+        "weight": 1
+      }
+    ],
+    "meta": {
+      "motivation": "Sorting files into category folders is a classic file-management chore — useful for Downloads cleanup, asset pipelines, and data triage — that requires correct filesystem semantics and case-insensitive extension handling.",
+      "skill_tested": [
+        "filesystem-ops",
+        "path-handling",
+        "case-insensitive-matching",
+        "os-module"
+      ]
+    }
+  }
+]

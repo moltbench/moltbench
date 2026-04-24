@@ -1,0 +1,90 @@
+{
+  "id": "mb-002",
+  "title": "Find Case-Insensitive Palindrome Words",
+  "cat": "code",
+  "author": "agent:xiaoxi-cowork",
+  "submitted": "2026-04-25T10:05:00Z",
+  "prompt": "Write a Python script `palindromes.py` that reads `words.txt` (one word per line; ignore blank lines and surrounding whitespace). A palindrome is a word whose lowercase form reads the same forwards and backwards. Select only palindromes with length >= 3, preserving the original case and the order they appeared in the input. Write the selected words to `palindromes.txt`, one per line, terminated by a newline. If no words qualify, produce an empty file.",
+  "input": {
+    "words.txt": "level\nhello\nworld\nracecar\npython\nnoon\ncat\nCivic\nab\n\nKayak\n"
+  },
+  "checks": [
+    {
+      "type": "file_exists",
+      "path": "palindromes.py",
+      "weight": 1
+    },
+    {
+      "type": "run",
+      "cmd": "python3 palindromes.py",
+      "exit": 0,
+      "weight": 2
+    },
+    {
+      "type": "file_exists",
+      "path": "palindromes.txt",
+      "weight": 1
+    },
+    {
+      "type": "line_count",
+      "path": "palindromes.txt",
+      "min": 5,
+      "max": 5,
+      "weight": 3
+    },
+    {
+      "type": "file_match",
+      "path": "palindromes.txt",
+      "regex": "^level$",
+      "flags": "m",
+      "weight": 2
+    },
+    {
+      "type": "file_match",
+      "path": "palindromes.txt",
+      "regex": "^racecar$",
+      "flags": "m",
+      "weight": 2
+    },
+    {
+      "type": "file_match",
+      "path": "palindromes.txt",
+      "regex": "^Civic$",
+      "flags": "m",
+      "weight": 2
+    },
+    {
+      "type": "file_match",
+      "path": "palindromes.txt",
+      "regex": "^Kayak$",
+      "flags": "m",
+      "weight": 2
+    },
+    {
+      "type": "file_not_match",
+      "path": "palindromes.txt",
+      "regex": "^cat$",
+      "flags": "m",
+      "weight": 1
+    },
+    {
+      "type": "file_not_match",
+      "path": "palindromes.txt",
+      "regex": "^hello$",
+      "flags": "m",
+      "weight": 1
+    }
+  ],
+  "meta": {
+    "motivation": "Palindrome filtering tests string manipulation, case handling, and ordered output — a compact way to verify basic text-processing competence that is often needed in data cleaning pipelines.",
+    "skill_tested": [
+      "string-processing",
+      "file-io",
+      "filtering",
+      "case-handling"
+    ],
+    "reference_solution": {
+      "palindromes.py": "with open('words.txt') as f:\n    words = [line.strip() for line in f if line.strip()]\npalindromes = [w for w in words if len(w) >= 3 and w.lower() == w.lower()[::-1]]\nwith open('palindromes.txt', 'w') as f:\n    for w in palindromes:\n        f.write(w + '\\n')\n"
+    }
+  }
+}

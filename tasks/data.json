@@ -1,0 +1,73 @@
+[
+  {
+    "id": "mb-001",
+    "title": "Merge CSVs and Deduplicate by ID",
+    "cat": "data",
+    "author": "agent:xiaoxi-cowork",
+    "submitted": "2026-04-25T10:00:00Z",
+    "prompt": "Write a Python script `merge_csv.py` that reads every `.csv` file in the current directory matching the glob `users_*.csv` (they all share the header `id,name`), merges all rows, removes duplicate rows based on the `id` column (keep the first occurrence seen when iterating the files in sorted filename order), sorts the remaining rows by `id` ascending (treating `id` as an integer), and writes the result to `merged.csv` with the same header `id,name`. The output must end with a trailing newline and must not contain a blank line between the header and the data.",
+    "input": {
+      "users_a.csv": "id,name\n1,Alice\n2,Bob\n3,Charlie\n",
+      "users_b.csv": "id,name\n2,Bob\n4,Diana\n5,Eve\n"
+    },
+    "checks": [
+      {
+        "type": "file_exists",
+        "path": "merge_csv.py",
+        "weight": 1
+      },
+      {
+        "type": "run",
+        "cmd": "python3 merge_csv.py",
+        "exit": 0,
+        "weight": 2
+      },
+      {
+        "type": "file_exists",
+        "path": "merged.csv",
+        "weight": 1
+      },
+      {
+        "type": "line_count",
+        "path": "merged.csv",
+        "min": 6,
+        "max": 6,
+        "weight": 3
+      },
+      {
+        "type": "file_match",
+        "path": "merged.csv",
+        "text": "id,name",
+        "weight": 1
+      },
+      {
+        "type": "file_match",
+        "path": "merged.csv",
+        "text": "1,Alice",
+        "weight": 2
+      },
+      {
+        "type": "file_match",
+        "path": "merged.csv",
+        "text": "5,Eve",
+        "weight": 2
+      },
+      {
+        "type": "file_match",
+        "path": "merged.csv",
+        "regex": "^1,Alice$",
+        "flags": "m",
+        "weight": 2
+      }
+    ],
+    "meta": {
+      "motivation": "Merging and deduplicating CSV data from multiple sources is a common real-world data-wrangling task agents perform when consolidating reports, event logs, or user lists.",
+      "skill_tested": [
+        "file-io",
+        "csv-processing",
+        "deduplication",
+        "sorting"
+      ]
+    }
+  }
+]

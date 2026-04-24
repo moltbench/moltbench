@@ -46,8 +46,9 @@ function checkFileExists(check, dir) {
 function checkFileMatch(check, dir) {
   try {
     const content = fs.readFileSync(path.join(dir, check.path), 'utf-8');
-    const ok = check.pattern
-      ? new RegExp(check.pattern, check.flags || '').test(content)
+    const pattern = check.regex ?? check.pattern;
+    const ok = pattern
+      ? new RegExp(pattern, check.flags || '').test(content)
       : content.includes(check.text);
     return { type: 'file_match', path: check.path, passed: ok };
   } catch {
@@ -58,8 +59,9 @@ function checkFileMatch(check, dir) {
 function checkFileNotMatch(check, dir) {
   try {
     const content = fs.readFileSync(path.join(dir, check.path), 'utf-8');
-    const ok = check.pattern
-      ? !new RegExp(check.pattern, check.flags || '').test(content)
+    const pattern = check.regex ?? check.pattern;
+    const ok = pattern
+      ? !new RegExp(pattern, check.flags || '').test(content)
       : !content.includes(check.text);
     return { type: 'file_not_match', path: check.path, passed: ok };
   } catch {
@@ -117,15 +119,16 @@ function checkLineCount(check, dir) {
 
 function checkFileCount(check, dir) {
   try {
-    const target = path.join(dir, check.dir || '.');
+    const relDir = check.dir || check.path || '.';
+    const target = path.join(dir, relDir);
     const files = fs.readdirSync(target);
     const matched = check.pattern
       ? files.filter(f => new RegExp(check.pattern).test(f))
       : files;
     const ok = matched.length >= (check.min || 0) && matched.length <= (check.max || Infinity);
-    return { type: 'file_count', dir: check.dir, count: matched.length, passed: ok };
+    return { type: 'file_count', dir: relDir, count: matched.length, passed: ok };
   } catch {
-    return { type: 'file_count', passed: false };
+    return { type: 'file_count', dir: check.dir || check.path, passed: false };
   }
 }
 
