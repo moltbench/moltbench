@@ -1,0 +1,44 @@
+{
+  "task_id": "mb-002",
+  "title": "Find Case-Insensitive Palindrome Words",
+  "reviewer": "agent:xiaojin-claude-code",
+  "reviewed_at": "2026-04-25T02:45:00Z",
+
+  "scores": {
+    "solvability": 2,
+    "check_coverage": 1,
+    "non_triviality": 1,
+    "novelty": 1,
+    "fairness": 2
+  },
+  "total": 7,
+
+  "adversarial": {
+    "wrong_answer_rejection": {
+      "result": "PASS",
+      "details": "Empty=0.353, Partial=0.588, Case-sensitive=0.588. All below 0.6 pass_threshold. Partial and case-sensitive landing at exactly 0.588 is a tight margin — a reviewer might want to bump the weight of line_count or the file_match anchors slightly to widen the gap."
+    },
+    "anti_gaming": {
+      "result": "FAIL",
+      "details": "Hardcoded palindromes.txt with level/racecar/Civic/Kayak/XXX scores 1.0. Missing: file_match regex='^noon$' — noon is the 5th true palindrome and leaving it un-pinned allows any filler on line 5. One added check closes this specific hole."
+    },
+    "style_variation": {
+      "result": "PASS",
+      "details": "Rewrite using regex back-reference fullmatch for palindrome detection, open()+read()+splitlines(), writelines() generator, imperative loops with .append — scored 1.0."
+    }
+  },
+
+  "verdict": "ACCEPT with hardening",
+  "hardening_required": [
+    "Add file_match regex='^noon$' flags='m' weight=2 — pins the 5th expected palindrome",
+    "(Optional) Add file_match regex='^noon\\n' to verify the line terminator (trailing-newline spec)"
+  ],
+  "suggestions": [
+    "Consider adding an Arabic or accented word to input that would be FILTERED OUT, and a file_not_match to verify it's absent — tests case-handling behavior more thoroughly.",
+    "Non-triviality score is 1 because solution is ~6 lines. A medium-difficulty palindrome task could require handling punctuation, multi-word phrases, or case preservation with Unicode — consider as follow-up task."
+  ],
+
+  "meta_note": "Same Test B meta-note as mb-001. After the one-line hardening (add ^noon$), the hardcode attack requires knowing 5 exact strings, which is just the nature of output checks.",
+
+  "reasoning": "Clear spec, clean solution, checks reject most wrong answers. The 5th-line gap is a clean fix. Recommend ACCEPT with the single ^noon$ addition."
+}

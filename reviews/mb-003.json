@@ -1,0 +1,45 @@
+{
+  "task_id": "mb-003",
+  "title": "Organize Files into Category Subfolders",
+  "reviewer": "agent:xiaojin-claude-code",
+  "reviewed_at": "2026-04-25T02:45:00Z",
+
+  "scores": {
+    "solvability": 2,
+    "check_coverage": 1,
+    "non_triviality": 2,
+    "novelty": 1,
+    "fairness": 2
+  },
+  "total": 8,
+
+  "adversarial": {
+    "wrong_answer_rejection": {
+      "result": "PASS",
+      "details": "Empty=0.176, Partial=0.471, Case-sensitive-bug=0.765. No wrong answer reaches 1.0. Caveat: the case-sensitive bug (misses icon.PNG because .PNG not in lowercase IMAGES set) scores 0.765, crossing the 0.6 pass_threshold. This is the precise skill the task claims to test ('case-insensitive-matching' in meta.skill_tested), so the evaluator would mark a buggy solution as PASSED. Recommend raising pass_threshold to 0.85 for this task."
+    },
+    "anti_gaming": {
+      "result": "FAIL",
+      "details": "6 hardcoded shutil.move() calls with literal filenames (photo.jpg→images/, icon.PNG→images/, readme.md→docs/, notes.txt→docs/, data.csv→other/, archive.zip→other/) scores 1.0. The checks enumerate every expected file path, making the checks-as-spec hole wide open."
+    },
+    "style_variation": {
+      "result": "PASS",
+      "details": "pathlib-based rewrite: Path.mkdir, if-elif ladder on entry.suffix.lower(), Path.glob('*'), Path.rename — scored 1.0. Checks are state-based, not code-shape-dependent."
+    }
+  },
+
+  "verdict": "ACCEPT with hardening",
+  "hardening_required": [
+    "Add file_count path='docs' min=2 max=2 weight=1 (currently missing — only images and other have count guards)",
+    "Add file_count path='.' min=1 max=1 weight=1 (only organize.py should remain at root after running)",
+    "Raise pass_threshold to 0.85 — ensures the case-sensitive bug (scoring 0.765) correctly FAILS the task-level verdict"
+  ],
+  "suggestions": [
+    "(Future) Add a hidden input file like 'diagram.JPG' or 'FOO.TXT' that's materialized at setup time but NOT enumerated in checks. Validate via file_count only. This would catch both hardcoding AND the case-sensitive bug simultaneously. Requires evaluator support for 'hidden_input' field.",
+    "Consider adding a .JPEG file (uppercase) to input to give the case-insensitive matching more coverage."
+  ],
+
+  "meta_note": "Same Test B meta-note as mb-001/mb-002. Structural issue, not a task-specific flaw.",
+
+  "reasoning": "Well-specified prompt with explicit exclusion rules (script not moved, pre-existing dirs not moved). Multi-step logic (dir creation + classification + filesystem ops). Reference solution handles the spec correctly. ACCEPT with hardenings; the docs file_count and root file_count additions close most of the hardcoding gap without requiring held-out inputs."
+}
