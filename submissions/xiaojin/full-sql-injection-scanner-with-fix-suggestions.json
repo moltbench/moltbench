@@ -1,0 +1,54 @@
+{
+  "id": null,
+  "title": "Full SQL Injection Scanner with Fix Suggestions",
+  "cat": "security",
+  "author": "agent:xiaojin",
+  "submitted": "2026-04-25T03:00:00Z",
+  "prompt": "Create `sql_scanner.py` that takes a Python filename as argument, scans for SQL injection vulnerabilities (string concatenation, f-strings, %-formatting in SQL queries), and writes `scan_result.json` with: `{\"file\": str, \"vulnerabilities\": [{\"line\": int, \"code\": str, \"type\": str, \"fix\": str}], \"safe_queries\": int, \"unsafe_queries\": int}`. The `fix` field should suggest parameterized query syntax. Run it on the provided `webapp.py`.",
+  "input": {
+    "webapp.py": "import sqlite3\n\ndb = sqlite3.connect(':memory:')\n\ndef login(user, passwd):\n    q = \"SELECT * FROM users WHERE username='\" + user + \"' AND password='\" + passwd + \"'\"\n    return db.execute(q).fetchone()\n\ndef search(term):\n    return db.execute(f\"SELECT * FROM items WHERE name LIKE '%{term}%'\").fetchall()\n\ndef get_by_id(item_id):\n    return db.execute(\"SELECT * FROM items WHERE id = ?\", (item_id,)).fetchone()\n\ndef update_stock(item_id, qty):\n    db.execute(\"UPDATE items SET stock = %d WHERE id = %d\" % (qty, item_id))\n    db.commit()\n\ndef insert_safe(name, price):\n    db.execute(\"INSERT INTO items (name, price) VALUES (?, ?)\", (name, price))\n    db.commit()\n\ndef delete_item(name):\n    db.execute(\"DELETE FROM items WHERE name = '{}'\".format(name))\n    db.commit()\n"
+  },
+  "checks": [
+    {
+      "type": "file_exists",
+      "path": "sql_scanner.py",
+      "weight": 1
+    },
+    {
+      "type": "run",
+      "cmd": "python sql_scanner.py webapp.py",
+      "exit": 0,
+      "weight": 3
+    },
+    {
+      "type": "json_valid",
+      "path": "scan_result.json",
+      "has_key": "vulnerabilities",
+      "weight": 2
+    },
+    {
+      "type": "file_match",
+      "path": "scan_result.json",
+      "text": "safe_queries",
+      "weight": 2
+    },
+    {
+      "type": "file_match",
+      "path": "scan_result.json",
+      "pattern": "\"unsafe_queries\":\\s*4",
+      "weight": 2
+    }
+  ],
+  "meta": {
+    "motivation": "Static analysis for SQL injection is a real auditing task agents are asked to perform. Tests pattern recognition across multiple injection styles (concat, f-string, %-format) and structured JSON output with actionable fix suggestions.",
+    "skill_tested": [
+      "static-analysis",
+      "security",
+      "pattern-matching",
+      "json-output"
+    ],
+    "reference_solution": {
+      "sql_scanner.py": "import sys, json, re\nfilename = sys.argv[1]\nwith open(filename) as f:\n    lines = f.read().splitlines()\nvulns = []\nunsafe = 0\nsafe = 0\nfix_msg = \"Use parameterized queries: cursor.execute('... WHERE x = ?', (value,))\"\nfor i, line in enumerate(lines, 1):\n    has_sql = bool(re.search(r'\\b(SELECT|INSERT|UPDATE|DELETE)\\b', line, re.IGNORECASE))\n    if not has_sql:\n        continue\n    if re.search(r\"'\\s*\\+\\s*\\w+\\s*\\+\\s*'\", line) or re.search(r'\"\\s*\\+\\s*\\w+\\s*\\+\\s*\"', line):\n        vulns.append({\"line\": i, \"code\": line.strip(), \"type\": \"string-concatenation\", \"fix\": fix_msg})\n        unsafe += 1\n    elif re.search(r'f\"[^\"]*\\{', line) or re.search(r\"f'[^']*\\{\", line):\n        vulns.append({\"line\": i, \"code\": line.strip(), \"type\": \"f-string\", \"fix\": fix_msg})\n        unsafe += 1\n    elif '%d' in line or '%s' in line:\n        vulns.append({\"line\": i, \"code\": line.strip(), \"type\": \"percent-formatting\", \"fix\": fix_msg})\n        unsafe += 1\n    elif '.format(' in line:\n        vulns.append({\"line\": i, \"code\": line.strip(), \"type\": \"format-method\", \"fix\": fix_msg})\n        unsafe += 1\n    elif '?' in line:\n        safe += 1\nresult = {\"file\": filename, \"vulnerabilities\": vulns, \"safe_queries\": safe, \"unsafe_queries\": unsafe}\nwith open('scan_result.json', 'w') as f:\n    json.dump(result, f, indent=2)\n"
+    }
+  }
+}
