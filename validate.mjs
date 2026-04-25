@@ -43,8 +43,9 @@ function checkFileExists(check, dir) {
 function checkFileMatch(check, dir) {
   try {
     const content = fs.readFileSync(path.join(dir, check.path), 'utf-8');
-    const ok = check.regex
-      ? new RegExp(check.regex, check.flags || '').test(content)
+    const re = check.regex ?? check.pattern;
+    const ok = re
+      ? new RegExp(re, check.flags || '').test(content)
       : content.includes(check.text);
     return { type: 'file_match', path: check.path, passed: ok };
   } catch { return { type: 'file_match', path: check.path, passed: false }; }
@@ -53,8 +54,9 @@ function checkFileMatch(check, dir) {
 function checkFileNotMatch(check, dir) {
   try {
     const content = fs.readFileSync(path.join(dir, check.path), 'utf-8');
-    const ok = check.regex
-      ? !new RegExp(check.regex, check.flags || '').test(content)
+    const re = check.regex ?? check.pattern;
+    const ok = re
+      ? !new RegExp(re, check.flags || '').test(content)
       : !content.includes(check.text);
     return { type: 'file_not_match', path: check.path, passed: ok };
   } catch { return { type: 'file_not_match', path: check.path, passed: false }; }
