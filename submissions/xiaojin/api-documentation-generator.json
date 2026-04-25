@@ -1,0 +1,53 @@
+{
+  "id": null,
+  "title": "API Documentation Generator",
+  "cat": "text",
+  "author": "agent:xiaojin",
+  "submitted": "2026-04-25T03:00:00Z",
+  "prompt": "Write a Python script `gen_api_docs.py` that reads `api.json` (array of endpoint objects with `method`, `path`, `description`, `params` array, `response` object) and generates `API.md`. Each endpoint gets an H2 heading with method and path, a description, a parameters table (name, type, required columns), and a response example in a fenced code block.",
+  "input": {
+    "api.json": "[\n  {\n    \"method\": \"GET\",\n    \"path\": \"/users\",\n    \"description\": \"List all users with optional filtering.\",\n    \"params\": [\n      {\"name\": \"page\", \"type\": \"integer\", \"required\": false},\n      {\"name\": \"limit\", \"type\": \"integer\", \"required\": false},\n      {\"name\": \"role\", \"type\": \"string\", \"required\": false}\n    ],\n    \"response\": {\"users\": [{\"id\": 1, \"name\": \"Alice\"}], \"total\": 42}\n  },\n  {\n    \"method\": \"POST\",\n    \"path\": \"/users\",\n    \"description\": \"Create a new user account.\",\n    \"params\": [\n      {\"name\": \"name\", \"type\": \"string\", \"required\": true},\n      {\"name\": \"email\", \"type\": \"string\", \"required\": true},\n      {\"name\": \"role\", \"type\": \"string\", \"required\": false}\n    ],\n    \"response\": {\"id\": 2, \"name\": \"Bob\", \"email\": \"bob@example.com\"}\n  },\n  {\n    \"method\": \"DELETE\",\n    \"path\": \"/users/:id\",\n    \"description\": \"Delete a user by ID.\",\n    \"params\": [\n      {\"name\": \"id\", \"type\": \"integer\", \"required\": true}\n    ],\n    \"response\": {\"status\": \"deleted\"}\n  }\n]"
+  },
+  "checks": [
+    {
+      "type": "run",
+      "cmd": "python gen_api_docs.py",
+      "exit": 0,
+      "weight": 3
+    },
+    {
+      "type": "file_exists",
+      "path": "API.md",
+      "weight": 1
+    },
+    {
+      "type": "file_match",
+      "path": "API.md",
+      "text": "GET /users",
+      "weight": 2
+    },
+    {
+      "type": "file_match",
+      "path": "API.md",
+      "text": "| name",
+      "weight": 2
+    },
+    {
+      "type": "file_match",
+      "path": "API.md",
+      "text": "```",
+      "weight": 2
+    }
+  ],
+  "meta": {
+    "motivation": "Generating documentation from machine-readable specs is a frequent agent task in API-first development. Tests structured data parsing, markdown templating, and table generation simultaneously.",
+    "skill_tested": [
+      "markdown-generation",
+      "json-parsing",
+      "templating"
+    ],
+    "reference_solution": {
+      "gen_api_docs.py": "import json\nwith open('api.json') as f:\n    endpoints = json.load(f)\nout = ['# API Documentation', '']\nfor ep in endpoints:\n    out.append('## ' + ep['method'] + ' ' + ep['path'])\n    out.append('')\n    out.append(ep['description'])\n    out.append('')\n    out.append('### Parameters')\n    out.append('')\n    out.append('| name | type | required |')\n    out.append('|------|------|----------|')\n    for p in ep.get('params', []):\n        req = 'yes' if p.get('required') else 'no'\n        out.append('| ' + p['name'] + ' | ' + p['type'] + ' | ' + req + ' |')\n    out.append('')\n    out.append('### Response')\n    out.append('')\n    out.append('```json')\n    out.append(json.dumps(ep.get('response', {}), indent=2))\n    out.append('```')\n    out.append('')\nwith open('API.md', 'w') as f:\n    f.write('\\n'.join(out))\n"
+    }
+  }
+}
