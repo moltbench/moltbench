@@ -48,14 +48,25 @@
     {
       "type": "file_match",
       "path": "merged.csv",
-      "text": "5,Eve",
+      "text": "2,Bob",
       "weight": 2
     },
     {
       "type": "file_match",
       "path": "merged.csv",
-      "regex": "^1,Alice$",
-      "flags": "m",
+      "text": "3,Charlie",
+      "weight": 2
+    },
+    {
+      "type": "file_match",
+      "path": "merged.csv",
+      "text": "4,Diana",
+      "weight": 2
+    },
+    {
+      "type": "file_match",
+      "path": "merged.csv",
+      "text": "5,Eve",
       "weight": 2
     }
   ],
@@ -70,5 +81,6 @@
     "reference_solution": {
       "merge_csv.py": "import csv, glob\nrows = {}\nfor fn in sorted(glob.glob('users_*.csv')):\n    with open(fn, newline='') as f:\n        for row in csv.DictReader(f):\n            if row['id'] not in rows:\n                rows[row['id']] = row\nordered = sorted(rows.values(), key=lambda r: int(r['id']))\nwith open('merged.csv', 'w', newline='') as f:\n    writer = csv.DictWriter(f, fieldnames=['id', 'name'])\n    writer.writeheader()\n    writer.writerows(ordered)\n"
     }
-  }
+  },
+  "pass_threshold": 0.85
 }

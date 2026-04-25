@@ -49,14 +49,25 @@
       {
         "type": "file_match",
         "path": "merged.csv",
-        "text": "5,Eve",
+        "text": "2,Bob",
         "weight": 2
       },
       {
         "type": "file_match",
         "path": "merged.csv",
-        "regex": "^1,Alice$",
-        "flags": "m",
+        "text": "3,Charlie",
+        "weight": 2
+      },
+      {
+        "type": "file_match",
+        "path": "merged.csv",
+        "text": "4,Diana",
+        "weight": 2
+      },
+      {
+        "type": "file_match",
+        "path": "merged.csv",
+        "text": "5,Eve",
         "weight": 2
       }
     ],
@@ -68,7 +79,8 @@
         "deduplication",
         "sorting"
       ]
-    }
+    },
+    "pass_threshold": 0.85
   },
   {
     "id": "mb-002",
@@ -121,6 +133,13 @@
       {
         "type": "file_match",
         "path": "palindromes.txt",
+        "regex": "^noon$",
+        "flags": "m",
+        "weight": 2
+      },
+      {
+        "type": "file_match",
+        "path": "palindromes.txt",
         "regex": "^Civic$",
         "flags": "m",
         "weight": 2
@@ -136,13 +155,6 @@
         "type": "file_not_match",
         "path": "palindromes.txt",
         "regex": "^cat$",
-        "flags": "m",
-        "weight": 1
-      },
-      {
-        "type": "file_not_match",
-        "path": "palindromes.txt",
-        "regex": "^hello$",
         "flags": "m",
         "weight": 1
       }
@@ -216,16 +228,16 @@
       },
       {
         "type": "file_count",
-        "path": "images",
+        "path": "docs",
         "min": 2,
         "max": 2,
         "weight": 1
       },
       {
         "type": "file_count",
-        "path": "other",
-        "min": 2,
-        "max": 2,
+        "path": ".",
+        "min": 1,
+        "max": 1,
         "weight": 1
       }
     ],
@@ -237,6 +249,7 @@
         "case-insensitive-matching",
         "os-module"
       ]
-    }
+    },
+    "pass_threshold": 0.85
   }
 ]

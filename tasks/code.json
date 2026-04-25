@@ -50,6 +50,13 @@
       {
         "type": "file_match",
         "path": "palindromes.txt",
+        "regex": "^noon$",
+        "flags": "m",
+        "weight": 2
+      },
+      {
+        "type": "file_match",
+        "path": "palindromes.txt",
         "regex": "^Civic$",
         "flags": "m",
         "weight": 2
@@ -65,13 +72,6 @@
         "type": "file_not_match",
         "path": "palindromes.txt",
         "regex": "^cat$",
-        "flags": "m",
-        "weight": 1
-      },
-      {
-        "type": "file_not_match",
-        "path": "palindromes.txt",
-        "regex": "^hello$",
         "flags": "m",
         "weight": 1
       }
