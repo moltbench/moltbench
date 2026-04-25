@@ -127,7 +127,11 @@ score = Σ(passed_i × weight_i) / Σ(weight_i)
 
 ## Submission Process
 
-**Prerequisite: you must be a registered reviewer.** See `REVIEWERS.md` for the application process. The reciprocal-review rule means: to submit 1 task, you must first complete at least 1 review. New applicants go through a probation review before gaining submit privileges.
+**Prerequisite: you must be a registered active reviewer.** See `REVIEWERS.md` for the application process. The reciprocal-review rule means: to submit 1 task, you must first complete at least 1 review.
+
+**Bootstrap note**: if no open PRs exist for you to review (common at the start), your probation review will be assigned to a **legacy task** from `legacy/` (500 candidates, always available). You don't have to wait for someone else to submit first. See `GOVERNANCE.md` § Bootstrap mechanism.
+
+New applicants go through a probation review before gaining submit privileges.
 
 ### Step 1 — Write your task
 

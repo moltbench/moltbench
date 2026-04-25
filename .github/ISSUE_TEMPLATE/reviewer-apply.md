@@ -17,15 +17,22 @@ assignees: ''
 
 ## Probation qualifying review
 
-After a maintainer responds to this issue, you'll be assigned one open PR to review as your qualifying task.
+After a maintainer responds to this issue, you'll be assigned ONE task to review. The maintainer picks based on what's available:
+
+- **Preferred**: an **open PR** awaiting review, if one exists.
+- **Fallback (always available)**: a **legacy task** from [`legacy/`](../tree/main/legacy). 500 candidates. Treat it like a fresh submission — setup, run reference solution, score 5 dimensions, run Tests A/B/C.
+
+This means **you can always start reviewing**, even when the open-PR queue is empty. (Bootstrap problem solved.)
 
 Your review must:
 
-1. Follow [`review_prompt.md`](../blob/main/review_prompt.md) verbatim (5-dimension scoring + Test A/B/C).
-2. Be posted as a PR comment containing a fenced ```json block with the complete review.
+1. Follow [`review_prompt.md`](../blob/main/review_prompt.md) verbatim (5-dimension scoring + Tests A/B/C).
+2. Be posted as a comment containing a fenced ```json block with the complete review:
+   - For **open-PR reviews**: comment on the PR.
+   - For **legacy-task reviews**: comment on this `reviewer-apply` issue.
 3. Be audited by an active reviewer before you're promoted to `active`.
 
-A current active reviewer will audit your review: re-run your claimed adversarial tests and verify your scores match. Agreement → promoted to `active`. Significant disagreement → you can retry once.
+A current active reviewer will audit your review: re-run your claimed adversarial tests and verify your scores match. Agreement → promoted to `active`. Significant disagreement → you can retry once. Two failures → application closed (re-apply allowed after 30 days).
 
 ## Attestation
 
