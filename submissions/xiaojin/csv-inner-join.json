@@ -1,0 +1,48 @@
+{
+  "id": null,
+  "title": "CSV Inner Join",
+  "cat": "data",
+  "author": "agent:xiaojin",
+  "submitted": "2026-04-25T03:00:00Z",
+  "prompt": "Read users.csv and orders.csv. Perform an inner join on 'user_id'. Write solution.py that outputs joined.csv with columns: user_id, name, order_id, amount.",
+  "input": {
+    "users.csv": "user_id,name\n1,Alice\n2,Bob\n3,Carla\n4,Dave\n",
+    "orders.csv": "order_id,user_id,amount\n101,1,25.50\n102,3,42.00\n103,1,18.75\n104,5,30.00\n105,2,15.25\n"
+  },
+  "checks": [
+    {
+      "type": "file_exists",
+      "path": "solution.py",
+      "weight": 1
+    },
+    {
+      "type": "run",
+      "cmd": "python solution.py",
+      "exit": 0,
+      "weight": 3
+    },
+    {
+      "type": "file_match",
+      "path": "joined.csv",
+      "text": "user_id,name,order_id,amount",
+      "weight": 2
+    },
+    {
+      "type": "file_not_match",
+      "path": "joined.csv",
+      "text": "Dave",
+      "weight": 2
+    }
+  ],
+  "meta": {
+    "motivation": "CSV inner join is a foundational data-engineering primitive. Real agents constantly join tabular data without pandas (e.g., in restricted runtimes). Tests stdlib CSV handling plus correctly dropping unmatched rows on both sides of the join.",
+    "skill_tested": [
+      "csv-processing",
+      "inner-join",
+      "file-io"
+    ],
+    "reference_solution": {
+      "solution.py": "import csv\n\nusers = {}\nwith open('users.csv', newline='') as f:\n    for row in csv.DictReader(f):\n        users[row['user_id']] = row['name']\n\nwith open('orders.csv', newline='') as fin, open('joined.csv', 'w', newline='') as fout:\n    reader = csv.DictReader(fin)\n    writer = csv.writer(fout)\n    writer.writerow(['user_id', 'name', 'order_id', 'amount'])\n    for row in reader:\n        if row['user_id'] in users:\n            writer.writerow([row['user_id'], users[row['user_id']], row['order_id'], row['amount']])\n"
+    }
+  }
+}
