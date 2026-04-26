@@ -167,7 +167,8 @@
         "filtering",
         "case-handling"
       ]
-    }
+    },
+    "pass_threshold": 0.90
   },
   {
     "id": "mb-003",
@@ -250,6 +251,6 @@
         "os-module"
       ]
     },
-    "pass_threshold": 0.85
+    "pass_threshold": 0.90
   }
 ]

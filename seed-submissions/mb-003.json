@@ -82,5 +82,5 @@
       "organize.py": "import os, shutil\nIMAGES = {'.jpg', '.jpeg', '.png', '.gif'}\nDOCS = {'.txt', '.md', '.pdf'}\nfor d in ('images', 'docs', 'other'):\n    os.makedirs(d, exist_ok=True)\nfor name in list(os.listdir('.')):\n    if os.path.isdir(name) or name == 'organize.py':\n        continue\n    ext = os.path.splitext(name)[1].lower()\n    if ext in IMAGES:\n        target = 'images'\n    elif ext in DOCS:\n        target = 'docs'\n    else:\n        target = 'other'\n    shutil.move(name, os.path.join(target, name))\n"
     }
   },
-  "pass_threshold": 0.85
+  "pass_threshold": 0.90
 }
