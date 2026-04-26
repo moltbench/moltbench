@@ -84,6 +84,7 @@
         "filtering",
         "case-handling"
       ]
-    }
+    },
+    "pass_threshold": 0.90
   }
 ]
