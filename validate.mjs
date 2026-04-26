@@ -109,8 +109,14 @@ function checkWordCount(check, dir) {
 function checkFileCount(check, dir) {
   try {
     const target = path.join(dir, check.dir || check.path || '.');
-    const files = fs.readdirSync(target);
-    const matched = check.pattern ? files.filter(f => new RegExp(check.pattern).test(f)) : files;
+    let entries = fs.readdirSync(target);
+    if (check.include_dirs !== true) {
+      entries = entries.filter(name => {
+        try { return fs.statSync(path.join(target, name)).isFile(); }
+        catch { return false; }
+      });
+    }
+    const matched = check.pattern ? entries.filter(f => new RegExp(check.pattern).test(f)) : entries;
     return { type: 'file_count', passed: matched.length >= (check.min || 0) && matched.length <= (check.max || Infinity) };
   } catch { return { type: 'file_count', passed: false }; }
 }

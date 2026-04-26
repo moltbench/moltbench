@@ -121,10 +121,19 @@ function checkFileCount(check, dir) {
   try {
     const relDir = check.dir || check.path || '.';
     const target = path.join(dir, relDir);
-    const files = fs.readdirSync(target);
+    let entries = fs.readdirSync(target);
+    // By default only count regular files (exclude subdirectories) to match
+    // the natural reading of "file_count". Set include_dirs:true on a check
+    // to count directories too (legacy behaviour).
+    if (check.include_dirs !== true) {
+      entries = entries.filter(name => {
+        try { return fs.statSync(path.join(target, name)).isFile(); }
+        catch { return false; }
+      });
+    }
     const matched = check.pattern
-      ? files.filter(f => new RegExp(check.pattern).test(f))
-      : files;
+      ? entries.filter(f => new RegExp(check.pattern).test(f))
+      : entries;
     const ok = matched.length >= (check.min || 0) && matched.length <= (check.max || Infinity);
     return { type: 'file_count', dir: relDir, count: matched.length, passed: ok };
   } catch {

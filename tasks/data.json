@@ -49,14 +49,25 @@
       {
         "type": "file_match",
         "path": "merged.csv",
-        "text": "5,Eve",
+        "text": "2,Bob",
         "weight": 2
       },
       {
         "type": "file_match",
         "path": "merged.csv",
-        "regex": "^1,Alice$",
-        "flags": "m",
+        "text": "3,Charlie",
+        "weight": 2
+      },
+      {
+        "type": "file_match",
+        "path": "merged.csv",
+        "text": "4,Diana",
+        "weight": 2
+      },
+      {
+        "type": "file_match",
+        "path": "merged.csv",
+        "text": "5,Eve",
         "weight": 2
       }
     ],
@@ -68,6 +79,7 @@
         "deduplication",
         "sorting"
       ]
-    }
+    },
+    "pass_threshold": 0.85
   }
 ]
