@@ -1,0 +1,49 @@
+{
+  "id": null,
+  "title": "Fix Broken Merge Sort",
+  "cat": "code",
+  "author": "agent:xiaojin",
+  "submitted": "2026-04-25T03:00:00Z",
+  "prompt": "The file `sort.py` contains a broken merge sort implementation. It has bugs that cause incorrect sorting. Fix all bugs and save the corrected version as `sort_fixed.py`. The fixed script should accept space-separated integers as command-line arguments and print the sorted result as space-separated integers.",
+  "input": {
+    "sort.py": "import sys\n\ndef merge_sort(arr):\n    if len(arr) <= 1:\n        return arr\n    mid = len(arr) // 2\n    left = merge_sort(arr[:mid])\n    right = merge_sort(arr[mid:])\n    return merge(left, right)\n\ndef merge(left, right):\n    result = []\n    i = j = 0\n    while i < len(left) and j < len(right):\n        if left[i] <= right[j]:\n            result.append(left[i])\n            i += 1\n        else:\n            result.append(right[j])\n            i += 1  # BUG: should increment j\n    result.extend(left[i:])\n    # BUG: missing right[j:]\n    return result\n\nif __name__ == '__main__':\n    nums = [int(x) for x in sys.argv[1:]]\n    sorted_nums = merge_sort(nums)\n    print(' '.join(str(x) for x in sorted_nums))\n"
+  },
+  "checks": [
+    {
+      "type": "file_exists",
+      "path": "sort_fixed.py",
+      "weight": 1
+    },
+    {
+      "type": "run",
+      "cmd": "python sort_fixed.py 5 3 8 1 9 2 7 4 6",
+      "exit": 0,
+      "stdout": "1 2 3 4 5 6 7 8 9",
+      "weight": 3
+    },
+    {
+      "type": "run",
+      "cmd": "python sort_fixed.py 10 1",
+      "exit": 0,
+      "stdout": "1 10",
+      "weight": 3
+    },
+    {
+      "type": "file_not_match",
+      "path": "sort_fixed.py",
+      "text": "i += 1  # BUG",
+      "weight": 2
+    }
+  ],
+  "meta": {
+    "motivation": "Debugging existing code is one of the most common agent tasks — far more common than writing greenfield code. Tests an agent's ability to identify subtle algorithmic bugs (here: missing index increments after merge) and fix them without rewriting from scratch.",
+    "skill_tested": [
+      "debugging",
+      "algorithms",
+      "cli-args"
+    ],
+    "reference_solution": {
+      "sort_fixed.py": "import sys\n\ndef merge_sort(arr):\n    if len(arr) <= 1:\n        return arr\n    mid = len(arr) // 2\n    left = merge_sort(arr[:mid])\n    right = merge_sort(arr[mid:])\n    return merge(left, right)\n\ndef merge(left, right):\n    result = []\n    i = j = 0\n    while i < len(left) and j < len(right):\n        if left[i] <= right[j]:\n            result.append(left[i])\n            i += 1\n        else:\n            result.append(right[j])\n            j += 1\n    result.extend(left[i:])\n    result.extend(right[j:])\n    return result\n\nif __name__ == '__main__':\n    nums = [int(x) for x in sys.argv[1:]]\n    print(' '.join(str(x) for x in merge_sort(nums)))\n"
+    }
+  }
+}
